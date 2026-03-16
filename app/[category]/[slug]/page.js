@@ -64,12 +64,19 @@ function calculateReadingTime(html) {
 // Remove SEO Yoast and SEO Rank Math TOC
 function cleanContent(html) {
   html = html
+    // Remove Yoast TOC
     .replace(
       /<div class="[^"]*wp-block-yoast-seo-table-of-contents[^"]*"[\s\S]*?<\/div>/gi,
       "",
     )
+    // Remove RankMath TOC
     .replace(
       /<div class="[^"]*wp-block-rank-math-toc-block[^"]*"[\s\S]*?<\/div>/gi,
+      "",
+    )
+    // Remove generic TOC
+    .replace(
+      /<nav>\s*<ul>([\s\S]*?<a href="#[^"]+">[\s\S]*?<\/a>){2,}[\s\S]*?<\/ul>\s*<\/nav>/gi,
       "",
     );
 
