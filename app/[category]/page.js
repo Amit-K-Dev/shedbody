@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import PostCard from "@/components/PostCard";
+import { getPostByCategory } from "@/lib/posts";
 
 export const revalidate = 3600;
 
@@ -59,11 +60,7 @@ export async function generateMetadata({ params }) {
 export default async function CategoryPage({ params }) {
   const { category } = await params;
 
-  const { data: posts, error } = await supabase
-    .from("posts")
-    .select("id, title, slug, excerpt, published_at, category")
-    .ilike("category", `${category}%`)
-    .order("published_at", { ascending: false });
+  const posts = await getPostByCategory(category);
 
   const filteredPosts = posts?.filter(
     (post) => post.category?.toLowerCase() === category.toLowerCase(),
