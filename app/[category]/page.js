@@ -80,6 +80,25 @@ export default async function CategoryPage({ params }) {
     );
   }
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https//shedbody.vercel.app",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: category.replace("-", " "),
+        item: `https://shedbody.vercel.app/${category}`,
+      },
+    ],
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -93,6 +112,11 @@ export default async function CategoryPage({ params }) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
