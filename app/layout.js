@@ -1,4 +1,5 @@
 import { Oswald, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/Header";
 import "./globals.css";
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         <main className="min-h-screen">{children}</main>
+        <Analytics />
       </body>
     </html>
   );
