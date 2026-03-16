@@ -62,11 +62,9 @@ export default async function CategoryPage({ params }) {
 
   const posts = await getPostByCategory(category);
 
-  const filteredPosts = posts?.filter(
-    (post) => post.category?.toLowerCase() === category.toLowerCase(),
-  );
+  const filteredPosts = posts || [];
 
-  if (!filteredPosts || filteredPosts.length === 0) {
+  if (!filteredPosts.length) {
     return (
       <div className="max-w-5xl mx-auto py-20 text-center">
         <h1 className="text-3xl font-bold capitalize">{category}</h1>
@@ -86,10 +84,10 @@ export default async function CategoryPage({ params }) {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${category} Articles`,
-    itemListElement: posts.map((post, index) => ({
+    itemListElement: filteredPosts.map((post, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `https://shedbody.vercel.app/${post.category.toLowerCase()}/${post.slug}`,
+      url: `https://shedbody.vercel.app/${post.category}/${post.slug}`,
     })),
   };
 
