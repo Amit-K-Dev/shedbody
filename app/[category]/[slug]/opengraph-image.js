@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { getPost } from "@/lib/posts";
 
 export const runtime = "edge";
 
@@ -10,24 +11,18 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image({ params }) {
-  const category = params.category
-    ?.replace(/-/g, "")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-
-  const title = params.slug
-    .replace(/-/g, "")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const post = await getPost(params.slug);
 
   return new ImageResponse(
     <div
       style={{
+        background: "#020617",
         width: "100%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         padding: "80px",
-        background: "#020617",
         color: "white",
       }}
     >
@@ -40,7 +35,7 @@ export default async function Image({ params }) {
           textTransformm: "uppercase",
         }}
       >
-        {category}
+        {post.category}
       </div>
 
       {/* Title */}
@@ -48,11 +43,13 @@ export default async function Image({ params }) {
         style={{
           fontSize: 60,
           fontWeight: 700,
+          color: "while",
+          lineClamp: 1.2,
           maxWidth: "900px",
           textAlign: "center",
         }}
       >
-        {title}
+        {post.title}
       </div>
 
       {/* Brand */}
