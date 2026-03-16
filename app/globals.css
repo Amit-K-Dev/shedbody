@@ -1,26 +1,89 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0b0b;
+  --bg-secondary: #0f172a;
+  --card: #111111;
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --visited: #15803d;
+  --text: #ffffff;
+  --muted: #9ca3af;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+}
+
+h2,
+h3 {
+  scroll-margin-top: 120px;
+}
+
+.nav-link {
+  position: relative;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--bg-secondary);
+  padding: 18px;
+  border-radius: 8px;
+  margin: 24px 0;
+}
+
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #4ade80;
+}
+
+.callout-tip {
+  border-left-color: var(--accent);
+}
+
+.callout-key {
+  border-left-color: #3b82f6;
+}
+
+.prose figure {
+  margin: 1.5rem 0;
+}
+
+.prose figure img {
+  border-radius: 12px;
+  width: 100%;
+}
+
+.prose figcaption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
 }
