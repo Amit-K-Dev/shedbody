@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ShedBody
 
-## Getting Started
+ShedBody is a modern **fitness and nutrition blog platform** built with **Next.js and Supabase**.  
+It delivers SEO-optimized articles with dynamic rendering, structured data, and automatic OpenGraph images.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- Dynamic blog posts from Supabase database
+- Category-based routing
+- SEO-optimized article pages
+- Automatic OpenGraph image generation
+- JSON-LD structured data for articles
+- Automatic sitemap generation
+- Robots.txt generation
+- Table of contents extraction
+- Reading time calculation
+- Inline related articles
+- Responsive UI
+
+---
+
+## Tech Stack
+
+- **Next.js (App Router)**
+- **Supabase (PostgreSQL)**
+- **Tailwind CSS**
+- **Vercel (Deployment)**
+
+---
+
+## Project Structure
+
+```
+app/
+ ├ [category]/[slug]     → Dynamic article pages
+ ├ sitemap.js            → Automatic sitemap generation
+ ├ robots.js             → Robots.txt generation
+ ├ layout.js             → Root layout
+ └ page.js               → Homepage
+
+components/
+ ├ Header.js
+ ├ Breadcrumbs.js
+ ├ TableOfContents.js
+ ├ InlineRelatedArticles.js
+ ├ ReadingProgress.js
+ ├ SearchPosts.js
+ └ PostCard.js
+
+lib/
+ ├ supabase.js           → Supabase client
+ ├ posts.js              → Data fetching logic
+ └ contentParser.js      → WordPress HTML cleanup & parsing
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Install dependencies:
 
-## Learn More
+```
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Run development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open in browser:
 
-## Deploy on Vercel
+```
+http://localhost:3000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The project is designed to deploy easily on **Vercel**.
+
+Steps:
+
+1. Push the project to GitHub
+2. Connect repository to Vercel
+3. Add environment variables
+4. Deploy
+
+---
+
+## Author
+
+**Amit Kumar**
