@@ -1,6 +1,9 @@
 import { supabase } from "@/lib/supabase";
 import PostCard from "@/components/PostCard";
-import { getPostByCategory } from "@/lib/posts";
+import Pagination from "@/components/Pagination";
+import { getAllPosts } from "@/lib/posts";
+import SortFilter from "@/components/SortFilter";
+import SearchBar from "@/components/SearchBar";
 
 export const revalidate = 3600;
 
@@ -57,12 +60,27 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function CategoryPage({ params }) {
+export default async function CategoryPage({ params, searchParams }) {
   const { category } = await params;
 
-  const posts = await getPostByCategory(category);
+  const resolvedSearchParams = await searchParams;
+
+  const page = parseInt(resolvedSearchParams?.page || "1");
+  const sort = resolvedSearchParams?.sort || "latest";
+  const search = resolvedSearchParams?.search || "";
+  const limit = 9;
+
+  const { posts, total } = await getAllPosts(
+    category,
+    page,
+    limit,
+    sort,
+    search,
+  );
 
   const filteredPosts = posts || [];
+
+  const totalPages = Math.ceil(total / limit);
 
   if (!filteredPosts.length) {
     return (
@@ -134,11 +152,41 @@ export default async function CategoryPage({ params }) {
             )} guides on ShedBody.`}
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </div>
+        {/* Search Bar */}
+        <SearchBar category={category} />
+
+        {/* Sort Filter */}
+        <SortFilter
+          category={category}
+          currentSort={sort}
+          currentSearch={search}
+        />
+
+        {/* Empty Search Result */}
+        {!filteredPosts.length && search ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold">
+              No results found for `{search}`
+            </h2>
+          </div>
+        ) : (
+          <>
+            {/* Post Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPosts.map((post) => (
+                <PostCard key={post.id} post={post} search={search} />
+              ))}
+            </div>
+
+            <Pagination
+              category={category}
+              page={page}
+              totalPages={totalPages}
+              sort={sort}
+              search={search}
+            />
+          </>
+        )}
       </main>
     </>
   );

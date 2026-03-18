@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -232,29 +233,44 @@ export async function generateStaticParams() {
   }));
 }
 
+// Increment Views
+async function incrementViews(postId) {
+  const { data, error } = await supabase.rpc("increment_views", {
+    post_id: postId,
+  });
+
+  // debuging
+  console.log("RPC response:", { data, error });
+}
+
 export default async function PostPage({ params }) {
+  noStore();
+
   const { slug, category } = await params;
 
   const post = await getPost(slug);
-
-  const relatedPosts = await getRelatedPosts(category, slug);
 
   if (!post) {
     notFound();
   }
 
-  const readingTime = calculateReadingTime(post.content);
+  await incrementViews(post.id);
+  const updatedPost = await getPost(slug);
 
-  const articleSchema = post
+  const relatedPosts = await getRelatedPosts(category, slug);
+
+  const readingTime = calculateReadingTime(updatedPost.content);
+
+  const articleSchema = updatedPost
     ? {
         "@context": "https://schema.org",
         "@type": "Article",
 
-        headline: post.title,
-        description: post.excerpt,
+        headline: updatedPost.title,
+        description: updatedPost.excerpt,
 
         image: [
-          `https://shedbody.vercel.app/${post.category}${post.slug}/og-image.jpg`,
+          `https://shedbody.vercel.app/${updatedPost.category}${updatedPost.slug}/og-image.jpg`,
         ],
 
         author: {
@@ -271,22 +287,23 @@ export default async function PostPage({ params }) {
           },
         },
 
-        datePublished: post.published_at,
-        dateModified: post.published_at,
+        datePublished: updatedPost.published_at,
+        dateModified: updatedPost.published_at,
 
         articleSection: "Fitness Guide",
 
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": `https://shedbody.vercel.app/${post.category}/${post.slug}`,
+          "@id": `https://shedbody.vercel.app/${updatedPost.category}/${updatedPost.slug}`,
         },
 
-        wordCount: post.content.replace(/<[^>]*>/g, "").split(/\s+/).length,
+        wordCount: updatedPost.content.replace(/<[^>]*>/g, "").split(/\s+/)
+          .length,
       }
     : null;
 
   // PIPELINES
-  let cleanedContent = cleanWordPressContent(post.content);
+  let cleanedContent = cleanWordPressContent(updatedPost.content);
 
   cleanedContent = cleanContent(cleanedContent);
 
@@ -310,6 +327,9 @@ export default async function PostPage({ params }) {
   // Extract headings for TOC
   const headings = extractHeadings(contentWithIds);
 
+  // debuging
+  console.log("update views:", updatedPost.views);
+
   return (
     <>
       <ReadingProgress />
@@ -327,18 +347,21 @@ export default async function PostPage({ params }) {
         <header className="mb-12">
           {/* Breadcrumbs */}
           <Breadcrumbs
-            category={post.category}
-            title={post.title}
+            category={updatedPost.category}
+            title={updatedPost.title}
             className="mb-4"
           />
 
           {/* Category & Evidence Badge */}
           <div className="flex items-center gap-3 mb-4">
             <Link
-              href={`/${post.category}`}
+              href={`/${updatedPost.category}`}
               className="text-green-500 text-sm font-semibold"
             >
-              <p>{category.charAt(0).toUpperCase() + category.slice(1)}</p>
+              <p>
+                {updatedPost.category.charAt(0).toUpperCase() +
+                  updatedPost.category.slice(1)}
+              </p>
             </Link>
 
             {sourceCount > 0 && (
@@ -350,12 +373,14 @@ export default async function PostPage({ params }) {
 
           {/* Article Title */}
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            {post.title}
+            {updatedPost.title}
           </h1>
 
           {/* Excerpt */}
-          {post.excerpt && (
-            <p className="text-gray-400 text-lg max-w-2xl">{post.excerpt}</p>
+          {updatedPost.excerpt && (
+            <p className="text-gray-400 text-lg max-w-2xl">
+              {updatedPost.excerpt}
+            </p>
           )}
 
           {/* Meta */}
@@ -363,7 +388,7 @@ export default async function PostPage({ params }) {
             <span>By ShedBody</span>
             <span>&bull;</span>
             <span>
-              {new Date(post.published_at).toLocaleDateString("en-US", {
+              {new Date(updatedPost.published_at).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
@@ -372,6 +397,10 @@ export default async function PostPage({ params }) {
             <span>&bull;</span>
             <span>
               {readingTime} min{readingTime > 1 ? "s" : ""} read
+            </span>
+            <span>&bull;</span>
+            <span>
+              {updatedPost.views || 0} view{updatedPost.views > 1 ? "s" : ""}
             </span>
           </div>
 

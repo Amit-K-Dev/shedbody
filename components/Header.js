@@ -12,8 +12,8 @@ export default function Header() {
         </Link>
 
         <nav className="space-x-8 text-sm">
-          <Link href="/" className="nav-link">
-            Home
+          <Link href="/articles" className="nav-link">
+            Articles
           </Link>
 
           <Link href="/workouts" className="nav-link">
