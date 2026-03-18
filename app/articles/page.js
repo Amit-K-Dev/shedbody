@@ -51,7 +51,11 @@ export default async function ArticlesPage({ searchParams }) {
           <Link
             key={cat}
             href={cat === "all" ? "/articles" : `${cat}`}
-            className="px-4 py-2 rounded-full border text-gray-300 border-gray-600"
+            className={
+              cat === "all"
+                ? "px-4 py-2 rounded-full bg-green-600 text-black"
+                : "px-4 py-2 rounded-full border text-gray-300 border-gray-600 hover:border-green-600 transition"
+            }
           >
             {cat.charAt(0).toUpperCase() + cat.slice(1)}
           </Link>

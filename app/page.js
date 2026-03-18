@@ -5,7 +5,7 @@ import PostCard from "@/components/PostCard";
 export default async function Home() {
   const { data: posts } = await supabase
     .from("posts")
-    .select("id, title, slug, category, excerpt, published_at")
+    .select("id, title, slug, category, excerpt, published_at, views")
     .order("published_at", { ascending: false })
     .limit(10);
 

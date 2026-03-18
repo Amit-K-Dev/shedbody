@@ -238,9 +238,6 @@ async function incrementViews(postId) {
   const { data, error } = await supabase.rpc("increment_views", {
     post_id: postId,
   });
-
-  // debuging
-  console.log("RPC response:", { data, error });
 }
 
 export default async function PostPage({ params }) {
@@ -326,9 +323,6 @@ export default async function PostPage({ params }) {
 
   // Extract headings for TOC
   const headings = extractHeadings(contentWithIds);
-
-  // debuging
-  console.log("update views:", updatedPost.views);
 
   return (
     <>
