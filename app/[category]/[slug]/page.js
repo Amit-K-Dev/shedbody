@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { supabase } from "@/lib/supabase";
+import { formatePostDate } from "@/lib/utils/date";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TableOfContents from "@/components/TableOfContents";
@@ -258,6 +259,14 @@ export default async function PostPage({ params }) {
 
   const readingTime = calculateReadingTime(updatedPost.content);
 
+  const postDate = formatePostDate(
+    updatedPost.updated_at || updatedPost.published_at,
+    {
+      showUpdatedLable: true,
+      isUpdated: !!updatedPost.updated_at,
+    },
+  );
+
   const articleSchema = updatedPost
     ? {
         "@context": "https://schema.org",
@@ -381,13 +390,7 @@ export default async function PostPage({ params }) {
           <div className="flex items-center gap-4 mt-6 text-sm text-gray-500">
             <span>By ShedBody</span>
             <span>&bull;</span>
-            <span>
-              {new Date(updatedPost.published_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
+            <span>{postDate}</span>
             <span>&bull;</span>
             <span>
               {readingTime} min{readingTime > 1 ? "s" : ""} read

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatePostDate } from "@/lib/utils/date";
 
 function highlight(text, query) {
   if (!query) return text;
@@ -27,10 +28,9 @@ export default function PostCard({ post, search = "" }) {
 
       <p className="text-xs text-zinc-500 mb-2">
         <span className="text-xs text-zinc-500  mr-2">
-          {new Date(post.published_at).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
+          {formatePostDate(post.updated_at || post.published_at, {
+            showUpdatedLable: true,
+            isUpdated: !!post.updated_at,
           })}
         </span>
 

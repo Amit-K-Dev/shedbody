@@ -1,5 +1,6 @@
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { getTrendingPosts, getPopularPosts, getSmartFeed } from "@/lib/posts";
 import PostCard from "@/components/PostCard";
 
 export default async function Home() {
@@ -7,10 +8,21 @@ export default async function Home() {
     .from("posts")
     .select("id, title, slug, category, excerpt, published_at, views")
     .order("published_at", { ascending: false })
-    .limit(10);
+    .limit(7);
 
   const featured = posts?.[0];
-  const latest = posts?.slice(1);
+  const latest = posts?.slice(1, 5);
+
+  const [smartFeed, trendingPosts, popularPosts] = await Promise.all([
+    getSmartFeed(6),
+    getTrendingPosts(4),
+    getPopularPosts(4),
+  ]);
+
+  const smartIds = new Set(smartFeed.map((p) => p.id));
+
+  const filteredTrending = trendingPosts.filter((p) => !smartIds.has(p.id));
+  const filteredPopular = popularPosts.filter((p) => !smartIds.has(p.id));
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-24">
@@ -59,32 +71,64 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* FEATURED ARTICLE */}
+      {/* RECOMMENDED ARTICLE */}
+      <section id="recommended" className="mb-16">
+        <h2 className="text-2xl font-bold mb-6">🔥 Recommended For You</h2>
 
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {smartFeed?.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED ARTICLE */}
       {featured && (
         <section className="mb-16">
+          <h2 className="text-2xl font-bold mb-6">⭐ Featured</h2>
           <Link
             href={`/${featured.category}/${featured.slug}`}
             className="block"
           >
-            <h2 className="text-4xl font-semibold text-white hover:text-green-400 transition">
+            <h3 className="text-4xl font-semibold text-white hover:text-green-400 transition">
               {featured.title}
-            </h2>
+            </h3>
           </Link>
 
           <p className="text-gray-400 mt-4 max-w-2xl">{featured.excerpt}</p>
         </section>
       )}
 
-      {/* ARTICLE GRID */}
+      {/* LATEST ARTICLE */}
+      <section id="latest" className="mb-16">
+        <h2 className="text-2xl font-bold mb-6">🧾 Just In</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {latest?.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
 
-      <section
-        id="latest"
-        className="grid md:grid-cols-2 lg:grid-cols-3 gap-10"
-      >
-        {latest?.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+      {/* TRENDING POSTS */}
+      <section id="trending" className="mb-16">
+        <h2 className="text-2xl font-bold mb-6">🔥 Trending</h2>
+
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {filteredTrending?.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
+
+      {/* POPULAR POSTS */}
+      <section id="popular" className="mb-16">
+        <h2 className="text-2xl font-bold mb-6">🏆 Most Popular</h2>
+
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {filteredPopular?.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
       </section>
     </main>
   );
