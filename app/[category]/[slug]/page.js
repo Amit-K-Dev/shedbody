@@ -7,6 +7,7 @@ import TableOfContents from "@/components/TableOfContents";
 import ReadingProgress from "@/components/ReadingProgress";
 import InlineRelatedArticle from "@/components/InlineRelatedArticles";
 import SourcesToggle from "@/components/SourcesToggle";
+import ViewTracker from "@/components/ViewTracker";
 import { getPost, getRelatedPosts } from "@/lib/posts";
 import {
   cleanWordPressContent,
@@ -234,13 +235,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Increment Views
-async function incrementViews(postId) {
-  const { data, error } = await supabase.rpc("increment_views", {
-    post_id: postId,
-  });
-}
-
 export default async function PostPage({ params }) {
   noStore();
 
@@ -252,7 +246,6 @@ export default async function PostPage({ params }) {
     notFound();
   }
 
-  await incrementViews(post.id);
   const updatedPost = await getPost(slug);
 
   const relatedPosts = await getRelatedPosts(category, slug);
@@ -338,6 +331,8 @@ export default async function PostPage({ params }) {
       <ReadingProgress />
 
       <main className="max-w-4xl mx-auto px-6 py-16">
+        <ViewTracker postId={post.id} />
+
         {articleSchema && (
           <script
             type="application/ld+json"
@@ -387,7 +382,7 @@ export default async function PostPage({ params }) {
           )}
 
           {/* Meta */}
-          <div className="flex items-center gap-4 mt-6 text-sm text-gray-500">
+          <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-gray-500">
             <span>By ShedBody</span>
             <span>&bull;</span>
             <span>{postDate}</span>
