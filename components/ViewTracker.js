@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 
 export default function ViewTracker({ postId }) {
   useEffect(() => {
@@ -21,16 +20,24 @@ export default function ViewTracker({ postId }) {
     }
 
     const increment = async () => {
-      const { error } = await supabase.rpc("increment_views", {
-        post_id: Number(postId),
-      });
-
-      if (!error) {
-        localStorage.setItem(key, JSON.stringify({ time: Date.now() })); // mark as viewed
-      } else {
-        console.error("View increment error");
+      try {
+        const res = await fetch("/api/view", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId: Number(postId) }),
+        });
+        if (res.ok) {
+          localStorage.setItem(key, JSON.stringify({ time: Date.now() }));
+        } else {
+          console.error("View API failed");
+        }
+      } catch (err) {
+        console.error("View fetch error:", err);
       }
     };
+
     increment();
   }, [postId]);
   return null;
