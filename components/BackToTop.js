@@ -32,7 +32,7 @@ export default function BackToTop() {
       className="fixed w-10 h-10 bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-black p-3 rounded-full shadow-lg transition"
       aria-label="Back to top"
     >
-      <span className="text-lg">&uarr;</span>
+      <span className="text-lg">↑</span>
     </button>
   );
 }
