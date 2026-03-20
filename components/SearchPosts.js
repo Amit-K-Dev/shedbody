@@ -21,7 +21,7 @@ export default function SearchPosts() {
   );
 
   return (
-    <div className="max-w-xl mx-auto mb-3">
+    <div className="max-w-xl mx-auto m-3">
       <input
         type="text"
         placeholder="Search ShedBody..."
