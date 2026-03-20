@@ -9,7 +9,7 @@ const categories = [
   { name: "Yoga", slug: "yoga" },
   { name: "Exercises", slug: "exercises" },
   { name: "Nutrition", slug: "nutrition" },
-  { name: "Recipes", slug: "Recipes" },
+  { name: "Recipes", slug: "recipes" },
   { name: "Articles", slug: "articles" },
 ];
 
