@@ -95,7 +95,7 @@ export default function SartPlan() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white text-white px-4 py-10">
+    <div className="min-h-screen text-white px-4 py-10">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">
           Build Your Smart Fitness Plan
@@ -167,7 +167,7 @@ export default function SartPlan() {
         <div className="grid gap-3 mb-6 ">
           <button
             onClick={generatePlan}
-            className="w-full py-3 rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 text-black font-bold"
+            className="w-full py-3 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-bold"
           >
             Generate Smart Plan
           </button>

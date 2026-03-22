@@ -55,18 +55,18 @@ export default async function Home() {
         {/* CTA */}
 
         <div className="mt-8 flex gap-4">
-          <a
-            href="#latest"
+          <Link
+            href="/start"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-black hover:text-black font-semibold px-6 py-3 rounded-lg transition transform hover:-translate-y-1 shadow-lg shadow-green-500/20"
           >
-            Read Latest Articles
-          </a>
+            Start Your Fitness Journey
+          </Link>
 
           <a
-            href="#"
+            href="#latest"
             className="inline-flex items-center px-5 py-3 border border-gray-700 rounded-lg text-gray-300 hover:border-green-500 hover:text-green-400 transition"
           >
-            Start Your Fitness Journey
+            Read Latest Articles
           </a>
         </div>
       </section>

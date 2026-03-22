@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BicepsFlexed } from "lucide-react";
 
 const categories = [
   { name: "Yoga", slug: "yoga" },
@@ -13,8 +14,13 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12 grid gap-10 md:grid-cols-3">
         {/* Brand */}
         <div>
-          <h2 className="text-xl font-bold text-green-400">
-            <span className="text-white">Shed</span>Body
+          <h2 className="flex items-center text-xl font-bold tracking-wide group">
+            <BicepsFlexed
+              size={22}
+              className="text-green-400 mr-2 group-hover:scale-110 transition"
+            />
+            <span className="text-white">Shed</span>
+            <span className="text-green-500">Body</span>
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed">
             Practical fitness, yoga, and nutrition guides to help you build a
@@ -69,7 +75,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-zinc-700 py-4 text-center text-sm text-gray-400">
+      <div className="border-t border-zinc-700 py-4 text-center text-sm text-gray-400 p-3">
         <p>&copy; {new Date().getFullYear()} ShedBody. All rights reserved.</p>
         <small>
           Our website services, content, and products are for informational

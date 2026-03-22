@@ -15,19 +15,11 @@ import {
 import SearchPosts from "./SearchPosts";
 
 const categories = [
-<<<<<<< HEAD
   { name: "Yoga", slug: "yoga", icon: Dumbbell },
   { name: "Exercises", slug: "exercises", icon: BicepsFlexed },
   { name: "Nutrition", slug: "nutrition", icon: Apple },
   { name: "Recipes", slug: "recipes", icon: Salad },
   { name: "Articles", slug: "articles", icon: FileText },
-=======
-  { name: "Yoga", slug: "yoga" },
-  { name: "Exercises", slug: "exercises" },
-  { name: "Nutrition", slug: "nutrition" },
-  { name: "Recipes", slug: "recipes" },
-  { name: "Articles", slug: "articles" },
->>>>>>> c2013835cc5091347bc771a59be80fdbac663b6d
 ];
 
 export default function Header() {
@@ -44,7 +36,6 @@ export default function Header() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -87,7 +78,7 @@ export default function Header() {
               {cat.name}
 
               {/* Underline animation */}
-              <span className="absolute left-0 -botton-1 h-[2px] w-0 bg-green-400 transition-all group-hover:w-full"></span>
+              <span className="absolute left-0 -botton-1 h-0.5 w-0 bg-green-400 transition-all group-hover:w-full"></span>
             </Link>
           ))}
         </nav>
@@ -95,13 +86,13 @@ export default function Header() {
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
           {/* Search Desktop */}
-          <div className="hidden md:block w-56">
+          <div className="hidden md:block w-52">
             <SearchPosts />
           </div>
           {/* CTA */}
           <Link
             href="/start"
-            className="hidden md:inline-block px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 text-black hover:scale-105 transition shadow-md"
+            className="hidden md:inline-block px-4 py-2 text-sm font-semibold rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black hover:scale-105 transition shadow-md"
           >
             Start Plan
           </Link>
@@ -118,7 +109,7 @@ export default function Header() {
       {/* MOBILE MENU */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          menuOpen ? "max-h-150 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-4 pb-4 bg-black border-t border-gray-800">
@@ -147,7 +138,7 @@ export default function Header() {
           {/* Mobile CTA */}
           <Link
             href="/start"
-            className="block mt-4 text-center px-4 py-2 rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-102 transition shadow-md"
+            className="block mt-4 text-center px-4 py-2 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-102 transition shadow-md"
           >
             Start Plan
           </Link>
