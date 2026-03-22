@@ -15,11 +15,19 @@ import {
 import SearchPosts from "./SearchPosts";
 
 const categories = [
+<<<<<<< HEAD
   { name: "Yoga", slug: "yoga", icon: Dumbbell },
   { name: "Exercises", slug: "exercises", icon: BicepsFlexed },
   { name: "Nutrition", slug: "nutrition", icon: Apple },
   { name: "Recipes", slug: "recipes", icon: Salad },
   { name: "Articles", slug: "articles", icon: FileText },
+=======
+  { name: "Yoga", slug: "yoga" },
+  { name: "Exercises", slug: "exercises" },
+  { name: "Nutrition", slug: "nutrition" },
+  { name: "Recipes", slug: "recipes" },
+  { name: "Articles", slug: "articles" },
+>>>>>>> c2013835cc5091347bc771a59be80fdbac663b6d
 ];
 
 export default function Header() {
