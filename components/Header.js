@@ -1,34 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Dumbbell,
+  BicepsFlexed,
+  Apple,
+  Salad,
+  FileText,
+  Menu,
+  X,
+} from "lucide-react";
 import SearchPosts from "./SearchPosts";
 
 const categories = [
-  { name: "Yoga", slug: "yoga" },
-  { name: "Exercises", slug: "exercises" },
-  { name: "Nutrition", slug: "nutrition" },
-  { name: "Recipes", slug: "Recipes" },
-  { name: "Articles", slug: "articles" },
+  { name: "Yoga", slug: "yoga", icon: Dumbbell },
+  { name: "Exercises", slug: "exercises", icon: BicepsFlexed },
+  { name: "Nutrition", slug: "nutrition", icon: Apple },
+  { name: "Recipes", slug: "recipes", icon: Salad },
+  { name: "Articles", slug: "articles", icon: FileText },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
 
+  const pathname = usePathname();
   const isActive = (path) => pathname === path;
 
+  // Scroll Effect (Shrink Navbar)
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-black/90 backdrop-blur-xl shadow-lg border-b border-gray-800 py-2"
+          : "bg-black/70 backdrop-blur-md py-3"
+      }`}
+    >
+      {/* MAIN NAVBAR */}
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold text-green-400 tracking-wide"
+          className="flex items-center text-xl font-bold tracking-wide group"
         >
+          <BicepsFlexed
+            size={22}
+            className="text-green-400 mr-2 group-hover:scale-110 transition"
+          />
           <span className="text-white">Shed</span>
-          <span className="text-green-400">Body</span>
+          <span className="text-green-500">Body</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -37,47 +69,82 @@ export default function Header() {
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
-              className={`text-sm transition nav-link ${
+              className={`flex items-center gap-2 text-sm font-medium transition relative group ${
                 isActive(`/${cat.slug}`)
                   ? "text-green-400"
                   : "text-gray-300 hover:text-white"
               }`}
             >
+              <cat.icon size={16} />
               {cat.name}
+
+              {/* Underline animation */}
+              <span className="absolute left-0 -botton-1 h-[2px] w-0 bg-green-400 transition-all group-hover:w-full"></span>
             </Link>
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="flex flex-col justify-between w-6 h-5 md:hidden text-gray-300 tracking-wide"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span className="block h-0.5 w-full bg-gray-300 rounded"></span>
-          <span className="block h-0.5 w-full bg-gray-300 rounded"></span>
-          <span className="block h-0.5 w-full bg-gray-300 rounded"></span>
-        </button>
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-3">
+          {/* Search Desktop */}
+          <div className="hidden md:block w-56">
+            <SearchPosts />
+          </div>
+          {/* CTA */}
+          <Link
+            href="/start"
+            className="hidden md:inline-block px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 text-black hover:scale-105 transition shadow-md"
+          >
+            Start Plan
+          </Link>
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden text-gray-300 hover:text-white transition"
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-zinc-900 border-t border-zinc-700 px-4 pb-4">
+      {/* MOBILE MENU */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
+          menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-4 pb-4 bg-black border-t border-gray-800">
+          {/* Mobile Search */}
+          <div className="mt-3 mb-4">
+            <SearchPosts />
+          </div>
+
+          {/* Mobile Nav */}
           {categories.map((cat) => (
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
               onClick={() => setMenuOpen(false)}
-              className={`block py-2 text-sm hover:text-green-400 ${
-                isActive(`/${cat.slug}`) ? "text-green-400" : "text-gray-300"
+              className={`flex items-center gap-2 py-2 text-sm transition ${
+                isActive(`/${cat.slug}`)
+                  ? "text-green-400"
+                  : "text-gray-300 hover:text-green-400"
               }`}
             >
+              <cat.icon size={16} />
               {cat.name}
             </Link>
           ))}
-        </div>
-      )}
 
-      <SearchPosts />
+          {/* Mobile CTA */}
+          <Link
+            href="/start"
+            className="block mt-4 text-center px-4 py-2 rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 text-black font-semibold hover:scale-102 transition shadow-md"
+          >
+            Start Plan
+          </Link>
+        </div>
+      </div>
     </header>
   );
 }

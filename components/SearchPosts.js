@@ -21,13 +21,13 @@ export default function SearchPosts() {
   );
 
   return (
-    <div className="max-w-xl mx-auto m-3">
+    <div className="w-full relative">
       <input
         type="text"
         placeholder="Search ShedBody..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-3 rounded-md bg-zinc-900 border border-zinc-700 text-white"
+        className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-sm text-white focus:border-green-400 outline-none"
       />
 
       {query && (

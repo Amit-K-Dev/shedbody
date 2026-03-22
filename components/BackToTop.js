@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -29,10 +30,10 @@ export default function BackToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed w-10 h-10 bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-black p-3 rounded-full shadow-lg transition"
+      className="fixed bottom-5 right-5 z-50 bg-green-500 hover:scale-110 text-black p-3 rounded-full shadow-lg flex items-center justify-center transition"
       aria-label="Back to top"
     >
-      <span className="text-lg">&uarr;</span>
+      <ArrowUp size={20} />
     </button>
   );
 }
