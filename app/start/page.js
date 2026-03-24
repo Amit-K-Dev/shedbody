@@ -4,6 +4,13 @@ import { useState } from "react";
 import { dietPlans } from "@/data/diet";
 import { workoutPlans } from "@/data/workout";
 import Link from "next/link";
+import {
+  saveUserProfile,
+  getProgress,
+  saveProgress,
+  getPlans,
+  savePlans,
+} from "@/lib/storage";
 
 export default function SartPlan() {
   const [goal, setGoal] = useState("fat_loss");
@@ -47,15 +54,19 @@ export default function SartPlan() {
   };
 
   // Save Progress
-  const saveProgress = () => {
-    const existing = JSON.parse(localStorage.getItem("progress") || "[]");
+  const handleSaveProgress = () => {
+    if (!weight) return;
+
+    const existing = getProgress();
 
     const newEntry = {
       date: new Date().toISOString(),
       weight: Number(weight),
     };
 
-    localStorage.setItem("progress", JSON.stringify([...existing, newEntry]));
+    const updated = [...existing, newEntry];
+
+    saveProgress(updated);
   };
 
   // Adjust Calories
@@ -108,14 +119,18 @@ export default function SartPlan() {
     const finalGoal = goal || suggestedGoal;
     const finalLevel = level || suggestedLevel;
 
-    const progress = JSON.parse(localStorage.getItem("progress") || "[]");
+    const progress = getProgress();
 
     const chartData = progress.map((item) => ({
       date: new Date(item.date).toLocaleDateString(),
       weight: Number(item.weight),
     }));
 
-    const adjustedCalories = adjustCalories(finalGoal, calories, progress);
+    const adjustedCalories = adjustCalories(
+      finalGoal,
+      calories,
+      progress || [],
+    );
 
     const workout = workoutPlans[finalGoal]?.[finalLevel] || [];
     const availableCalories = Object.keys(dietPlans[finalGoal] || {}).map(
@@ -150,22 +165,19 @@ export default function SartPlan() {
     });
   };
 
-  localStorage.setItem(
-    "userProfile",
-    JSON.stringify({
-      weight,
-      height,
-      age,
-      goal,
-      level,
-      dietType,
-    }),
-  );
+  saveUserProfile({
+    weight,
+    height,
+    age,
+    goal,
+    level,
+    dietType,
+  });
 
   const savePlan = () => {
     if (!result) return;
 
-    const plans = JSON.parse(localStorage.getItem("plans") || "[]");
+    const plans = getPlans() || [];
 
     plans.push({
       ...result,
@@ -173,9 +185,9 @@ export default function SartPlan() {
       createdAt: new Date().toISOString(),
     });
 
-    localStorage.setItem("plans", JSON.stringify(plans));
+    savePlans(plans);
 
-    saveProgress();
+    handleSaveProgress();
 
     alert("Plan Saved!");
   };
@@ -190,13 +202,16 @@ export default function SartPlan() {
           Get a personalized workout & diet plan in seconds.
         </p>
         <div className="flex gap-3 mb-6">
-          <Link href="/plans" className="text-sm text-green-400 cursor-pointer">
+          <Link
+            href="/plans"
+            className="text-sm text-green-400 cursor-pointer hover:text-green-300 transition"
+          >
             My Plans
           </Link>
           <span className="text-gray-400">&bull;</span>
           <Link
             href="/progress"
-            className="text-sm text-green-400 cursor-pointer"
+            className="text-sm text-green-400 cursor-pointer hover:text-green-300 transition"
           >
             My Progress
           </Link>
@@ -208,10 +223,10 @@ export default function SartPlan() {
             <button
               key={g}
               onClick={() => setGoal(g)}
-              className={`p-3 rounded-lg cursor-pointer ${
+              className={`p-2 rounded-lg cursor-pointer ${
                 goal === g
-                  ? "bg-green-500 text-black"
-                  : "bg-zinc-900 border border-zinc-700"
+                  ? "bg-green-400 text-black hover:bg-green-300 transition"
+                  : "bg-zinc-900 border border-zinc-700 hover:border-green-400 transition"
               }`}
             >
               {g.replace("_", " ").toUpperCase()}
@@ -225,10 +240,10 @@ export default function SartPlan() {
             <button
               key={lvl}
               onClick={() => setLevel(lvl)}
-              className={`p-3 rounded-lg cursor-pointer ${
+              className={`p-2 rounded-lg cursor-pointer ${
                 level === lvl
-                  ? "bg-green-500 text-black"
-                  : "bg-zinc-900 border border-zinc-700"
+                  ? "bg-green-400 text-black hover:bg-green-300 transition"
+                  : "bg-zinc-900 border border-zinc-700 hover:border-green-300 transition"
               }`}
             >
               {lvl.replace("_", " ").toUpperCase()}
@@ -389,41 +404,11 @@ export default function SartPlan() {
           {/* Save Plan */}
           <button
             onClick={savePlan}
-            className="mt-4 w-full py-3 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-semibold cursor-pointer"
+            className="mt-4 w-full py-3 rounded-lg bg-linear-to-r from-zinc-900 to-zinc-800 text-white font-semibold cursor-pointer border border-zinc-700 hover:border-green-400 transition"
           >
             Save Plan
           </button>
         </div>
-
-        {/* RELATED CONTENT */}
-        {result && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-3">Recommended Reads</h3>
-
-            <div className="space-y-2 text-green-400">
-              {goal === "fat_loss" && (
-                <>
-                  <p>&bull; Best Fat Loss Exercises</p>
-                  <p>&bull; High Protein Diet Guide</p>
-                </>
-              )}
-
-              {goal === "muscle_gain" && (
-                <>
-                  <p>&bull; Muscle Building Workout Plan</p>
-                  <p>&bull; Bulking Diet Strategy</p>
-                </>
-              )}
-
-              {goal === "maintenace" && (
-                <>
-                  <p>&bull; Muscle Maintain Workout Plan</p>
-                  <p>&bull; Maintain Diet Strategy</p>
-                </>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export const metadata = {
     ],
     apple: "/apple-icon.png",
   },
+  manifest: "/site.webmanifest",
 };
 
 const oswald = Oswald({

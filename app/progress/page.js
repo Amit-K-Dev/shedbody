@@ -12,10 +12,11 @@ import {
   CartesianGrid,
 } from "recharts";
 import Link from "next/link";
+import { getProgress, getUserProfile } from "@/lib/storage";
 
 const getAIFeedback = (data, goal) => {
   if (!data || data.length === 0) {
-    return "Start tracking your weight to get AI insights.";
+    return "Start tracking your weight to get insights.";
   }
 
   const latest = data[data.length - 1].weight;
@@ -78,17 +79,11 @@ export default function ProgressPage() {
 
   useEffect(() => {
     const loadData = () => {
-      const savedProgress = JSON.parse(
-        localStorage.getItem("progress") || "[]",
-      );
+      const savedProgress = getProgress();
       setData(savedProgress);
 
       // Get Goal
-      const userProfile = JSON.parse(
-        typeof window !== "undefined"
-          ? localStorage.getItem("userProfile") || "{}"
-          : "{}",
-      );
+      const userProfile = getUserProfile() || {};
       setGoal(userProfile.goal || "fat_loss");
       setGoalWeight(userProfile.targetWeight || 65);
     };
@@ -96,13 +91,9 @@ export default function ProgressPage() {
     loadData();
   }, []);
 
-  const feedback = getAIFeedback(data, goal);
-  const isFatloss = goal === "fat_loss";
-  const lineColor = isFatloss ? "#22c55e" : "#3b82f6";
-
   const chartData = data
     .map((item) => {
-      if (!item.date || !item.weight) return null;
+      if (!item.date || item.weight === null) return null;
 
       const dateObj = new Date(item.date);
 
@@ -125,12 +116,30 @@ export default function ProgressPage() {
 
   const smoothedData = getWeeklySmoothedData(chartData);
 
-  const trend =
-    data.length >= 2 ? data[data.length - 1].weight - data[0].weight : 0;
+  const feedback = getAIFeedback(smoothedData, goal);
+  const isFatloss = goal === "fat_loss";
+  const lineColor = isFatloss ? "#22c55e" : "#3b82f6";
+
+  const extendedData = [...smoothedData];
+
+  const last = smoothedData[smoothedData.length - 1]?.smoothWeight;
+  const prev = smoothedData[smoothedData.length - 2]?.smoothWeight;
+
+  const weeklyTrend = last && prev ? last - prev : 0;
 
   // Prediction
-  const prediction =
-    data.length >= 2 ? data[data.length - 1].weight + trend : null;
+  const prediction = last != null ? Number(last) + weeklyTrend : null;
+
+  if (prediction !== null) {
+    const lastItem = smoothedData[smoothedData.length - 1];
+
+    extendedData.push({
+      date: "Next",
+      smoothWeight: Number(prediction.toFixed(1)),
+      weight: lastItem?.weight,
+      isPrediction: true,
+    });
+  }
 
   return (
     <div className="min-h-screen text-white px-4 py-10">
@@ -152,9 +161,9 @@ export default function ProgressPage() {
         {/* TREND */}
         <p className="text-sm text-gray-400 mb-2">
           Trend:{" "}
-          {trend < 0
+          {weeklyTrend < 0
             ? "📉 Losing weight"
-            : trend > 0
+            : weeklyTrend > 0
               ? "📈 Gaining weight"
               : "⚖ Stable"}
         </p>
@@ -173,7 +182,7 @@ export default function ProgressPage() {
               Weight Progress Over Time
             </p>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={smoothedData}>
+              <LineChart data={extendedData}>
                 <XAxis dataKey="date" stroke="#888" />
                 <YAxis stroke="#888" domain={["dataMin - 2", "dataMax + 2"]} />
 
@@ -185,12 +194,13 @@ export default function ProgressPage() {
                   }}
                   labelStyle={{ color: "#aaa" }}
                   formatter={(value, name) => {
-                    const label =
-                      name === "smoothWeight"
-                        ? "🔥 Trend"
-                        : name === "weight"
-                          ? "Weight"
-                          : name;
+                    const lableMap = {
+                      smoothWeight: "🔥 Trend",
+                      weight: "Weight",
+                    };
+
+                    const label = lableMap[name] || name;
+
                     return [`${value} kg`, label];
                   }}
                 />
@@ -221,8 +231,18 @@ export default function ProgressPage() {
                   dataKey="smoothWeight"
                   stroke={lineColor}
                   strokeWidth={3}
-                  dot={{ r: 4, fill: "#22c55e" }}
-                  activeDot={{ r: 6 }}
+                  dot={({ cx, cy, payload }) => {
+                    const isPrediction = payload?.isPrediction;
+
+                    return (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={isPrediction ? 6 : 4}
+                        fill={isPrediction ? "#22c55e" : "#8884d8"}
+                      />
+                    );
+                  }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -254,7 +274,7 @@ export default function ProgressPage() {
           </Link>
           <Link
             href="/plans"
-            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-semibold text-center shadow-lg shadow-green-500/20 cursor-pointer"
+            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-zinc-900 to-zinc-800 text-white font-semibold text-center shadow-lg shadow-green-500/20 cursor-pointer border border-zinc-700 hover:border-green-400 transition"
           >
             My Plans
           </Link>
