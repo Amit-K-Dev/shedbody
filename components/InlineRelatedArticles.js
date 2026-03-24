@@ -12,7 +12,7 @@ export default function InlineRelatedArticle({ posts }) {
           <li key={post.slug}>
             <Link
               href={`${post.category}/${post.slug}`}
-              className="text-green-400 hover:text-green-300 transition"
+              className="text-green-400 no-underline hover:text-green-300 transition"
             >
               {post.title}
             </Link>

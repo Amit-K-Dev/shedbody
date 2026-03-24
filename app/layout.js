@@ -11,6 +11,13 @@ export const metadata = {
   },
   description:
     "ShedBody delivers practical fitness, weight loss, workout, and nutrition guides to help you build a healthier body and sustainable lifestyle.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 const oswald = Oswald({

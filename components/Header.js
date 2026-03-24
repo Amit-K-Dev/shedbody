@@ -8,7 +8,7 @@ import {
   BicepsFlexed,
   Apple,
   Salad,
-  FileText,
+  LineChart,
   Menu,
   X,
 } from "lucide-react";
@@ -19,7 +19,7 @@ const categories = [
   { name: "Exercises", slug: "exercises", icon: BicepsFlexed },
   { name: "Nutrition", slug: "nutrition", icon: Apple },
   { name: "Recipes", slug: "recipes", icon: Salad },
-  { name: "Articles", slug: "articles", icon: FileText },
+  { name: "Progress", slug: "progress", icon: LineChart },
 ];
 
 export default function Header() {
@@ -68,7 +68,7 @@ export default function Header() {
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
-              className={`flex items-center gap-2 text-sm font-medium transition relative group ${
+              className={`flex items-center gap-2 text-sm font-medium transition nav-link relative group ${
                 isActive(`/${cat.slug}`)
                   ? "text-green-400"
                   : "text-gray-300 hover:text-white"
@@ -76,9 +76,6 @@ export default function Header() {
             >
               <cat.icon size={16} />
               {cat.name}
-
-              {/* Underline animation */}
-              <span className="absolute left-0 -botton-1 h-0.5 w-0 bg-green-400 transition-all group-hover:w-full"></span>
             </Link>
           ))}
         </nav>
@@ -99,7 +96,7 @@ export default function Header() {
           {/* Mobile Toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-gray-300 hover:text-white transition"
+            className="md:hidden text-gray-300 hover:text-white transition cursor-pointer"
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
