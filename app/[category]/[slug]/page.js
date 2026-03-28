@@ -15,6 +15,8 @@ import {
   optimizeImages,
 } from "@/lib/contentParser";
 import Link from "next/link";
+import ExpertInline from "@/components/ExpertInline";
+import { getExpertForPost } from "@/lib/getExpertForPost";
 
 // Generate Metadata
 export async function generateMetadata({ params }) {
@@ -246,11 +248,13 @@ export default async function PostPage({ params }) {
     notFound();
   }
 
-  const updatedPost = await getPost(slug);
+  const updatedPost = post;
 
   const relatedPosts = await getRelatedPosts(category, slug);
 
   const readingTime = calculateReadingTime(updatedPost.content);
+
+  const expert = getExpertForPost(updatedPost);
 
   const postDate = formatePostDate(
     updatedPost.updated_at || updatedPost.published_at,
@@ -272,10 +276,25 @@ export default async function PostPage({ params }) {
           `https://shedbody.vercel.app/${updatedPost.category}${updatedPost.slug}/og-image.jpg`,
         ],
 
-        author: {
-          "@type": "Organization",
-          name: "ShedBody",
-        },
+        author: expert
+          ? {
+              "@type": "Person",
+              name: expert.name,
+              jobTitle: expert.role,
+              description: expert.specialty,
+            }
+          : {
+              "@type": "Organization",
+              name: "ShedBody",
+            },
+
+        reviewedBy: expert
+          ? {
+              "@type": "Person",
+              name: expert.name,
+              jobTitle: expert.role,
+            }
+          : undefined,
 
         publisher: {
           "@type": "Organization",
@@ -287,9 +306,14 @@ export default async function PostPage({ params }) {
         },
 
         datePublished: updatedPost.published_at,
-        dateModified: updatedPost.published_at,
+        dateModified: updatedPost.updated_at || updatedPost.published_at,
 
-        articleSection: "Fitness Guide",
+        articleSection: updatedPost.category,
+
+        about: {
+          "@type": "Thing",
+          name: updatedPost.category,
+        },
 
         mainEntityOfPage: {
           "@type": "WebPage",
@@ -330,138 +354,131 @@ export default async function PostPage({ params }) {
     <>
       <ReadingProgress />
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <ViewTracker postId={post.id} />
+      {articleSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleSchema),
+          }}
+        />
+      )}
 
-        {articleSchema && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(articleSchema),
-            }}
-          />
-        )}
-        {/* Article Hero */}
-        <header className="mb-12">
-          {/* Breadcrumbs */}
-          <Breadcrumbs
-            category={updatedPost.category}
-            title={updatedPost.title}
-            className="mb-4"
-          />
+      <ViewTracker postId={post.id} />
+      <section className="py-12 md:py-16">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-16">
+          <article className="mx-auto">
+            {/* Article Hero */}
+            <header className="mb-12">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                category={updatedPost.category}
+                title={updatedPost.title}
+                className="mb-4"
+              />
 
-          {/* Category & Evidence Badge */}
-          <div className="flex items-center gap-3 mb-4">
-            <Link
-              href={`/${updatedPost.category}`}
-              className="text-green-500 text-sm font-semibold"
-            >
-              <p>
-                {updatedPost.category.charAt(0).toUpperCase() +
-                  updatedPost.category.slice(1)}
-              </p>
-            </Link>
+              {/* Category & Evidence Badge */}
+              <div className="flex items-center gap-3 mb-4">
+                <Link
+                  href={`/${updatedPost.category}`}
+                  className="text-green-500 text-sm font-semibold"
+                >
+                  <p>
+                    {updatedPost.category.charAt(0).toUpperCase() +
+                      updatedPost.category.slice(1)}
+                  </p>
+                </Link>
 
-            {sourceCount > 0 && (
-              <span className="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded">
-                &#10003; Evidence-Based &bull; {sourceCount} Sources
-              </span>
-            )}
-          </div>
+                {sourceCount > 0 && (
+                  <span className="text-xs px-2 py-1 bg-green-500/10 text-green-400 rounded">
+                    &#10003; Evidence-Based &bull; {sourceCount} Sources
+                  </span>
+                )}
+              </div>
 
-          {/* Article Title */}
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            {updatedPost.title}
-          </h1>
+              {/* Article Title */}
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                {updatedPost.title}
+              </h1>
 
-          {/* Excerpt */}
-          {updatedPost.excerpt && (
-            <p className="text-gray-400 text-lg max-w-2xl">
-              {updatedPost.excerpt}
-            </p>
-          )}
+              {/* Excerpt */}
+              {updatedPost.excerpt && (
+                <p className="text-gray-400 text-lg max-w-2xl mb-4">
+                  {updatedPost.excerpt}
+                </p>
+              )}
 
-          {/* Meta */}
-          <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-gray-500">
-            <span>By ShedBody</span>
-            <span>&bull;</span>
-            <span>{postDate}</span>
-            <span>&bull;</span>
-            <span>
-              {readingTime} min{readingTime > 1 ? "s" : ""} read
-            </span>
-            <span>&bull;</span>
-            <span>
-              {updatedPost.views || 0} view{updatedPost.views > 1 ? "s" : ""}
-            </span>
-          </div>
+              {/* Meta */}
+              <ExpertInline expert={expert} />
+              <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-gray-500">
+                <span>{postDate}</span>
+                <span>&bull;</span>
+                <span>
+                  {readingTime} min{readingTime > 1 ? "s" : ""} read
+                </span>
+                <span>&bull;</span>
+                <span>
+                  {updatedPost.views || 0} read
+                  {updatedPost.views > 1 ? "s" : ""}
+                </span>
+              </div>
+            </header>
+            <div className="prose prose-invert prose-lg">
+              {/* TOC UI */}
+              {headings && headings.length > 0 && (
+                <nav
+                  aria-label="Article Table of contents"
+                  className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8"
+                >
+                  <h2 className="text-lg font-semibold mb-4">
+                    In This Article
+                  </h2>
 
-          {/* Editorial Process */}
-          <p className="text-xs text-gray-400 mt-3">
-            Reviewed under our{" "}
-            <Link
-              href="/editorial-policy"
-              className="text-green-400 hover:underline"
-            >
-              Editorial Process
-            </Link>
-          </p>
-        </header>
-        {/* TOC UI */}
-        {headings && headings.length > 0 && (
-          <nav
-            aria-label="Article Table of contents"
-            className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-10"
-          >
-            <h2 className="text-lg font-semibold mb-4">In This Article</h2>
+                  <ul className="space-y-2 text-sm">
+                    {headings.map((heading) => {
+                      return (
+                        <li
+                          key={heading.id}
+                          className={
+                            heading.level !== "2" ? "ml-4 text-zinc-400" : ""
+                          }
+                        >
+                          <a
+                            href={`#${heading.id}`}
+                            className="block py-1 text-green-400 hover:text-green-300 transition"
+                          >
+                            {heading.text}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+              )}
 
-            <ul className="space-y-2 text-sm">
-              {headings.map((heading) => {
-                return (
-                  <li
-                    key={heading.id}
-                    className={
-                      heading.level !== "2" ? "ml-4 text-zinc-400" : ""
-                    }
-                  >
-                    <a
-                      href={`#${heading.id}`}
-                      className="block py-1 text-green-400 hover:text-green-300 transition"
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        )}
-        <div className="max-w-337.5 mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-16">
-          {/* Article Content */}
-          <article className="min-w-0 prose prose-invert prose-lg max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: contentWithIds }} />
+              {/* Article Content */}
 
-            {/* Sources Toggle */}
-            <SourcesToggle count={sourceCount}>
-              <ul className="space-y-3 list-disc pl-5 text-gray-300">
-                {sources.map((source, i) => (
-                  <li
-                    key={i}
-                    className="text-gray-300 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: source }}
-                  />
-                ))}
-              </ul>
-            </SourcesToggle>
+              <div dangerouslySetInnerHTML={{ __html: contentWithIds }} />
 
-            {/* Related Articles */}
-            <InlineRelatedArticle posts={relatedPosts} />
+              {/* Sources Toggle */}
+              <SourcesToggle count={sourceCount}>
+                <ul className="space-y-3 pl-5 text-gray-300">
+                  {sources.map((source, i) => (
+                    <li key={i} className="text-gray-400 leading-relaxed">
+                      <span dangerouslySetInnerHTML={{ __html: source }} />
+                    </li>
+                  ))}
+                </ul>
+              </SourcesToggle>
+
+              {/* Related Articles */}
+              <InlineRelatedArticle posts={relatedPosts} />
+            </div>
           </article>
 
           {/* Sidebar TOC */}
           <TableOfContents headings={headings} />
         </div>
-      </main>
+      </section>
     </>
   );
 }

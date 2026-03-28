@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { getProgress, getUserProfile } from "@/lib/storage";
 
+// ======= UTILS =======
+
 const getAIFeedback = (data, goal) => {
   if (!data || data.length === 0) {
     return "Start tracking your weight to get insights.";
@@ -69,8 +71,6 @@ function getWeeklySmoothedData(data) {
   }
   return smoothed;
 }
-
-// Custom Tool Tip
 
 export default function ProgressPage() {
   const [data, setData] = useState([]);
@@ -154,7 +154,7 @@ export default function ProgressPage() {
 
         {/* FEEDBACK */}
         <div className="mb-4 p-4 rounded-lg bg-zinc-900 border border-zinc-700">
-          <h2 className="text-lg font-semibold mb-2">ShedBody Coach</h2>
+          <h2 className="text-lg font-semibold mb-2">Coach</h2>
           <p className="text-green-400">{feedback}</p>
         </div>
 
