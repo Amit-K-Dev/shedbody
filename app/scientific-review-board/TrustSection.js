@@ -34,7 +34,7 @@ export default function TrustSection() {
       </p>
 
       {/* Expert Avatar Stack */}
-      <div className="flex justify-center items-center gap-3">
+      <div className="flex flex-wrap justify-center items-center gap-3">
         <div className="flex -space-x-3">
           {experts.map((expert, i) => (
             <div
@@ -42,7 +42,9 @@ export default function TrustSection() {
               className="w-10 h-10 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-xs font-semibold text-black border-2 border-black"
               title={`${expert.name} - ${expert.role}`}
             >
-              {expert.name.charAt(4)}
+              {expert.name.charAt(4) === " "
+                ? expert.name.charAt(0).toUpperCase()
+                : expert.name.charAt(4).toUpperCase()}
             </div>
           ))}
         </div>

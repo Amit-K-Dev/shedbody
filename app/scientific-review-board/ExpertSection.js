@@ -24,7 +24,9 @@ export default function ExpertSection() {
           >
             {/* Avatar */}
             <div className="w-14 h-14 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-black font-bold text-lg mb-4">
-              {expert.name.charAt(4)}
+              {expert.name.charAt(4) === " "
+                ? expert.name.charAt(0).toUpperCase()
+                : expert.name.charAt(4).toUpperCase()}
             </div>
 
             {/* Name */}

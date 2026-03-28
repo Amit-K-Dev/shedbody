@@ -43,7 +43,7 @@ export default function FAQSection() {
               <div
                 className={`px-5 transition-all duration-300 ${
                   isOpen
-                    ? "max-h-60 pb-5 opacity-100"
+                    ? "max-h-80 mx-auto pb-5 opacity-100"
                     : "max-h-0 opacity-0 overflow-hidden"
                 }`}
               >

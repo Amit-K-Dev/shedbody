@@ -7,7 +7,9 @@ export default function ExpertInline({ expert }) {
   return (
     <div className="flex items-center gap-3 py-1">
       <div className="w-10 h-10 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-black font-bold">
-        {expert.name.charAt(4)}
+        {expert.name.charAt(4) === " "
+          ? expert.name.charAt(0).toUpperCase()
+          : expert.name.charAt(4).toUpperCase()}
       </div>
 
       <div className="text-sm">
