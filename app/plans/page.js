@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getPlans, savePlans } from "@/lib/storage";
+import { X } from "lucide-react";
 
 export default function PlanPage() {
   const [plans, setPlans] = useState([]);
@@ -31,7 +32,7 @@ export default function PlanPage() {
   };
 
   return (
-    <div className="min-h-screen text-white px-4 py-10">
+    <section className="min-h-screen text-white px-4 py-10">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">
           My Saved Plans ({plans.length})
@@ -40,111 +41,137 @@ export default function PlanPage() {
         {/* CLEAR ALL BUTTON */}
         <button
           onClick={() => {
-            if (confirm("Delete all plans?")) {
-              clearAllPlans();
-            }
+            if (confirm("Delete all plans?")) clearAllPlans();
           }}
-          className="mb-4 bg-red-500 px-4 py-2 rounded cursor-pointer"
+          className="mb-6 px-5 rounded-lg bg-red-500/10 border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition cursor-pointer"
         >
-          Clear All
+          Clear All Plans
         </button>
 
         {plans.length === 0 && (
-          <p className="text-gray-400 mb-2">
-            No plans yet. Generate one to get started.
-          </p>
+          <div className="text-center mt-20">
+            <p className="text-gray-400 mb-6">
+              No plan yet. Generate one to get started.
+            </p>
+
+            <Link
+              href="/start"
+              className="px-6 py-3 bg-green-500 rounded-lg text-black font-semibold"
+            >
+              Generate Your First Plan
+            </Link>
+          </div>
         )}
 
         {plans.map((plan, i) => (
           <div
             key={plan.id || i}
-            className="mb-6 border border-zinc-800 bg-zinc-900 p-4 rounded-xl shadow-md"
+            className="group mb-6 rounded-2xl border border-zinc-800 bg-linear-to-br from-zinc-900 to-zinc-950 p-5 shadow-lg hover:shadow-green-500/10 transition-all duration-300 hover:-translate-y-1"
           >
-            {/* GOAL */}
-            <p>
-              <strong>Goal:</strong>{" "}
-              {plan.goal
-                ? plan.goal.replace("_", " ").toUpperCase()
-                : "UNKNOWN"}
-            </p>
-            <p className="mb-2">
-              <strong>Diet Type:</strong>{" "}
-              {plan.dietType
-                ? plan.dietType.replace("_", " ").toUpperCase()
-                : "UNKNOWN"}
-            </p>
-            <p className="mb-2">
-              <strong>Level:</strong>{" "}
-              {plan.level
-                ? plan.level.replace("_", " ").toUpperCase()
-                : "UNKNOWN"}
-            </p>
-            <p>
-              <strong>Calories:</strong> {plan.calories} kcal
-            </p>
-            <p>
-              <strong>Protein:</strong> {plan.protein} g/day
-            </p>
+            {/* HEADER */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between gap-2 text-gray-400">
+                <p className="text-xs text-green-400 font-semibold tracking-wide">
+                  {plan.goal
+                    ? plan.goal.replace("_", " ").toUpperCase()
+                    : "Unknown"}
+                </p>
+                <span>&bull;</span>
+                <h3 className="text-sm text-green-400">
+                  {plan.level.toUpperCase()}
+                </h3>
+                <span>&bull;</span>
+
+                <p className="text-xs text-green-400 font-semibold tracking-wide">
+                  {plan.dietType
+                    ? plan.dietType.replace("_", " ").toUpperCase()
+                    : "Unknown"}
+                </p>
+              </div>
+
+              {/* DELETE ICON */}
+              <button
+                onClick={() => deletePlan(i)}
+                className="text-red-400 hover:text-red-300 transition"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* STATS */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="bg-zinc-800/50 p-3 rounded-lg">
+                <p className="text-sm text-gray-400">Calories</p>
+                <p className="text-lg font-bold text-white">
+                  {plan.calories} kcal
+                </p>
+              </div>
+
+              <div className="bg-zinc-800/50 p-3 rounded-lg">
+                <p className="text-sm text-gray-400">Protein</p>
+                <p className="text-lg font-bold text-white">{plan.protein} g</p>
+              </div>
+            </div>
 
             {/* WORKOUT */}
-            <div className="mb-2">
-              <h3 className="font-semibold text-lg mt-3 mb-2">Workout:</h3>
-              {!plan.workout?.length && (
-                <p className="text-gray-400">No workout defined</p>
-              )}
-              <ul>
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-gray-300 mb-2">
+                Workout Plan
+              </h4>
+              <ul className="space-y-1 text-sm text-gray-400">
                 {plan.workout?.map((d, idx) => (
-                  <li key={idx}>&bull; {d}</li>
+                  <li key={idx} className="flex items-center gap-2">
+                    <span className="text-green-400">&bull;</span> {d}
+                  </li>
                 ))}
               </ul>
             </div>
 
             {/* MEALS */}
-            <div className="mb-2">
-              <h3 className="font-semibold text-lg mt-3 mb-2">Meals:</h3>
-              <p>
-                🍳 <span className="font-semibold">Breakfast:</span>{" "}
-                {plan.meals?.breakfast || "Not set"}
-              </p>
-              <p>
-                🍛 <span className="font-semibold">Lunch:</span>{" "}
-                {plan.meals?.lunch || "Not set"}
-              </p>
-              <p>
-                🥗 <span className="font-semibold">Dinner:</span>{" "}
-                {plan.meals?.dinner || "Not set"}
-              </p>
-              <p>
-                🥤 <span className="font-semibold">Snacks:</span>{" "}
-                {plan.meals?.snacks || "Not set"}
-              </p>
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-gray-300 mb-2">
+                Meals
+              </h4>
+
+              <div className="text-sm text-gray-400 space-y-1">
+                <p>
+                  🍳 <span className="font-semibold">Breakfast:</span>{" "}
+                  {plan.meals?.breakfast || "Not set"}
+                </p>
+                <p>
+                  🍛 <span className="font-semibold">Lunch:</span>{" "}
+                  {plan.meals?.lunch || "Not set"}
+                </p>
+                <p>
+                  🥗 <span className="font-semibold">Dinner:</span>{" "}
+                  {plan.meals?.dinner || "Not set"}
+                </p>
+                <p>
+                  🥤 <span className="font-semibold">Snacks:</span>{" "}
+                  {plan.meals?.snacks || "Not set"}
+                </p>
+              </div>
             </div>
 
-            {/* DELETE BUTTON (PER CARD) */}
+            {/* ACTIONS */}
+            <div className="flex gap-3 mt-4">
+              <Link
+                href="/start"
+                className="flex-1 text-center py-2 rounded-lg bg-green-500 hover:bg-green-400 text-black font-semibold transition"
+              >
+                Reuse Plan
+              </Link>
 
-            <button
-              onClick={() => deletePlan(i)}
-              className="mt-3 text-red-400 text-sm cursor-pointer"
-            >
-              Delete
-            </button>
+              <Link
+                href="/progress"
+                className="flex-1 text-center py-2 rounded-lg border border-zonc-700 hover:border-green-400 transition"
+              >
+                Track
+              </Link>
+            </div>
           </div>
         ))}
-        <div className="flex items-center justify-between gap-3 mt-4 mb-2">
-          <Link
-            href="/start"
-            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-semibold text-center shadow-lg shadow-green-500/20 cursor-pointer"
-          >
-            Generate Smart Plan
-          </Link>
-          <Link
-            href="/progress"
-            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-zinc-900 to-zinc-800 text-white font-semibold text-center shadow-lg shadow-zinc-500/20 border border-zinc-700 cursor-pointer hover:border-green-400 transition"
-          >
-            See Progress
-          </Link>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }

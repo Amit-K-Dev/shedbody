@@ -444,7 +444,7 @@ export default async function PostPage({ params }) {
                         >
                           <a
                             href={`#${heading.id}`}
-                            className="block py-1 text-green-400 hover:text-green-300 transition"
+                            className="block py-1 no-underline text-green-400 hover:text-green-300 transition"
                           >
                             {heading.text}
                           </a>

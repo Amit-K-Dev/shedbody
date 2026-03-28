@@ -18,7 +18,7 @@ export default async function Page({ params }) {
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-16">
+    <section className="max-w-4xl mx-auto px-6 py-16">
       <h1 className="text-4xl font-bold mb-6">{page.title}</h1>
 
       <div
@@ -27,6 +27,6 @@ export default async function Page({ params }) {
           __html: page.content,
         }}
       />
-    </main>
+    </section>
   );
 }

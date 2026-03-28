@@ -37,7 +37,7 @@ export default async function ArticlesPage({ searchParams }) {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16">
+    <section className="max-w-6xl mx-auto px-6 py-16">
       {/* Title */}
       <h1 className="text-4xl font-bold mb-6">All Articles</h1>
 
@@ -78,6 +78,6 @@ export default async function ArticlesPage({ searchParams }) {
           <Link href={`/articles?page=${page + 1}`}>Next &rarr;</Link>
         )}
       </div>
-    </main>
+    </section>
   );
 }

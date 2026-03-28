@@ -45,7 +45,7 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <main className="max-w-4xl mx-auto px-6 py-20 text-gray-300">
+      <section className="max-w-4xl mx-auto px-6 py-20 text-gray-300">
         {/* HERO SECTION */}
         <section className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
@@ -297,7 +297,7 @@ export default function AboutPage() {
             Explore Workouts
           </Link>
         </section>
-      </main>
+      </section>
     </>
   );
 }

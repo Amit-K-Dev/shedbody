@@ -140,7 +140,7 @@ export default async function CategoryPage({ params, searchParams }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <section className="max-w-6xl mx-auto px-6 py-16">
         <h1 className="text-4xl font-bold capitalize mb-4">
           {category.replace("-", "")}
         </h1>
@@ -187,7 +187,7 @@ export default async function CategoryPage({ params, searchParams }) {
             />
           </>
         )}
-      </main>
+      </section>
     </>
   );
 }
