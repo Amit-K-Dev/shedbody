@@ -19,7 +19,9 @@ export default function SearchPosts() {
         const res = await fetch("/api/posts");
         const data = await res.json();
 
-        const safePosts = Array.isArray(data) ? data : data.posts || [];
+        if (!data) return [];
+
+        const safePosts = Array.isArray(data) ? data : data?.posts || [];
 
         const optimized = safePosts.map((p) => ({
           ...p,

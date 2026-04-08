@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 export default function TableOfContents({ headings }) {
   const [activeId, setActiveId] = useState("");
 
+  if (!headings || headings.length === 0) return null;
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -15,7 +17,7 @@ export default function TableOfContents({ headings }) {
         });
       },
       {
-        rootMargin: "-40% 0px -55% 0px",
+        rootMargin: "-20% 0px -70% 0px",
       },
     );
 
@@ -29,25 +31,33 @@ export default function TableOfContents({ headings }) {
 
   return (
     <aside className="hidden lg:block">
-      <div className="sticky top-24 border border-zinc-800 p-5">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-400 mb-4">
+      <div className="sticky top-24 rounded-xl border border-zinc-800 p-6 bg-zinc-900/50 backdrop-blur-sm">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-5">
           On this page
         </h3>
 
-        <ul className="space-y-2 text-sm">
-          {headings.map((heading) => (
-            <li
-              key={heading.id}
-              className={heading.level !== "2" ? "ml-4 text-zinc-400" : ""}
-            >
-              <a
-                href={`#${heading.id}`}
-                className={`block border-1-2 pl-3 transition ${activeId === heading.id ? "border-green-500 text-green-400 font-medium" : "border-transparent text-zinc-400 hover:text-green-400"}`}
+        <ul className="space-y-3 text-sm">
+          {headings.map((heading) => {
+            const isActive = activeId === heading.id;
+
+            return (
+              <li
+                key={heading.id}
+                className={heading.level !== "2" ? "ml-4" : ""}
               >
-                {heading.text}
-              </a>
-            </li>
-          ))}
+                <a
+                  href={`#${heading.id}`}
+                  className={`block border-l-2 pl-4 py-1 transition-colors duration-200 ${
+                    isActive
+                      ? "border-emerald-500 text-emerald-400 font-medium"
+                      : "border-transparent text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
+                  }`}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </aside>

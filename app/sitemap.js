@@ -5,7 +5,7 @@ export default async function sitemap() {
     .from("posts")
     .select("slug, category, published_at");
 
-  const baseUrl = "https://shedbody.vercel.app";
+  const baseUrl = "https://shedbody.com";
 
   const postUrls = posts.map((post) => ({
     url: `${baseUrl}/${post.category.toLowerCase()}/${post.slug}`,

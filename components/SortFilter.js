@@ -1,40 +1,49 @@
 import Link from "next/link";
 
-export default function SortFilter({ category, currentSort, currentSearch }) {
+export default function SortFilter({
+  category,
+  currentSort = "latest",
+  currentSearch = "",
+}) {
+  const sortOptions = [
+    { id: "latest", label: "Latest" },
+    { id: "oldest", label: "Oldest" },
+    { id: "popular", label: "Popular" },
+  ];
+
+  // Smart URL Builder
+  const createSortUrl = (sortId) => {
+    const params = new URLSearchParams();
+
+    params.set("sort", sortId);
+
+    if (currentSearch) {
+      params.set("search", currentSearch);
+    }
+
+    return `/${category}?${params.toString()}`;
+  };
+
   return (
-    <div className="flex gap-4 mb-8">
-      <Link
-        href={`/${category}?sort=latest&search=${currentSearch}`}
-        className={`px-4 py-2 rounded ${
-          currentSort === "latest"
-            ? "bg-green-600 text-black"
-            : "bg-zinc-900 border border-zinc-800 hover:border-green-500 transition"
-        }`}
-      >
-        Latest
-      </Link>
+    <div className="flex flex-wrap gap-4 mb-8">
+      {sortOptions.map((option) => {
+        const isActive = currentSort === option.id;
 
-      <Link
-        href={`/${category}?sort=oldest&search=${currentSearch}`}
-        className={`px-4 py-2 rounded ${
-          currentSort === "oldest"
-            ? "bg-green-600 text-black"
-            : "bg-zinc-900 border border-zinc-800 hover:border-green-500 transition"
-        }`}
-      >
-        Oldest
-      </Link>
-
-      <Link
-        href={`/${category}?sort=popular&search=${currentSearch}`}
-        className={`px-4 py-2 rounded ${
-          currentSort === "popular"
-            ? "bg-green-600 text-black"
-            : "bg-zinc-900 border border-zinc-800 hover:border-green-500 transition"
-        }`}
-      >
-        Popular
-      </Link>
+        return (
+          <Link
+            key={option.id}
+            href={createSortUrl(option.id)}
+            scroll={false}
+            className={`px-4 py-2 rounded-lg transition ${
+              isActive
+                ? "bg-emerald-500 text-black font-semibold"
+                : "bg-zinc-900 border border-zinc-700 text-zinc-300 hover:border-emerald-500"
+            }`}
+          >
+            {option.label}
+          </Link>
+        );
+      })}
     </div>
   );
 }

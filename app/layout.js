@@ -1,8 +1,8 @@
 import { Oswald, Inter } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 import BackToTop from "@/components/BackToTop";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   metadataBase: new URL("https://shedbody.com"),
@@ -85,7 +85,13 @@ const inter = Inter({
   varible: "--font-inter",
 });
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const schema = [
     {
       "@context": "https://schema.org",
@@ -121,13 +127,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${oswald.variable} font-sans antialiased`}
       >
+        {/* SEO SCHEMA */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-        <Header />
+
         <main className="min-h-screen">{children}</main>
-        <Footer />
+
+        <Toaster />
         <BackToTop />
       </body>
     </html>

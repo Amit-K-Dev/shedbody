@@ -53,9 +53,10 @@ async function uploadAll() {
             .replace(/\\/g, "/"); // 🔥 fix for Windows paths
 
           const result = await cloudinary.uploader.upload(filePath, {
-            folder: "shedbody",
+            upload_preset: "shedbody_upload",
             public_id: publicId,
-            overwrite: false,
+            resource_type: "auto",
+            context: `alt=${publicId}|caption=${publicId}`,
           });
 
           console.log("✅", result.secure_url);
@@ -68,3 +69,5 @@ async function uploadAll() {
 }
 
 uploadAll();
+
+// https://res.cloudinary.com/dmwbt16vm/image/upload/f_auto,q_auto/2025/01/almond-lemon-cake-sandwiches.jpg

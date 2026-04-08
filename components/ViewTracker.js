@@ -1,44 +1,57 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ViewTracker({ postId }) {
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    if (!postId) return;
+    if (!postId || hasFetched.current) return;
 
     const key = `viewed_post_${postId}`;
 
-    const stored = localStorage.getItem(key);
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        const { time } = JSON.parse(stored);
+        const THIRTY_MIN = 30 * 60 * 1000;
 
-    if (stored) {
-      const { time } = JSON.parse(stored);
-      const THIRTY_MIN = 30 * 60 * 1000;
-
-      if (Date.now() - time < THIRTY_MIN) {
-        return; // block within 30 mins
+        if (Date.now() - time < THIRTY_MIN) {
+          return;
+        }
       }
+    } catch (e) {
+      console.warn("ViewTracker localStorage parse error:", e);
+
+      localStorage.removeItem(key);
     }
 
     const increment = async () => {
+      hasFetched.current = true;
+
       try {
         const res = await fetch("/api/view", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ postId: Number(postId) }),
+
+          body: JSON.stringify({ postId }),
         });
+
         if (res.ok) {
           localStorage.setItem(key, JSON.stringify({ time: Date.now() }));
         } else {
-          console.error("View API failed");
+          hasFetched.current = false;
         }
       } catch (err) {
         console.error("View fetch error:", err);
+        hasFetched.current = false;
       }
     };
 
     increment();
   }, [postId]);
+
   return null;
 }
