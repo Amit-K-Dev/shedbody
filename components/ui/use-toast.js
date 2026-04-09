@@ -62,7 +62,7 @@ export function useToast() {
   }, []);
 
   const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((l) => l !== addToast));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   useEffect(() => {

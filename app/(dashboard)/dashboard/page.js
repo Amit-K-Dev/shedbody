@@ -2,6 +2,7 @@ import { getDashboardData } from "@/lib/dashboard/getDashboardData";
 import { getWeightData } from "@/lib/dashboard/getWeightData";
 import { getStreak } from "@/lib/dashboard/getStreak";
 import { generateInsights } from "@/lib/ai/generateInsights";
+import { getProfileData } from "@/lib/dashboard/getProfileData";
 
 // UI
 import LevelCard from "@/components/dashboard/LevelCard";
@@ -26,13 +27,14 @@ export const metadata = {
 };
 
 export default async function DashboardPage() {
-  const [dashboardData, weightData, streak] = await Promise.all([
+  const [dashboardData, weightData, streak, profileData] = await Promise.all([
     getDashboardData(),
     getWeightData(),
     getStreak(),
+    getProfileData(),
   ]);
 
-  const goal = 72; // TODO: fetch from DB
+  const goal = profileData?.target_weight || 72; // Fetch from DB
 
   const insights = generateInsights({
     weightData: weightData || [],
@@ -47,7 +49,7 @@ export default async function DashboardPage() {
 
   // RETURN UI
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-32">
       {/* Heading */}
       <h2 className="text-2xl font-bold">Welcome back 👋</h2>
 

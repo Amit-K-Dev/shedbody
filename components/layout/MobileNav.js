@@ -7,7 +7,8 @@ export default function MobileNav() {
   const pathname = usePathname();
 
   const items = [
-    { name: "Home", href: "/dashboard" },
+    { name: "Home", href: "/" },
+    { name: "BMI Calculator", href: "/calculators/bmi" },
     { name: "Progress", href: "/progress" },
     { name: "My Plan", href: "/plans" },
     { name: "New Plan", href: "/start" },

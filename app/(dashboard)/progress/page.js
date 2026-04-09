@@ -12,7 +12,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import Link from "next/link";
-import { getProgress, getUserProfile, addProgressEntry } from "@/lib/storage";
+import { getProgress, getUserProfile } from "@/lib/storage";
+import { toast } from "@/components/ui/use-toast"; // ✅ Premium Toast added
 
 // ======= UTILS =======
 
@@ -88,7 +89,8 @@ export default function ProgressPage() {
       // Get Goal
       const profile = (await getUserProfile()) || {};
       setGoal(profile?.goal || "fat_loss");
-      setGoalWeight(profile?.targetWeight || 65);
+      // ✅ BUG 2 FIXED: Database uses target_weight
+      setGoalWeight(profile?.target_weight || 65);
     }
 
     loadData();
@@ -99,25 +101,45 @@ export default function ProgressPage() {
 
     setLoading(true);
 
-    await addProgressEntry({
-      weight: Number(weightInput),
-    });
+    try {
+      // ✅ BUG 1 FIXED: Restored Gamification (API calls instead of direct storage)
+      const res = await fetch("/api/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ weight: Number(weightInput) }),
+      });
 
-    setWeightInput("");
+      if (!res.ok) throw new Error("Failed to save");
 
-    // Reload data
-    const updated = await getProgress();
-    setData(updated);
+      // XP & Streak (Taaki dashboard aur progress page sync rahein)
+      await fetch("/api/xp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 20 }),
+      });
+      await fetch("/api/streak", { method: "POST" });
 
-    setLoading(false);
+      toast.show({
+        title: "Weight logged & XP earned! 🔥",
+        variant: "success",
+      });
+      setWeightInput("");
+
+      // Reload data
+      const updated = await getProgress();
+      setData(updated);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to log weight");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const chartData = data
     .map((item) => {
       if (!item.created_at || item.weight === null) return null;
-
       const dateObj = new Date(item.created_at);
-
       if (isNaN(dateObj)) return null;
 
       return {
@@ -136,16 +158,13 @@ export default function ProgressPage() {
     }));
 
   const smoothedData = getWeeklySmoothedData(chartData);
-
   const feedback = getAIFeedback(smoothedData, goal);
   const isFatloss = goal === "fat_loss";
   const lineColor = isFatloss ? "#22c55e" : "#3b82f6";
-
   const extendedData = [...smoothedData];
 
   const last = smoothedData[smoothedData.length - 1]?.smoothWeight;
   const prev = smoothedData[smoothedData.length - 2]?.smoothWeight;
-
   const weeklyTrend = last && prev ? last - prev : 0;
 
   // Prediction
@@ -153,7 +172,6 @@ export default function ProgressPage() {
 
   if (prediction !== null) {
     const lastItem = smoothedData[smoothedData.length - 1];
-
     extendedData.push({
       date: "Next",
       smoothWeight: Number(prediction.toFixed(1)),
@@ -163,12 +181,12 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="min-h-screen text-white px-4 py-10">
+    <div className="min-h-screen text-zinc-50 px-4 py-10 pb-32">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Your Progress</h1>
 
         {data.length < 2 && (
-          <p className="text-gray-400 mb-4">
+          <p className="text-zinc-400 mb-4">
             Add more entries to see progress trend
           </p>
         )}
@@ -176,20 +194,20 @@ export default function ProgressPage() {
         {/* CURRENT vs GOAL */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-zinc-900 p-4 rounded-xl">
-            <p className="text-gray-400 text-sm">Current</p>
-            <p className="texl-xl font-bold">{last || "--"} kg</p>
+            <p className="text-zinc-400 text-sm">Current</p>
+            <p className="text-xl font-bold">{last || "--"} kg</p>
           </div>
 
           <div className="bg-zinc-900 p-4 rounded-xl">
-            <p className="text-gray-400 text-sm">Target</p>
+            <p className="text-zinc-400 text-sm">Target</p>
             <p className="text-xl font-bold">{goalWeight} kg</p>
           </div>
         </div>
 
         {/* ADD WEIGHT INPUT UI */}
         <div className="mb-6 p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-          <h3 className="text-sm text-gray-400 mb-2">Log Today's Weight</h3>
-          <p className="text-sm text-gray-400 mb-2">
+          <h3 className="text-sm text-zinc-400 mb-2">Log Today's Weight</h3>
+          <p className="text-sm text-zinc-400 mb-2">
             Last: {data[data.length - 1]?.weight || "--"} kg
           </p>
 
@@ -199,13 +217,13 @@ export default function ProgressPage() {
               placeholder="Enter weight (kg)"
               value={weightInput}
               onChange={(e) => setWeightInput(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg bg-zinc-800 text-white outline-none"
+              className="flex-1 px-3 py-2 rounded-lg bg-zinc-800 text-zinc-50 outline-none"
             />
 
             <button
               onClick={handleAddWeight}
               disabled={loading}
-              className="px-4 py-2 bg-green-500 text-black rounded-lg font-semibold"
+              className="px-4 py-2 bg-emerald-500 text-black rounded-lg font-semibold"
             >
               {loading ? "Saving..." : "Add"}
             </button>
@@ -214,14 +232,14 @@ export default function ProgressPage() {
 
         {/* FEEDBACK */}
         <div className="mb-4 p-4 rounded-lg bg-zinc-900 border border-zinc-700">
-          <h2 className="text-lg font-semibold mb-2">Coach</h2>
-          <div className="p-4 rounded-xl bg-green-500/10 border border-green-500">
-            <p className="text-green-400 font-medium">{feedback}</p>
+          <h2 className="text-lg font-semibold mb-2">AI Coach</h2>
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500">
+            <p className="text-emerald-400 font-medium">{feedback}</p>
           </div>
         </div>
 
         {/* TREND */}
-        <p className="text-sm text-gray-400 mb-2">
+        <p className="text-sm text-zinc-400 mb-2">
           Trend:{" "}
           {weeklyTrend < 0
             ? "📉 Losing weight"
@@ -232,18 +250,18 @@ export default function ProgressPage() {
 
         {/* PREDICTION */}
         {prediction && (
-          <p className="text-xs text-gray-500 mb-2">
+          <p className="text-xs text-zinc-500 mb-2">
             Predicted next: {prediction.toFixed(1)} kg
           </p>
         )}
 
         {/* CHART */}
         {chartData.length >= 2 && (
-          <div className="w-full h-75 mb-6 bg-zinc-900 rounded-xl p-4 transition-all duration-300">
-            <p className="text-sm text-gray-400 mb-2">
+          <div className="w-full h-90 mb-6 bg-zinc-900 rounded-xl p-4 transition-all duration-300">
+            <p className="text-sm text-zinc-400 mb-2">
               Weight Progress Over Time
             </p>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={extendedData}>
                 <XAxis dataKey="date" stroke="#888" />
                 <YAxis stroke="#888" domain={["dataMin - 2", "dataMax + 2"]} />
@@ -260,24 +278,25 @@ export default function ProgressPage() {
                       smoothWeight: "🔥 Trend",
                       weight: "Weight",
                     };
-
                     const label = lableMap[name] || name;
-
                     return [`${value} kg`, label];
                   }}
                 />
 
-                {/* Goal Line */}
                 <ReferenceLine
                   y={goalWeight}
                   stroke="#facc15"
                   strokeDasharray="5 5"
-                  label="Goal"
+                  label={{
+                    position: "top",
+                    value: "Goal",
+                    fill: "#facc15",
+                    fontSize: 12,
+                  }}
                 />
 
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
 
-                {/* Weight Line */}
                 <Line
                   type="monotone"
                   dataKey="weight"
@@ -287,7 +306,6 @@ export default function ProgressPage() {
                   dot={false}
                 />
 
-                {/* Smooth Weight Line */}
                 <Line
                   type="monotone"
                   dataKey="smoothWeight"
@@ -295,9 +313,10 @@ export default function ProgressPage() {
                   strokeWidth={3}
                   dot={({ cx, cy, payload }) => {
                     const isPrediction = payload?.isPrediction;
-
+                    if (!cx || !cy) return null;
                     return (
                       <circle
+                        key={`dot-${cx}-${cy}`}
                         cx={cx}
                         cy={cy}
                         r={isPrediction ? 6 : 4}
@@ -315,14 +334,15 @@ export default function ProgressPage() {
         {data.map((item, i) => (
           <div
             key={i}
-            className="mb-2 bg-zinc-900 border border-zinc-700 p-3 rounded-lg"
+            className="mb-2 bg-zinc-900 border border-zinc-700 p-3 rounded-lg flex justify-between"
           >
             <p>
-              <span className="font-semibold">Date:</span>{" "}
+              <span className="font-semibold text-zinc-400">Date:</span>{" "}
               {new Date(item.created_at).toLocaleDateString()}
             </p>
             <p>
-              <span className="font-semibold">Weight:</span> {item.weight} kg
+              <span className="font-semibold text-zinc-400">Weight:</span>{" "}
+              <span className="text-emerald-400">{item.weight} kg</span>
             </p>
           </div>
         ))}
@@ -330,13 +350,13 @@ export default function ProgressPage() {
         <div className="flex gap-3 mt-10 mb-2">
           <Link
             href="/start"
-            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-green-400 to-emerald-500 text-black font-semibold text-center shadow-lg shadow-green-500/20 cursor-pointer"
+            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-emerald-400 to-emerald-600 text-black font-semibold text-center shadow-lg shadow-emerald-500/20 hover:scale-105 transition-transform"
           >
             Start New Plan
           </Link>
           <Link
             href="/plans"
-            className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-zinc-900 to-zinc-800 text-white font-semibold text-center shadow-lg shadow-green-500/20 cursor-pointer border border-zinc-700 hover:border-green-400 transition"
+            className="w-full px-6 py-3 rounded-lg bg-zinc-800 text-zinc-50 font-semibold text-center shadow-lg border border-zinc-700 hover:border-emerald-400 hover:scale-105 transition-transform"
           >
             My Plans
           </Link>

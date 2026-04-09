@@ -6,10 +6,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard" },
+  { name: "Home", href: "/" },
   { name: "Progress", href: "/progress" },
   { name: "BMI Calculator", href: "/calculators/bmi" },
-  { name: "Start Plan", href: "/start" },
+  { name: "My Plan", href: "/plans" },
+  { name: "Start New Plan", href: "/start" },
 ];
 
 export default function Sidebar({ user }) {

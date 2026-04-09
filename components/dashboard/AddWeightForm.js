@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 export default function AddWeightForm() {
-  const router = useRouter;
+  const router = useRouter();
   const [weight, setWeight] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,10 +23,10 @@ export default function AddWeightForm() {
         body: JSON.stringify({ weight }),
       });
 
-      if (!res.ok) throw new Error("Failed to save");
+      if (!res.ok) throw new Error("Failed to save progress");
 
       // XP
-      await fetch("/api/xp", {
+      const xpRes = await fetch("/api/xp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,13 +34,17 @@ export default function AddWeightForm() {
         body: JSON.stringify({ amount: 20 }),
       });
 
+      if (!xpRes.ok) console.warn("XP update failed");
+
       // Streak
-      await fetch("/api/streak", {
+      const streakRes = await fetch("/api/streak", {
         method: "POST",
       });
 
+      if (!streakRes.ok) console.warn("Streak update failed");
+
       // Success
-      toast.success("Weight added 🚀");
+      toast.show({ title: "Weight added 🚀", variant: "success" });
 
       setWeight("");
 
@@ -62,13 +66,13 @@ export default function AddWeightForm() {
         placeholder="Enter weight (kg)"
         value={weight}
         onChange={(e) => setWeight(e.target.value)}
-        className="w-full p-3 rounded-lg bg-zinc-800 border border-zinc-700 mb-4"
+        className="w-full p-3 rounded-lg bg-zinc-800 border border-zinc-700 mb-4 text-zinc-50"
       />
 
       <button
         onClick={handleAdd}
         disabled={loading}
-        className="w-full bg-emerald-500 text-black py-2 rounded-lg hover:bg-emerald-400 transition-transform duration-150 cursor-pointer"
+        className="w-full bg-emerald-500 text-black font-bold py-2 rounded-lg hover:bg-emerald-400 transition-transform duration-150 cursor-pointer disabled:opacity-50"
       >
         {loading ? "Saving..." : "Add Entry"}
       </button>

@@ -2,21 +2,72 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 export default function SetGoal({ currentGoal }) {
   const [goal, setGoal] = useState(currentGoal || "");
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
 
   const supabase = createClient();
 
   const saveGoal = async () => {
-    const { data } = await supabase.auth.getUser();
+    setIsSaving(true);
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    await supabase
-      .from("user_profiles")
-      .update({ target_weight: parseFloat(goal) })
-      .eq("id", data.user.id);
+      if (authError || !user) throw new Error("User not found");
 
-    alert("Goal updated");
+      // Check profile
+      const { data: existingProfile } = await supabase
+        .from("user_profiles")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      let dbError;
+
+      if (existingProfile) {
+        // UPDATE
+        const { error } = await supabase
+          .from("user_profiles")
+          .update({ target_weight: parseFloat(goal) })
+          .eq("user_id", user.id);
+        dbError = error;
+      } else {
+        // INSERT (Create)
+        const { error } = await supabase.from("user_profiles").insert([
+          {
+            user_id: user.id,
+            target_weight: parseFloat(goal),
+            goal: "Lose Weight",
+            xp: 0,
+            gamification_level: 1,
+            streak_count: 1,
+          },
+        ]);
+        dbError = error;
+      }
+
+      if (dbError) throw dbError;
+
+      toast.show({
+        title: "Goal updated successfully! 🎯",
+        variant: "success",
+      });
+
+      router.refresh();
+    } catch (error) {
+      console.error("Error saving goal:", error);
+
+      toast.error("Something went wrong while saving the goal.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -27,14 +78,16 @@ export default function SetGoal({ currentGoal }) {
         type="number"
         value={goal}
         onChange={(e) => setGoal(e.target.value)}
-        className="w-full p-3 bg-zinc-800 rounded-lg mb-4"
+        className="w-full p-3 bg-zinc-800 rounded-lg mb-4 text-white"
+        placeholder="Enter target weight..."
       />
 
       <button
         onClick={saveGoal}
-        className="w-full p-3 bg-emerald-500 text-black py-2 rounded-lg cursor-pointer hover:bg-emerald-400"
+        disabled={isSaving}
+        className="w-full p-3 bg-emerald-500 text-black font-bold py-2 rounded-lg cursor-pointer hover:bg-emerald-400 disabled:opacity-50"
       >
-        Save Goal
+        {isSaving ? "Saving..." : "Save Goal"}
       </button>
     </div>
   );
