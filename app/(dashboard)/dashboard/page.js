@@ -5,13 +5,14 @@ import { generateInsights } from "@/lib/ai/generateInsights";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
 
 // UI
-import LevelCard from "@/components/dashboard/LevelCard";
-import StreakCard from "@/components/dashboard/StreakCard";
-import BMIChart from "@/components/dashboard/BMIChart";
-import WeightChart from "@/components/dashboard/WeightChart";
-import AddWeightForm from "@/components/dashboard/AddWeightForm";
-import SetGoal from "@/components/dashboard/SetGoal";
-import Insights from "@/components/dashboard/Insights";
+import PremiumHeader from "@/components/dashboard/PremiumHeader";
+import StatCards from "@/components/dashboard/StatCards";
+import PremiumInsights from "@/components/dashboard/PremiumInsights";
+import PremiumChart from "@/components/dashboard/PremiumChart";
+import PremiumBMI from "@/components/dashboard/PremiumBMI";
+import PremiumAddWeight from "@/components/dashboard/PremiumAddWeight";
+import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
+
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
 
@@ -36,6 +37,17 @@ export default async function DashboardPage() {
 
   const goal = profileData?.target_weight || 72; // Fetch from DB
 
+  const heightInMeters = profileData?.height ? profileData.height / 100 : 1;
+  const bmiHistory = (weightData || []).map((item) => {
+    return {
+      date: new Date(item.created_at).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      }),
+      bmi: Number((item.weight / (heightInMeters * heightInMeters)).toFixed(1)),
+    };
+  });
+
   const insights = generateInsights({
     weightData: weightData || [],
     bmiLogs: dashboardData?.bmiLogs || [],
@@ -47,91 +59,58 @@ export default async function DashboardPage() {
       new Date(entry.created_at).toDateString() === new Date().toDateString(),
   );
 
-  // RETURN UI
+  const currentWeight = weightData?.[weightData.length - 1]?.weight;
+
+  // UI
   return (
-    <div className="space-y-8 pb-32">
-      {/* Heading */}
-      <h2 className="text-2xl font-bold">Welcome back 👋</h2>
+    <section className="min-h-screen text-zinc-50 px-4 py-10">
+      <div className="max-w-4xl mx-auto ">
+        <div className="space-y-8 pb-32">
+          {/* Heading */}
+          <h2 className="text-2xl font-bold">Welcome back 👋</h2>
 
-      {/* REMINDER */}
-      <ReminderBanner todayLogged={todayLogged} />
+          {/* HERO SECTION */}
+          <PremiumHeader profile={profileData} />
 
-      {/* HERO SECTION */}
-      <MotionWrapper delay={0.1}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <LevelCard
-            level={1}
-            xp={40}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
-          <StreakCard
-            streak={streak}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
+          {/* REMINDER */}
+          <ReminderBanner todayLogged={todayLogged} />
 
-          <StatCard
-            title="Latest BMI"
-            value={dashboardData?.latestBMI || "--"}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
+          {/* STATS */}
+          <MotionWrapper delay={0.1}>
+            <StatCards
+              latestBMI={dashboardData?.latestBMI || "--"}
+              totalLogs={weightData?.length || 0}
+              category={dashboardData?.latestCategory || "--"}
+              currentWeight={currentWeight}
+              goalWeight={goal}
+            />
+          </MotionWrapper>
+
+          {/* ACTIONS */}
+          <MotionWrapper delay={0.2}>
+            <div className="grid grid-cols-1 gap-6">
+              <PremiumAddWeight lastWeight={currentWeight} />
+              <PremiumSetGoal currentTarget={profileData?.target_weight} />
+            </div>
+          </MotionWrapper>
+
+          {/* CHART */}
+          <MotionWrapper delay={0.2}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <PremiumChart
+                weightData={weightData}
+                goalWeight={profileData?.target_weight}
+              />
+              <PremiumBMI bmiData={bmiHistory} />
+            </div>
+          </MotionWrapper>
+
+          {/* AI COACH INSIGHTS */}
+          <MotionWrapper delay={0.2}>
+            <PremiumInsights insights={insights} />
+          </MotionWrapper>
         </div>
-      </MotionWrapper>
-
-      {/* Stats */}
-      <MotionWrapper delay={0.1}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <StatCard
-            title="Total Logs"
-            value={dashboardData?.totalLogs || 0}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
-          <StatCard
-            title="Category"
-            value={dashboardData?.latestCategory || "--"}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
-          <StatCard
-            title="Current Weight"
-            value={weightData?.at(-1)?.weight || "--"}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
-          <StatCard
-            title="Goal"
-            value={goal}
-            className="hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition"
-          />
-        </div>
-      </MotionWrapper>
-
-      {/* CHART */}
-      <MotionWrapper delay={0.2}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <WeightChart data={weightData} />
-          <BMIChart data={dashboardData?.bmiLogs || []} />
-        </div>
-      </MotionWrapper>
-
-      {/* ACTIONS */}
-      <MotionWrapper delay={0.2}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AddWeightForm />
-          <SetGoal currentGoal={goal} />
-        </div>
-      </MotionWrapper>
-
-      {/* AI INSIGHTS */}
-      <MotionWrapper delay={0.2}>
-        <Insights insights={insights} />
-      </MotionWrapper>
-    </div>
-  );
-}
-
-function StatCard({ title, value }) {
-  return (
-    <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-      <p className="text-sm text-zinc-400">{title}</p>
-      <p className="text-2xl font-bold text-zinc-50 mt-1">{value}</p>
-    </div>
+      </div>
+    </section>
   );
 }

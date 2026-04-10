@@ -54,10 +54,10 @@ export default async function BMICalculatorPage() {
           </p>
 
           <div>
-            <h2 className="text-xl font-bold text-zinc-50">
+            <h2 className="text-xl font-bold text-zinc-50 mb-4">
               BMI Categories and Their Meaning
             </h2>
-            <p>
+            <p className="mb-4">
               BMI results are grouped into categories that indicate potential
               health risks:
             </p>
@@ -136,7 +136,7 @@ export default async function BMICalculatorPage() {
 
           {/* Registration Hook (Lead Magnet) */}
           <div className="bg-linear-to-r from-emerald-500/20 to-zinc-900 border border-emerald-500/30 rounded-2xl p-8 text-center">
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-zinc-50 mb-2">
               Track Your Progress Automatically
             </h3>
             <p className="text-zinc-400 mb-6">
@@ -151,7 +151,7 @@ export default async function BMICalculatorPage() {
             </Link>
           </div>
 
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-zinc-50">
             How Does the BMI Calculator Work?
           </h2>
           <p>
@@ -163,7 +163,7 @@ export default async function BMICalculatorPage() {
 
           {/* Formulas & Limitations Section (Already Good) */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-zinc-50">
               How is BMI Calculated?
             </h2>
             <p>BMI is calculated using the following mathematical formulas:</p>
@@ -181,13 +181,13 @@ export default async function BMICalculatorPage() {
             For example, if you weigh 70 kg and are 1.75 meters tall, your BMI
             would be:
           </p>
-          <ul className="list-disc list-outside pl-6 marker:text-green-700">
+          <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
             <li>BMI = 70 ÷ (1.75 × 1.75) = 22.86</li>
           </ul>
 
           <p>This result falls within the "normal weight" range.</p>
 
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-zinc-50">
             Why Use a BMI Calculator?
           </h2>
           <p>
@@ -196,7 +196,7 @@ export default async function BMICalculatorPage() {
             it:
           </p>
 
-          <h3 className="text-lg font-bold text-white">
+          <h3 className="text-lg font-bold text-zinc-50">
             1. Monitor Your Health
           </h3>
           <p>
@@ -204,13 +204,15 @@ export default async function BMICalculatorPage() {
             your weight could be impacting your well-being.
           </p>
 
-          <h3 className="text-lg font-bold text-white">2. Set Fitness Goals</h3>
+          <h3 className="text-lg font-bold text-zinc-50">
+            2. Set Fitness Goals
+          </h3>
           <p>
             If you’re starting a fitness journey, knowing your BMI can help you
             set realistic weight targets.
           </p>
 
-          <h3 className="text-lg font-bold text-white">
+          <h3 className="text-lg font-bold text-zinc-50">
             3. Track Changes Over Time
           </h3>
           <p>
@@ -218,7 +220,7 @@ export default async function BMICalculatorPage() {
             work toward a healthier lifestyle.
           </p>
 
-          <h3 className="text-lg font-bold text-white">
+          <h3 className="text-lg font-bold text-zinc-50">
             4. Aid in Conversations with Healthcare Professionals
           </h3>
           <p>
@@ -226,17 +228,17 @@ export default async function BMICalculatorPage() {
             dietitians about your health and nutrition.
           </p>
 
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-zinc-50">
             BMI for Adults vs. Children
           </h2>
 
-          <h3 className="text-lg font-bold text-white">Adults</h3>
+          <h3 className="text-lg font-bold text-zinc-50">Adults</h3>
           <p>
             For adults aged 18 and older, BMI categories are the same regardless
             of age or gender.
           </p>
 
-          <h3 className="text-lg font-bold text-white">Children and Teens</h3>
+          <h3 className="text-lg font-bold text-zinc-50">Children and Teens</h3>
           <p>
             For children and teenagers, we interpret BMI differently by
             comparing it to standardized growth charts based on age and gender.
@@ -244,16 +246,16 @@ export default async function BMICalculatorPage() {
             child’s BMI is expressed as a percentile rather than a fixed number.
           </p>
 
-          <h2 className="text-xl font-bold text-white">Limitations of BMI</h2>
+          <h2 className="text-xl font-bold text-zinc-50">Limitations of BMI</h2>
           <p>
             While BMI is a useful tool, it’s not perfect. Here are some of its
             limitations:
           </p>
 
-          <ul className="list-disc list-outside pl-6 marker:text-green-700">
+          <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
             <li>
               <strong>Not a Standalone Health Measure:</strong>
-              <ul className="list-disc list-outside pl-6 marker:text-green-700">
+              <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
                 <li>
                   BMI doesn’t account for other factors like age, genetics, bone
                   density, or lifestyle. It’s best used alongside other health
@@ -264,7 +266,7 @@ export default async function BMICalculatorPage() {
 
             <li>
               <strong>Doesn’t Differentiate Between Fat and Muscle:</strong>
-              <ul className="list-disc list-outside pl-6 marker:text-green-700">
+              <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
                 <li>
                   Muscle weighs more than fat, so athletes with high muscle mass
                   may have a high BMI without being overweight.
@@ -274,7 +276,7 @@ export default async function BMICalculatorPage() {
 
             <li>
               <strong>Doesn’t Consider Fat Distribution:</strong>
-              <ul className="list-disc list-outside pl-6 marker:text-green-700">
+              <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
                 <li>
                   BMI doesn’t indicate where the body stores fat, which can
                   impact health risks. For example, abdominal fat poses greater
@@ -284,12 +286,12 @@ export default async function BMICalculatorPage() {
             </li>
           </ul>
 
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-zinc-50">
             How to Use the BMI Calculator Effectively
           </h2>
           <p>Here’s a quick guide to using the BMI Calculator:</p>
 
-          <ul className="list-disc list-outside pl-6 marker:text-green-700">
+          <ul className="list-disc list-outside pl-6 marker:text-emerald-700">
             <li>
               <strong>Use as a Starting Point</strong>: If your BMI falls
               outside the “normal” range, consider discussing your results with
@@ -301,7 +303,7 @@ export default async function BMICalculatorPage() {
               in either{" "}
               <Link
                 href="/calculators/calories-calculator"
-                className="text-green-400 no-underline hover:text-green-300 transition"
+                className="text-emerald-400 no-underline hover:text-emerald-300 transition"
               >
                 metric or imperial units
               </Link>
@@ -319,7 +321,7 @@ export default async function BMICalculatorPage() {
             </li>
           </ul>
 
-          <p className="border-l-4 border-green-500 bg-green-500/10 rounded">
+          <p className="border-l-4 border-emerald-500 bg-emerald-500/10 rounded-lg p-4">
             The BMI Calculator is a helpful tool for quickly understanding
             whether your weight is within a healthy range. While it’s not a
             perfect measure of health, it’s a great starting point for
