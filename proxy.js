@@ -30,7 +30,7 @@ export async function proxy(req) {
   } = await supabase.auth.getUser();
 
   const { pathname } = req.nextUrl;
-  const protectedRoutes = ["/dashboard", "/progress", "/plans", "/start"];
+  const protectedRoutes = ["/dashboard", "/plans", "/start"];
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route),
   );
@@ -49,7 +49,6 @@ export async function proxy(req) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/progress/:path*",
     "/plans/:path*",
     "/start/:path*",
     "/login",

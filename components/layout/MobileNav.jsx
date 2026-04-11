@@ -8,8 +8,7 @@ export default function MobileNav() {
 
   const items = [
     { name: "Home", href: "/" },
-    { name: "BMI", href: "/calculators/bmi" },
-    { name: "Progress", href: "/progress" },
+    { name: "BMI Calculator", href: "/calculators/bmi" },
     { name: "My Plan", href: "/plans" },
     { name: "New Plan", href: "/start" },
   ];

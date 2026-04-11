@@ -7,7 +7,6 @@ import { useState } from "react";
 
 const navItems = [
   { name: "Home", href: "/" },
-  { name: "Progress", href: "/progress" },
   { name: "BMI Calculator", href: "/calculators/bmi" },
   { name: "My Plan", href: "/plans" },
   { name: "Start New Plan", href: "/start" },

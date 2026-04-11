@@ -39,7 +39,7 @@ export async function generateMetadata({ params }) {
       description: post.excerpt,
       image: [
         {
-          url: `${BASE_URL}/${post.category}/${post.slug}/opengraph-image`,
+          url: `${BASE_URL}/${post.category}/${post.slug}/og-image`,
           width: 1200,
           height: 630,
         },

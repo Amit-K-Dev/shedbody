@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 import BackToTop from "@/components/BackToTop";
 import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 
 export const metadata = {
   metadataBase: new URL("https://shedbody.com"),
@@ -43,7 +44,7 @@ export const metadata = {
       "Tranform your body with structured workouts, nutrition guidance, and consistency.",
     images: [
       {
-        url: "https://shedbody.com/og-image.jpg",
+        url: "https://shedbody.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "ShedBody",
@@ -56,7 +57,7 @@ export const metadata = {
     title: "ShedBody",
     description:
       "Fitness, fat loss, yoga, and healthy lifestyle guidance that actually works.",
-    images: ["https://shedbody.com/og-image.jpg"],
+    images: ["https://shedbody.com/og-image.png"],
   },
 
   icons: {
@@ -72,6 +73,10 @@ export const metadata = {
     index: true,
     follow: true,
   },
+
+  other: {
+    "google-adsense-account": "ca-pub-9117254807197165",
+  },
 };
 
 const oswald = Oswald({
@@ -82,7 +87,7 @@ const oswald = Oswald({
 
 const inter = Inter({
   subsets: ["latin"],
-  varible: "--font-inter",
+  variable: "--font-inter",
 });
 
 export default async function RootLayout({ children }) {
@@ -98,7 +103,7 @@ export default async function RootLayout({ children }) {
       "@type": "WebSite",
       name: "ShedBody",
       url: "https://shedbody.com",
-      logo: "https://shedbody.com/logo.png",
+      logo: "https://shedbody.com/shedbody-logo-black.png",
       potentialAction: {
         "@type": "SearchAction",
         target: "https://shedbody.com/search?q={search_term_string}",
@@ -110,8 +115,8 @@ export default async function RootLayout({ children }) {
       "@type": "Organization",
       name: "ShedBody",
       url: "https://shedbody.com",
-      logo: "https://shedbody.com/logo.png",
-      sameAS: [
+      logo: "https://shedbody.com/shedbody-logo-black.png",
+      sameAs: [
         "https://youtube.com/@shed-body",
         "https://linkedin.com/company/shedbody",
         "https://facebook.com/shedbody",
@@ -124,6 +129,14 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9117254807197165"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body
         className={`${inter.variable} ${oswald.variable} font-sans antialiased`}
       >
