@@ -1,6 +1,8 @@
-import { supabase } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function sitemap() {
+  const supabase = await createClient();
+
   const baseUrl = "https://shedbody.com";
 
   const staticPages = [
