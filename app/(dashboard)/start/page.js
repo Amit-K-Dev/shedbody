@@ -226,7 +226,7 @@ export default function StartPlan() {
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
               <Target className="w-4 h-4" /> Primary Goal
             </h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid md:grid-cols-3 gap-3">
               {["fat_loss", "muscle_gain", "maintenance"].map((g) => (
                 <button
                   key={g}
@@ -247,7 +247,7 @@ export default function StartPlan() {
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
               <Activity className="w-4 h-4" /> Experience Level
             </h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid md:grid-cols-3 gap-3">
               {["beginner", "intermediate", "advanced"].map((lvl) => (
                 <button
                   key={lvl}
