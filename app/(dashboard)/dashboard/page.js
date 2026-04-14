@@ -26,6 +26,7 @@ import {
   Sparkles,
   Target,
   ArrowRight,
+  History,
 } from "lucide-react";
 
 export const metadata = {

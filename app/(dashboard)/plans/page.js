@@ -18,10 +18,10 @@ import {
   Coffee,
   Bed,
   Info,
-  Target, // ✅ New V2 Icons Imported
+  Target,
 } from "lucide-react";
 
-// ✅ THE ELITE ICON & COLOR MAP FOR V2
+// ELITE ICON & COLOR MAP FOR V2
 const iconMap = {
   sun: Sun,
   apple: Apple,
