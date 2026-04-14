@@ -7,20 +7,46 @@ import { workoutPlans } from "@/data/workout";
 import Link from "next/link";
 import { saveUserProfile, savePlan } from "@/lib/storage";
 import {
+  Sun,
   Apple,
-  CalendarDays,
-  Egg,
-  Moon,
   Utensils,
+  Coffee,
+  Dumbbell,
+  Moon,
+  Bed,
+  Info,
   Activity,
   Target,
   Flame,
-  Dumbbell,
   Sparkles,
   User,
   Loader2,
+  CalendarDays,
+  Egg,
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+
+const iconMap = {
+  sun: Sun,
+  apple: Apple,
+  utensils: Utensils,
+  coffee: Coffee,
+  dumbbell: Dumbbell,
+  moon: Moon,
+  bed: Bed,
+  info: Info,
+};
+
+const colorMap = {
+  yellow: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20",
+  green: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+  orange: "text-orange-400 bg-orange-400/10 border-orange-400/20",
+  purple: "text-purple-400 bg-purple-400/10 border-purple-400/20",
+  red: "text-red-400 bg-red-400/10 border-red-400/20",
+  blue: "text-blue-400 bg-blue-400/10 border-blue-400/20",
+  indigo: "text-indigo-400 bg-indigo-400/10 border-indigo-400/20",
+  gray: "text-zinc-400 bg-zinc-800 border-zinc-700",
+};
 
 export default function StartPlan() {
   const router = useRouter();
@@ -418,66 +444,148 @@ export default function StartPlan() {
                 </ul>
               </div>
 
-              {/* Meal Panel */}
-              {result.meals && (
-                <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/60 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold text-zinc-50 mb-4 flex items-center gap-2">
-                    <Utensils className="w-5 h-5 text-emerald-400" /> Nutrition
-                    Plan
+              {/* NUTRITION PROTOCOL V2.0 */}
+              {result && result.meals && (
+                <div className="mt-6 p-6 md:p-8 bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-3xl shadow-[0_0_30px_rgba(16,185,129,0.1)] animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+                  <h3 className="text-xl font-black text-zinc-50 mb-6 flex items-center gap-2">
+                    <Utensils className="w-6 h-6 text-emerald-400" /> Premium
+                    Nutrition Protocol
                   </h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
-                      <div className="p-2 bg-yellow-500/10 rounded-lg shrink-0">
-                        <Egg className="w-4 h-4 text-yellow-500" />
+
+                  {/* V2 MACROS (If Available) */}
+                  {result.meals.macros && (
+                    <div className="flex justify-between items-center bg-zinc-950/50 p-4 rounded-2xl border border-zinc-800/50 mb-8">
+                      <div className="text-center flex-1">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                          Protein
+                        </p>
+                        <p className="text-xl font-black text-blue-400">
+                          {result.meals.macros.protein}g
+                        </p>
                       </div>
-                      <div>
-                        <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                          Breakfast
-                        </span>
-                        <span className="text-sm text-zinc-300">
-                          {result.meals.breakfast}
-                        </span>
+                      <div className="w-px h-8 bg-zinc-800"></div>
+                      <div className="text-center flex-1">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                          Carbs
+                        </p>
+                        <p className="text-xl font-black text-orange-400">
+                          {result.meals.macros.carbs}g
+                        </p>
                       </div>
-                    </li>
-                    <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
-                      <div className="p-2 bg-orange-500/10 rounded-lg shrink-0">
-                        <Utensils className="w-4 h-4 text-orange-500" />
+                      <div className="w-px h-8 bg-zinc-800"></div>
+                      <div className="text-center flex-1">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                          Fats
+                        </p>
+                        <p className="text-xl font-black text-yellow-400">
+                          {result.meals.macros.fats}g
+                        </p>
                       </div>
-                      <div>
-                        <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                          Lunch
-                        </span>
-                        <span className="text-sm text-zinc-300">
-                          {result.meals.lunch}
-                        </span>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
-                      <div className="p-2 bg-blue-500/10 rounded-lg shrink-0">
-                        <Moon className="w-4 h-4 text-blue-500" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                          Dinner
-                        </span>
-                        <span className="text-sm text-zinc-300">
-                          {result.meals.dinner}
-                        </span>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
-                      <div className="p-2 bg-zinc-700/50 rounded-lg shrink-0">
-                        <Apple className="w-4 h-4 text-zinc-300" />
-                      </div>
-                      <div>
-                        <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                          Snacks
-                        </span>
-                        <span className="text-sm text-zinc-300">
-                          {result.meals.snacks}
-                        </span>
-                      </div>
-                    </li>
+                    </div>
+                  )}
+
+                  <ul className="space-y-4">
+                    {/* 🧠 SMART RENDERING: Is it V2 (Array) or V1 (Object)? */}
+                    {result.meals.meals && Array.isArray(result.meals.meals) ? (
+                      // V2.0 Render Logic
+                      result.meals.meals.map((meal) => {
+                        const IconComponent = iconMap[meal.icon] || Info;
+                        const colorStyle =
+                          colorMap[meal.color] || colorMap.gray;
+
+                        return (
+                          <li
+                            key={meal.id}
+                            className="relative group overflow-hidden bg-zinc-950/40 p-4 rounded-2xl border border-zinc-800/50 hover:border-emerald-500/30 transition-all duration-300"
+                          >
+                            <div className="absolute inset-0 bg-liner-to-r from-transparent to-zinc-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="flex gap-4 relative z-10">
+                              <div
+                                className={`p-3 rounded-xl border shrink-0 flex items-center justify-center h-12 w-12 ${colorStyle}`}
+                              >
+                                <IconComponent className="w-6 h-6" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                                  <span className="font-bold text-zinc-200">
+                                    {meal.name}
+                                  </span>
+                                  {meal.time && (
+                                    <span className="text-[10px] font-bold bg-zinc-800 text-zinc-400 px-2.5 py-1 rounded-md border border-zinc-700/50 uppercase tracking-wider">
+                                      {meal.time}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-sm text-zinc-400 leading-relaxed">
+                                  {meal.items}
+                                </p>
+                                {meal.note && (
+                                  <p className="text-xs text-red-400 mt-2 italic flex items-center gap-1">
+                                    <Target className="w-3 h-3" /> {meal.note}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })
+                    ) : (
+                      // V1.0 Render Logic (Fallback for backward compatibility)
+                      <>
+                        <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
+                          <div className="p-2 bg-yellow-500/10 rounded-lg shrink-0">
+                            <Egg className="w-4 h-4 text-yellow-500" />
+                          </div>
+                          <div>
+                            <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                              Breakfast
+                            </span>
+                            <span className="text-sm text-zinc-300">
+                              {result.meals.breakfast}
+                            </span>
+                          </div>
+                        </li>
+                        <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
+                          <div className="p-2 bg-orange-500/10 rounded-lg shrink-0">
+                            <Utensils className="w-4 h-4 text-orange-500" />
+                          </div>
+                          <div>
+                            <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                              Lunch
+                            </span>
+                            <span className="text-sm text-zinc-300">
+                              {result.meals.lunch}
+                            </span>
+                          </div>
+                        </li>
+                        <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
+                          <div className="p-2 bg-blue-500/10 rounded-lg shrink-0">
+                            <Moon className="w-4 h-4 text-blue-500" />
+                          </div>
+                          <div>
+                            <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                              Dinner
+                            </span>
+                            <span className="text-sm text-zinc-300">
+                              {result.meals.dinner}
+                            </span>
+                          </div>
+                        </li>
+                        <li className="flex items-start gap-3 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/50">
+                          <div className="p-2 bg-zinc-700/50 rounded-lg shrink-0">
+                            <Apple className="w-4 h-4 text-zinc-300" />
+                          </div>
+                          <div>
+                            <span className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                              Snacks
+                            </span>
+                            <span className="text-sm text-zinc-300">
+                              {result.meals.snacks}
+                            </span>
+                          </div>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </div>
               )}

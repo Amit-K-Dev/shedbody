@@ -14,7 +14,35 @@ import {
   Dumbbell,
   Trash2,
   Sparkles,
+  Sun,
+  Coffee,
+  Bed,
+  Info,
+  Target, // ✅ New V2 Icons Imported
 } from "lucide-react";
+
+// ✅ THE ELITE ICON & COLOR MAP FOR V2
+const iconMap = {
+  sun: Sun,
+  apple: Apple,
+  utensils: Utensils,
+  coffee: Coffee,
+  dumbbell: Dumbbell,
+  moon: Moon,
+  bed: Bed,
+  info: Info,
+};
+
+const colorMap = {
+  yellow: "text-yellow-400 bg-yellow-400/10 border border-yellow-400/20",
+  green: "text-emerald-400 bg-emerald-400/10 border border-emerald-400/20",
+  orange: "text-orange-400 bg-orange-400/10 border border-orange-400/20",
+  purple: "text-purple-400 bg-purple-400/10 border border-purple-400/20",
+  red: "text-red-400 bg-red-400/10 border border-red-400/20",
+  blue: "text-blue-400 bg-blue-400/10 border border-blue-400/20",
+  indigo: "text-indigo-400 bg-indigo-400/10 border border-indigo-400/20",
+  gray: "text-zinc-400 bg-zinc-800 border border-zinc-700",
+};
 
 export default function PlanPage() {
   const [plans, setPlans] = useState([]);
@@ -34,7 +62,7 @@ export default function PlanPage() {
   // DELETE
   async function handleDelete(id) {
     await deletePlan(id);
-    loadPlans();
+    loadPlans(); // refresh
   }
 
   // CLEAR ALL
@@ -85,7 +113,7 @@ export default function PlanPage() {
           </div>
         )}
 
-        {/* EMPTY STATE */}
+        {/* EMPTY STATE (Premium Look) */}
         {!loading && plans.length === 0 && (
           <div className="relative overflow-hidden bg-zinc-900/40 backdrop-blur-md border border-zinc-800/60 rounded-3xl p-12 text-center group">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -114,7 +142,7 @@ export default function PlanPage() {
 
         {/* GRID LIST */}
         {!loading && plans.length > 0 && (
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-6">
             {plans.map((plan) => (
               <div
                 key={plan.id}
@@ -122,7 +150,7 @@ export default function PlanPage() {
                   plan.is_active
                     ? "border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
                     : "border-zinc-800/60 hover:border-emerald-500/30"
-                } rounded-2xl p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.15)] flex flex-col`}
+                } rounded-2xl p-5 md:p-6 transition-all duration-500 flex flex-col`}
               >
                 {/* Subtle Background Glow */}
                 <div
@@ -204,77 +232,162 @@ export default function PlanPage() {
                   </div>
                 </div>
 
-                {/* CONTENT AREA (Split 50/50 for Workout and Meals) */}
+                {/* 🚀 THE V2 CONTENT AREA (Workout + Full Meals) */}
                 <div className="grid md:grid-cols-2 gap-4 flex-1 relative z-10 mb-6">
                   {/* WORKOUT */}
-                  <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30">
-                    <h4 className="text-xs font-bold tracking-wider text-zinc-500 uppercase mb-3 flex items-center gap-2">
-                      <CalendarDays className="w-4 h-4 text-zinc-400" /> Workout
+                  <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30 h-fit">
+                    <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase mb-4 flex items-center gap-2">
+                      <CalendarDays className="w-4 h-4" /> Workout Protocol
                     </h4>
-                    <ul className="space-y-2.5">
-                      {plan.workout?.slice(0, 6).map((d, idx) => (
+                    <ul className="space-y-3">
+                      {plan.workout?.map((d, idx) => (
                         <li
                           key={idx}
-                          className="text-sm text-zinc-300 flex items-start gap-2"
+                          className="text-[13px] text-zinc-300 flex items-start gap-2 border-b border-zinc-800/50 pb-2 last:border-0 last:pb-0"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
-                          <span className="line-clamp-2">{d}</span>
+                          <span className="w-5 h-5 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
+                            {idx + 1}
+                          </span>
+                          <span className="leading-snug">{d}</span>
                         </li>
                       ))}
-                      {plan.workout?.length > 6 && (
-                        <li className="text-xs text-emerald-400 font-medium italic">
-                          + more days...
-                        </li>
-                      )}
                     </ul>
                   </div>
 
-                  {/* MEALS */}
-                  <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30">
-                    <h4 className="text-xs font-bold tracking-wider text-zinc-500 uppercase mb-3 flex items-center gap-2">
-                      <Apple className="w-4 h-4 text-zinc-400" /> Meals
+                  {/* MEALS (FULL V2 RENDER) */}
+                  <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30 h-fit">
+                    <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase mb-4 flex items-center gap-2">
+                      <Apple className="w-4 h-4" /> Full Nutrition Plan
                     </h4>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-2 text-sm">
-                        <Egg className="w-4 h-4 text-yellow-500 mt-0.5 shrink-0" />
-                        <div>
-                          <span className="text-zinc-300 line-clamp-1">
-                            {plan.meals?.breakfast || "--"}
-                          </span>
+
+                    {/* V2 Macros Render */}
+                    {plan.meals?.macros && (
+                      <div className="flex justify-between items-center bg-zinc-950/50 p-2.5 rounded-lg border border-zinc-700/50 mb-4">
+                        <div className="text-center flex-1">
+                          <p className="text-[9px] font-bold text-zinc-500 uppercase">
+                            Pro
+                          </p>
+                          <p className="text-sm font-black text-blue-400">
+                            {plan.meals.macros.protein}g
+                          </p>
                         </div>
-                      </li>
-                      <li className="flex items-start gap-2 text-sm">
-                        <Utensils className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" />
-                        <div>
-                          <span className="text-zinc-300 line-clamp-1">
-                            {plan.meals?.lunch || "--"}
-                          </span>
+                        <div className="text-center flex-1 border-x border-zinc-700/50">
+                          <p className="text-[9px] font-bold text-zinc-500 uppercase">
+                            Carb
+                          </p>
+                          <p className="text-sm font-black text-orange-400">
+                            {plan.meals.macros.carbs}g
+                          </p>
                         </div>
-                      </li>
-                      <li className="flex items-start gap-2 text-sm">
-                        <Moon className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                        <div>
-                          <span className="text-zinc-300 line-clamp-1">
-                            {plan.meals?.dinner || "--"}
-                          </span>
+                        <div className="text-center flex-1">
+                          <p className="text-[9px] font-bold text-zinc-500 uppercase">
+                            Fat
+                          </p>
+                          <p className="text-sm font-black text-yellow-400">
+                            {plan.meals.macros.fats}g
+                          </p>
                         </div>
-                      </li>
+                      </div>
+                    )}
+
+                    <ul className="space-y-4">
+                      {/* SMART CHECK: V2 Array vs V1 Object */}
+                      {plan.meals?.meals && Array.isArray(plan.meals.meals) ? (
+                        plan.meals.meals.map((meal) => {
+                          const IconComponent = iconMap[meal.icon] || Info;
+                          const colorStyle =
+                            colorMap[meal.color] || colorMap.gray;
+
+                          return (
+                            <li key={meal.id} className="flex gap-3">
+                              <div
+                                className={`p-2 rounded-lg shrink-0 flex items-center justify-center h-8 w-8 ${colorStyle}`}
+                              >
+                                <IconComponent className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                  <span className="text-xs font-bold text-zinc-200">
+                                    {meal.name}
+                                  </span>
+                                  {meal.time && (
+                                    <span className="text-[9px] text-zinc-500 font-medium">
+                                      {meal.time}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-[11px] text-zinc-400 leading-snug">
+                                  {meal.items}
+                                </p>
+                              </div>
+                            </li>
+                          );
+                        })
+                      ) : (
+                        /* V1 Fallback */
+                        <>
+                          <li className="flex items-start gap-2 text-sm">
+                            <Egg className="w-4 h-4 text-yellow-500 mt-0.5 shrink-0" />
+                            <div>
+                              <span className="block text-[10px] font-bold text-zinc-500 uppercase">
+                                Breakfast
+                              </span>
+                              <span className="text-zinc-300 text-[11px]">
+                                {plan.meals?.breakfast || "--"}
+                              </span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <Utensils className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" />
+                            <div>
+                              <span className="block text-[10px] font-bold text-zinc-500 uppercase">
+                                Lunch
+                              </span>
+                              <span className="text-zinc-300 text-[11px]">
+                                {plan.meals?.lunch || "--"}
+                              </span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <Moon className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                            <div>
+                              <span className="block text-[10px] font-bold text-zinc-500 uppercase">
+                                Dinner
+                              </span>
+                              <span className="text-zinc-300 text-[11px]">
+                                {plan.meals?.dinner || "--"}
+                              </span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-sm">
+                            <Apple className="w-4 h-4 text-zinc-400 mt-0.5 shrink-0" />
+                            <div>
+                              <span className="block text-[10px] font-bold text-zinc-500 uppercase">
+                                Snacks
+                              </span>
+                              <span className="text-zinc-300 text-[11px]">
+                                {plan.meals?.snacks || "--"}
+                              </span>
+                            </div>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </div>
                 </div>
 
                 {/* ACTIONS */}
-                <div className="flex gap-3 mt-auto relative z-10 pt-2 border-t border-zinc-800/50">
+                <div className="flex gap-3 mt-auto relative z-10 pt-4 border-t border-zinc-800/50">
                   <Link
                     href="/start"
-                    className="flex-1 text-center py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition-all"
+                    className="flex-1 text-center py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition-all text-sm"
                   >
                     Generate New
                   </Link>
 
                   <Link
                     href="/dashboard"
-                    className="flex-1 text-center py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-50 font-bold transition-all border border-zinc-700"
+                    className="flex-1 text-center py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-50 font-bold transition-all border border-zinc-700 text-sm"
                   >
                     Dashboard
                   </Link>

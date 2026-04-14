@@ -16,17 +16,16 @@ import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
 
-// Icons & Link fro Protocol Section
+// Icons & Link for Protocol Section
 import Link from "next/link";
 import {
-  Flame,
-  Dumbbell,
   CalendarDays,
   Utensils,
-  ArrowRight,
+  Flame,
+  Dumbbell,
   Sparkles,
-  History,
   Target,
+  ArrowRight,
 } from "lucide-react";
 
 export const metadata = {
@@ -212,11 +211,18 @@ export default async function DashboardPage() {
                       </div>
                       <div className="bg-zinc-950/50 border border-zinc-800/50 p-4 rounded-xl">
                         <h4 className="text-xs font-bold text-zinc-500 uppercase flex items-center gap-2 mb-2">
-                          <Utensils className="w-4 h-4 text-emerald-400" />{" "}
+                          <Utensils className="w-4 h-4 text-emerald-400" /> Key
                           Meals
                         </h4>
                         <p className="text-sm text-zinc-300 line-clamp-2">
-                          {currentPlan.meals?.breakfast}
+                          {/* 🧠 SMART FETCHING: V2 (Array) ya V1 (Object) */}
+                          {
+                            currentPlan.meals?.meals // Check if it's V2
+                              ? currentPlan.meals.meals.find(
+                                  (m) => m.id === "meal1",
+                                )?.items // Fetch Breakfast from V2
+                              : currentPlan.meals?.breakfast // Fetch Breakfast from V1
+                          }
                         </p>
                       </div>
                     </div>
