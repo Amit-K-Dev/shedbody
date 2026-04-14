@@ -2038,7 +2038,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate",
           },
           {
             id: "meal5",
@@ -2126,7 +2126,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate",
           },
           {
             id: "meal5",
@@ -2217,7 +2217,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate",
           },
           {
             id: "meal5",
@@ -2305,7 +2305,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate",
           },
           {
             id: "meal5",
@@ -2396,7 +2396,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2484,7 +2484,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2575,7 +2575,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2663,7 +2663,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2754,7 +2754,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2842,7 +2842,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -2933,7 +2933,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3021,7 +3021,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3112,7 +3112,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3200,7 +3200,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3291,7 +3291,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3380,7 +3380,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 3 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3472,7 +3472,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3561,7 +3561,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates)",
           },
           {
             id: "meal5",
@@ -3653,7 +3653,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 50g Red Grapes",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 50g Red Grapes",
           },
           {
             id: "meal5",
@@ -3742,7 +3742,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 50g Red Grapes",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 50g Red Grapes",
           },
           {
             id: "meal5",
@@ -3834,7 +3834,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -3923,7 +3923,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4015,7 +4015,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4104,7 +4104,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4196,7 +4196,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4285,7 +4285,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4377,7 +4377,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4466,7 +4466,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4558,7 +4558,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4607,7 +4607,7 @@ export const dietPlans = {
             color: "yellow",
             type: "high-carb",
             items:
-              "110g Oats, 1.5 scoop Whey Protein (35g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
           },
           {
             id: "meal2",
@@ -4647,7 +4647,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4739,7 +4739,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4788,7 +4788,7 @@ export const dietPlans = {
             color: "yellow",
             type: "high-carb",
             items:
-              "110g Oats, 1.5 scoop Whey Protein (35g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
           },
           {
             id: "meal2",
@@ -4828,7 +4828,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4920,7 +4920,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -4969,7 +4969,7 @@ export const dietPlans = {
             color: "yellow",
             type: "high-carb",
             items:
-              "110g Oats, 1.5 scoop Whey Protein (35g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
           },
           {
             id: "meal2",
@@ -5009,7 +5009,7 @@ export const dietPlans = {
             type: "recovery",
             note: "Adjust based on workout timing (morning/evening)",
             items:
-              "1–2 scoop Whey Isolate in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein or Isolate), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+              "1–2 scoop Whey Protein in 300ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
           },
           {
             id: "meal5",
@@ -5030,6 +5030,1454 @@ export const dietPlans = {
             type: "slow-protein",
             items:
               "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4100: {
+      // Bulk Gain Protocol
+      veg: {
+        macros: {
+          protein: 256,
+          carbs: 564,
+          fats: 91,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 7 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "290g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1/2 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 400ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 256,
+          carbs: 564,
+          fats: 91,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 7 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "290g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1/2 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 400ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 4 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4200: {
+      // Extreme Gain Protocol
+      veg: {
+        macros: {
+          protein: 263,
+          carbs: 578,
+          fats: 93,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 7 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "290g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 263,
+          carbs: 578,
+          fats: 93,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 7 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "290g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4300: {
+      // Extreme Gain Protocol
+      veg: {
+        macros: {
+          protein: 269,
+          carbs: 591,
+          fats: 95.5,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 269,
+          carbs: 591,
+          fats: 95,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4400: {
+      // Extreme Gain Protocol
+      veg: {
+        macros: {
+          protein: 275,
+          carbs: 605,
+          fats: 98,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 275,
+          carbs: 605,
+          fats: 98,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1/2 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd) 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "150ml Low Fat Milk or 0.6 scoop Casein Protein (or 0.6 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4500: {
+      // Extreme Bulk Gain Protocol
+      veg: {
+        macros: {
+          protein: 281,
+          carbs: 619,
+          fats: 100,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 281,
+          carbs: 619,
+          fats: 100,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 9 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd) 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein)",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4600: {
+      // Extreme Bulk Gain Protocol
+      veg: {
+        macros: {
+          protein: 287,
+          carbs: 633,
+          fats: 102,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 287,
+          carbs: 633,
+          fats: 102,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 23 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4700: {
+      // Extreme Bulk Gain Protocol
+      veg: {
+        macros: {
+          protein: 294,
+          carbs: 646,
+          fats: 104,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 24 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1.5 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 294,
+          carbs: 646,
+          fats: 104,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 24 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "6 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "1–2 scoop Whey Protein in 420ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1.5 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk or 1 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "120g Grilled Chicken Can be added in Dinner everyday or 3 times a week. 120g Grilled Fish can be added in Dinner once a week.",
+          },
+        ],
+      },
+    },
+
+    4800: {
+      // Extreme Bulk Gain Protocol
+      veg: {
+        macros: {
+          protein: 300,
+          carbs: 660,
+          fats: 106.5,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 24 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "7 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "2.2 scoops Whey Protein in 500ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1.5 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for cooking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk mix 10g Whey protein or 1.2 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
+          },
+          {
+            id: "tips",
+            name: "Tips",
+            icon: "info",
+            color: "gray",
+            type: "info",
+            items:
+              "Rotate Lentils, Beans, Channa, etc on daily basis. 100g Dairy Paneer or Soy Paneer can be added in Dinner few times a week.",
+          },
+        ],
+      },
+
+      nonVeg: {
+        macros: {
+          protein: 300,
+          carbs: 660,
+          fats: 106,
+        },
+        meals: [
+          {
+            id: "meal1",
+            name: "Breakfast",
+            time: "8–9 AM",
+            icon: "sun",
+            color: "yellow",
+            type: "high-carb",
+            items:
+              "110g Oats, 1.5 scoop Whey Protein (40g), 1 Apple, 24 Almonds, Cinnamon, 1 Multivitamin",
+          },
+          {
+            id: "meal2",
+            name: "Mid-Morning Snack",
+            time: "10–11 AM",
+            icon: "apple",
+            color: "green",
+            type: "carb-protein",
+            items:
+              "3 Whole Eggs, 8 Egg Whites, 4 Multigrain Bread, 1.2 tsp Jam, 1.5 Banana",
+          },
+          {
+            id: "meal3",
+            name: "Lunch",
+            time: "1–2 PM",
+            icon: "utensils",
+            color: "orange",
+            type: "high-carb",
+            items:
+              "310g Rice, 110g Kidney Beans, 8 Egg Whites, Any Vegetables (Peas, Carrots, Bell Pepper, etc), 1 tsp Ghee or Coconut",
+          },
+          {
+            id: "meal4",
+            name: "Evening Snack",
+            time: "4–5 PM",
+            icon: "coffee",
+            color: "purple",
+            type: "energy-dense",
+            items:
+              "7 Rice Cake, 2 tsp Peanut Butter, 180ml Low Fat Milk, 10 Boiled Egg Whites",
+          },
+          {
+            id: "postWorkout",
+            name: "Post-Workout",
+            icon: "dumbbell",
+            color: "red",
+            type: "recovery",
+            note: "Adjust based on workout timing (morning/evening)",
+            items:
+              "2.2 scoops Whey Protein in 500ml Gatorade or Coconut Water (or 6–10 Egg Whites if no Whey Protein), 3g Creatine Monohydrate, 6 Khajoor (Dates), 1.5 Banana (or 80g Grapes)",
+          },
+          {
+            id: "meal5",
+            name: "Dinner",
+            time: "8–9 PM",
+            icon: "moon",
+            color: "blue",
+            type: "balanced",
+            items:
+              "250g Black Lentil, 180g Brown Rice, 110g Low Fat Yogurt (Curd), 1 tsp coconut oil for coocking, 1/2 Plate Mixed Salad (Lettuce, Cucumber, Carrots, etc), 1g Fish Oil or Omega 3",
+          },
+          {
+            id: "meal6",
+            name: "Pre-Bed Snack",
+            time: "1 hour before sleep",
+            icon: "bed",
+            color: "indigo",
+            type: "slow-protein",
+            items:
+              "260ml Low Fat Milk mix 10g Whey Protein or 1.2 scoop Casein Protein (or 1 scoop Whey Protein if no Casein Protein), 1 Rice Cake",
           },
           {
             id: "tips",
