@@ -233,7 +233,7 @@ export default function PlanPage() {
                 </div>
 
                 {/* 🚀 THE V2 CONTENT AREA (Workout + Full Meals) */}
-                <div className="grid md:grid-cols-2 gap-4 flex-1 relative z-10 mb-6">
+                <div className="grid grid-cols-1 gap-4 flex-1 relative z-10 mb-6">
                   {/* WORKOUT */}
                   <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30 h-fit">
                     <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase mb-4 flex items-center gap-2">

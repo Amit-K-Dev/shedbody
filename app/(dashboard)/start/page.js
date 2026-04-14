@@ -119,6 +119,7 @@ export default function StartPlan() {
       return;
     }
 
+    // BMR & Maintenance Calculation
     let bmr =
       gender === "male"
         ? 10 * weight + 6.25 * height - 5 * age + 5
@@ -128,21 +129,32 @@ export default function StartPlan() {
     let calories;
 
     if (goal === "fat_loss") calories = maintenance - 400;
-    else if (goal === "muscle_gain") calories = maintenance + 300;
+    else if (goal === "muscle_gain") calories = maintenance + 400;
     else calories = maintenance;
 
     const bmiCategory = getBMICategory(weight, height);
     const suggestedGoal = getSuggestedGoal(bmiCategory);
     const suggestedLevel = getSuggestedLevel(activity);
 
+    // Finalize Goal
     const finalGoal = goal || suggestedGoal;
     const finalLevel = level || suggestedLevel;
     const adjustedCalories = adjustCalories(finalGoal, calories, []);
 
-    const workout = workoutPlans[finalGoal]?.[finalLevel] || [];
-    const availableCalories = Object.keys(dietPlans[finalGoal] || {}).map(
+    // Fetch Workout (Safe Check)
+    let workoutCategory = workoutPlans[finalGoal] ? finalGoal : "fat_loss";
+    const workout = workoutPlans[workoutCategory]?.[finalLevel] || [];
+
+    // Fetch Diet (Fallback Engine)
+    let dietCategory =
+      dietPlans[finalGoal] && Object.keys(dietPlans[finalGoal]).length > 0
+        ? finalGoal
+        : "fat_loss";
+    const availableCalories = Object.keys(dietPlans[dietCategory] || {}).map(
       Number,
     );
+
+    // Find the closest calorie available in the database
     const closest = availableCalories.length
       ? availableCalories.reduce((prev, curr) =>
           Math.abs(curr - adjustedCalories) < Math.abs(prev - adjustedCalories)
@@ -154,17 +166,24 @@ export default function StartPlan() {
     let diet = null;
     if (closest) {
       diet =
-        dietPlans[finalGoal]?.[closest]?.[dietType] ||
-        dietPlans[finalGoal]?.[closest]?.veg ||
-        null;
+        dietPlans[dietCategory]?.[closest]?.[dietType] ||
+        dietPlans[dietCategory]?.[closest]?.["veg"] ||
+        Object.values(dietPlans[dietCategory][closest])[0];
     }
 
+    const planProtein =
+      diet?.macros?.protein ||
+      Math.round(weight * (finalGoal === "muscle_gain" ? 2.2 : 2.0));
+
+    const planCalories = closest || Math.round(adjustedCalories);
+
+    // Final result setup
     setResult({
       goal: finalGoal,
       level: finalLevel,
       dietType,
-      calories: Math.round(adjustedCalories),
-      protein: Math.round(weight * 2),
+      calories: planCalories,
+      protein: planProtein,
       workout,
       meals: diet,
     });
