@@ -21,7 +21,7 @@ import {
   Target,
 } from "lucide-react";
 
-// ELITE ICON & COLOR MAP FOR V2
+// ICON & COLOR MAP FOR V2
 const iconMap = {
   sun: Sun,
   apple: Apple,
@@ -62,7 +62,7 @@ export default function PlanPage() {
   // DELETE
   async function handleDelete(id) {
     await deletePlan(id);
-    loadPlans(); // refresh
+    loadPlans();
   }
 
   // CLEAR ALL
@@ -232,25 +232,123 @@ export default function PlanPage() {
                   </div>
                 </div>
 
-                {/* 🚀 THE V2 CONTENT AREA (Workout + Full Meals) */}
+                {/* V2 CONTENT AREA (Workout + Full Meals) */}
                 <div className="grid grid-cols-1 gap-4 flex-1 relative z-10 mb-6">
-                  {/* WORKOUT */}
+                  {/* WORKOUT (SMART V1 & V2 RENDER) */}
                   <div className="bg-zinc-800/30 rounded-xl p-4 border border-zinc-700/30 h-fit">
-                    <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase mb-4 flex items-center gap-2">
-                      <CalendarDays className="w-4 h-4" /> Workout Protocol
-                    </h4>
-                    <ul className="space-y-3">
-                      {plan.workout?.map((d, idx) => (
-                        <li
-                          key={idx}
-                          className="text-[13px] text-zinc-300 flex items-start gap-2 border-b border-zinc-800/50 pb-2 last:border-0 last:pb-0"
-                        >
-                          <span className="w-5 h-5 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
-                            {idx + 1}
-                          </span>
-                          <span className="leading-snug">{d}</span>
-                        </li>
-                      ))}
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                      <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase flex items-center gap-2">
+                        <CalendarDays className="w-4 h-4" />
+                        {plan.workout?.protocol_name || "Workout Protocol"}
+                      </h4>
+                      {/* V2 Protocol Badge */}
+                      {plan.workout?.protocol_name && (
+                        <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                          Elite V2
+                        </span>
+                      )}
+                    </div>
+
+                    <ul className="space-y-5">
+                      {/* SMART CHECK: V2 Object (Schedule) vs V1 Array */}
+                      {plan.workout?.schedule ? (
+                        // V2 RENDER LOGIC
+                        plan.workout.schedule.map((dayData, idx) => (
+                          <li
+                            key={idx}
+                            className="border-b border-zinc-700/50 pb-5 last:border-0 last:pb-0"
+                          >
+                            {/* Day Header */}
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-sm shrink-0">
+                                DAY {dayData.day}
+                              </span>
+                              <span className="text-[13px] font-bold text-zinc-100 uppercase tracking-wide">
+                                {dayData.title}
+                              </span>
+                            </div>
+
+                            {/* Target Muscles Tags */}
+                            {dayData.target_muscles && (
+                              <div className="flex flex-wrap gap-1.5 mb-4">
+                                {dayData.target_muscles.map((m, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-[9px] font-medium text-zinc-400 bg-zinc-900/80 border border-zinc-700/50 px-1.5 py-0.5 rounded-md"
+                                  >
+                                    {m}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Exercises Table View */}
+                            <div className="space-y-2 mb-3">
+                              {dayData.exercises?.map((ex) => (
+                                <div
+                                  key={ex.id}
+                                  className="flex justify-between items-center gap-3 bg-zinc-950/40 p-2.5 rounded-lg border border-zinc-800/50 hover:border-emerald-500/30 transition-colors"
+                                >
+                                  <div className="flex-1">
+                                    <p className="text-[11px] font-bold text-zinc-200">
+                                      {ex.name}
+                                    </p>
+                                    {ex.technique && (
+                                      <p className="text-[9px] text-emerald-400 mt-0.5 flex items-center gap-1">
+                                        <Sparkles className="w-2.5 h-2.5" />{" "}
+                                        {ex.technique}
+                                      </p>
+                                    )}
+                                  </div>
+                                  <div className="text-right shrink-0">
+                                    <p className="text-[11px] font-black text-zinc-50">
+                                      {ex.sets}{" "}
+                                      <span className="text-zinc-500 font-normal">
+                                        x
+                                      </span>{" "}
+                                      {ex.reps}
+                                    </p>
+                                    <p className="text-[9px] font-medium text-zinc-500 mt-0.5">
+                                      {ex.rest} rest
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Cardio Finisher Tag */}
+                            {dayData.finisher_cardio &&
+                              dayData.finisher_cardio.type !== "None" && (
+                                <div className="text-[10px] text-orange-400 font-medium flex items-center justify-between bg-orange-400/10 p-2 rounded-lg border border-orange-400/20">
+                                  <span className="flex items-center gap-1.5">
+                                    <Flame className="w-3 h-3" /> Finisher:{" "}
+                                    {dayData.finisher_cardio.type}
+                                  </span>
+                                  <span>
+                                    {dayData.finisher_cardio.duration}
+                                  </span>
+                                </div>
+                              )}
+                          </li>
+                        ))
+                      ) : // V1 RENDER LOGIC (Fallback)
+                      Array.isArray(plan.workout) ? (
+                        plan.workout.map((d, idx) => (
+                          <li
+                            key={idx}
+                            className="text-[13px] text-zinc-300 flex items-start gap-2 border-b border-zinc-800/50 pb-2 last:border-0 last:pb-0"
+                          >
+                            <span className="w-5 h-5 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
+                              {idx + 1}
+                            </span>
+                            <span className="leading-snug">{d}</span>
+                          </li>
+                        ))
+                      ) : (
+                        <p className="text-xs text-zinc-500 italic">
+                          No workout protocol available.
+                        </p>
+                      )}
                     </ul>
                   </div>
 

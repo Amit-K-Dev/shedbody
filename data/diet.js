@@ -6495,6 +6495,7 @@ export const dietPlans = {
 
   maintenance: {
     // 2000-2400 calorie protocol balance out maintenance
+
     2000: {
       veg: {
         macros: {
@@ -6509,7 +6510,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -6519,7 +6520,7 @@ export const dietPlans = {
             time: "10–11 AM",
             icon: "apple",
             color: "green",
-            type: "light",
+            type: "light-balanced",
             items: "2 Whole Eggs, 7 Egg Whites, 1.5 Fruit (Guava/Apple/Orange)",
           },
           {
@@ -6597,7 +6598,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -6687,7 +6688,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -6775,7 +6776,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -6865,7 +6866,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein (40g), 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -6954,7 +6955,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -7045,7 +7046,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -7134,7 +7135,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein (40g), 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -7225,7 +7226,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
@@ -7314,7 +7315,7 @@ export const dietPlans = {
             time: "8–9 AM",
             icon: "sun",
             color: "yellow",
-            type: "balanced",
+            type: "balanced-carb",
             items:
               "30g Oats, 1.3 scoop Whey Protein, 1/2 Apple, 1-2 tsp Flaxseed or Pumpkin seed, Cinnamon, 1 Multivitamin",
           },
