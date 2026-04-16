@@ -17,6 +17,13 @@ export default function PremiumSetGoal({ currentTarget }) {
       return;
     }
 
+    const targetWeight = parseFloat(goalInput);
+
+    if (targetWeight <= 0 || targetWeight > 500) {
+      toast.error("Please enter a realistic target weight");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -28,12 +35,15 @@ export default function PremiumSetGoal({ currentTarget }) {
       if (!user) throw new Error("User not found");
 
       // Update target weight in Database
-      const { error } = await supabase
+      const { data: updatedProfile, error } = await supabase
         .from("user_profiles")
-        .update({ target_weight: parseFloat(goalInput) })
-        .eq("user_id", user.id);
+        .update({ target_weight: targetWeight })
+        .eq("user_id", user.id)
+        .select("user_id")
+        .maybeSingle();
 
       if (error) throw error;
+      if (!updatedProfile) throw new Error("Profile not found");
 
       toast.show({
         title: "Target Goal Updated! 🎯",

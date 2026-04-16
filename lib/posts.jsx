@@ -5,31 +5,52 @@ import { createClient as createStandardClient } from "@supabase/supabase-js";
 // Helper for standardized error logging
 const logError = (context, error) => console.error(`${context} error:`, error);
 
+const publicPostFields =
+  "id, title, slug, excerpt, category, views, updated_at, published_at";
+
+function applyPublicPostFilters(query) {
+  return query
+    .not("title", "is", null)
+    .not("slug", "is", null)
+    .not("category", "is", null)
+    .not("published_at", "is", null);
+}
+
 // GET SINGLE POST
 export const getPost = cache(async (slug) => {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const query = supabase
     .from("posts")
     .select(
-      "id, title, slug, content, excerpt, category, published_at, views, updated_at",
-    )
+      "id, title, slug, content, processed_content, excerpt, category, published_at, views, updated_at",
+    );
+
+  const { data, error } = await applyPublicPostFilters(query)
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
   if (error) {
     logError("getPost", error);
     return null;
   }
-  return data;
+
+  if (!data) return null;
+
+  return {
+    ...data,
+    content: data.processed_content || data.content || "",
+  };
 });
 
 // GET RELATED POSTS (Increased limit slightly for better UI options)
 export const getRelatedPosts = cache(async (category, slug) => {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const query = supabase
     .from("posts")
     .select("id, title, slug, category, excerpt")
-    .eq("category", category)
+    .eq("category", category);
+
+  const { data, error } = await applyPublicPostFilters(query)
     .neq("slug", slug)
     .order("published_at", { ascending: false })
     .limit(3);
@@ -41,7 +62,10 @@ export const getRelatedPosts = cache(async (category, slug) => {
 export const getCategories = cache(async () => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from("posts").select("category");
+  const { data, error } = await supabase
+    .from("posts")
+    .select("category")
+    .not("category", "is", null);
 
   if (error) return ["all"];
 
@@ -59,22 +83,22 @@ export const getTrendingPosts = cache(async (limit = 6) => {
     Date.now() - 7 * 24 * 60 * 60 * 1000,
   ).toISOString();
 
-  let { data, error } = await supabase
+  const trendingQuery = supabase
     .from("posts")
-    .select(
-      "id, title, slug, excerpt, category, views, updated_at, published_at",
-    )
+    .select(publicPostFields);
+
+  let { data, error } = await applyPublicPostFilters(trendingQuery)
     .gte("updated_at", sevenDaysAgo)
     .order("views", { ascending: false })
     .limit(limit);
 
   // Fallback
   if (!data || data.length === 0) {
-    const { data: fallbackData } = await supabase
+    const fallbackQuery = supabase
       .from("posts")
-      .select(
-        "id, title, slug, excerpt, category, views, updated_at, published_at",
-      )
+      .select(publicPostFields);
+
+    const { data: fallbackData } = await applyPublicPostFilters(fallbackQuery)
       .order("views", { ascending: false })
       .limit(limit);
     return fallbackData || [];
@@ -87,11 +111,11 @@ export const getTrendingPosts = cache(async (limit = 6) => {
 export const getPopularPosts = cache(async (limit = 6) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const query = supabase
     .from("posts")
-    .select(
-      "id, title, slug, excerpt, category, views, updated_at, published_at",
-    )
+    .select(publicPostFields);
+
+  const { data, error } = await applyPublicPostFilters(query)
     .order("views", { ascending: false })
     .limit(limit);
 
@@ -117,11 +141,11 @@ export function calculatePostScore(post) {
 export const getSmartFeed = cache(async (limit = 6) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const query = supabase
     .from("posts")
-    .select(
-      "id, title, slug, excerpt, category, views, published_at, updated_at",
-    )
+    .select(publicPostFields);
+
+  const { data, error } = await applyPublicPostFilters(query)
     .order("published_at", { ascending: false })
     .limit(30);
 
@@ -140,12 +164,14 @@ export const getAllPosts = cache(
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    let query = supabase
+    let query = applyPublicPostFilters(
+      supabase
       .from("posts")
       .select(
         "id, title, slug, excerpt, published_at, category, views, updated_at",
         { count: "exact" },
-      );
+      ),
+    );
 
     // 1. Search Logic
     if (search && search.trim() !== "") {
@@ -187,7 +213,10 @@ export const getCategoriesForBuild = async () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   );
 
-  const { data, error } = await supabase.from("posts").select("category");
+  const { data, error } = await supabase
+    .from("posts")
+    .select("category")
+    .not("category", "is", null);
 
   if (error) {
     console.error("Build time categories error:", error);

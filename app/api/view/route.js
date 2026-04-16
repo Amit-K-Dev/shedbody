@@ -1,27 +1,38 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req) {
+  const body = await req.json().catch(() => null);
+  const postId = Number(body?.postId);
+
+  if (!Number.isInteger(postId) || postId <= 0) {
+    return NextResponse.json({ error: "Invalid postId" }, { status: 400 });
+  }
+
+  const supabase = await createClient();
+
+  const forwardedFor = req.headers.get("x-forwarded-for") || "";
+  const ip =
+    forwardedFor.split(",")[0].trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+  const userAgent = req.headers.get("user-agent") || "unknown";
+
+  const userHash = crypto
+    .createHash("sha256")
+    .update(`${ip}:${userAgent}:${process.env.VIEW_HASH_SECRET || "local-dev"}`)
+    .digest("hex");
+
   try {
-    const { postId } = await req.json();
-
-    if (!postId) {
-      return NextResponse.json({ error: "Missing postId" }, { status: 400 });
-    }
-
-    // Create simple user fingerprint
-    const ip =
-      req.headers.get("x-forwarded-for") ||
-      reg.headers.get("x-real-ip") ||
-      "unknown";
-
-    const userHash = `${ip}-${req.headers.get("user-agent")}`;
-
     // 30 minuts window
-    const THIRTY_MIN_AGO = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    const viewedAt = new Date();
+    const THIRTY_MIN_AGO = new Date(
+      viewedAt.getTime() - 30 * 60 * 1000,
+    ).toISOString();
 
     // Check recent view
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from("post_views")
       .select("id")
       .eq("post_id", postId)
@@ -29,20 +40,27 @@ export async function POST(req) {
       .gte("viewed_at", THIRTY_MIN_AGO)
       .limit(1);
 
+    if (existingError) throw existingError;
+
     if (existing && existing.length > 0) {
       return NextResponse.json({ message: "Already counted" });
     }
 
     // Insert view record
-    await supabase.from("post_views").insert({
+    const { error: insertError } = await supabase.from("post_views").insert({
       post_id: postId,
       user_hash: userHash,
+      viewed_at: viewedAt.toISOString(),
     });
 
+    if (insertError) throw insertError;
+
     // Increment actual views
-    await supabase.rpc("increment_views", {
+    const { error: rpcError } = await supabase.rpc("increment_views", {
       post_id: postId,
     });
+
+    if (rpcError) throw rpcError;
 
     return NextResponse.json({ success: true });
   } catch (err) {

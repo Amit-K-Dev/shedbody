@@ -1,9 +1,10 @@
 import { getDashboardData } from "@/lib/dashboard/getDashboardData";
 import { getWeightData } from "@/lib/dashboard/getWeightData";
-import { getStreak } from "@/lib/dashboard/getStreak";
 import { generateInsights } from "@/lib/ai/generateInsights";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
+import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
+import { createClient } from "@/lib/supabase/server";
 
 // UI
 import PremiumHeader from "@/components/dashboard/PremiumHeader";
@@ -42,25 +43,77 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+function formatPlanLabel(value) {
+  return value ? value.replaceAll("_", " ") : "Unknown";
+}
+
+function summarizeWorkout(workout) {
+  if (!workout) return "No workout summary saved yet.";
+
+  if (typeof workout === "string") return workout;
+
+  if (Array.isArray(workout)) {
+    const first = workout[0];
+    if (!first) return "No workout summary saved yet.";
+    if (typeof first === "string") return first;
+    return first.title || first.name || "Workout protocol ready.";
+  }
+
+  const firstDay = workout.schedule?.[0];
+  const firstExercise = firstDay?.exercises?.[0]?.name;
+  const parts = [
+    workout.protocol_name,
+    firstDay?.title,
+    firstExercise ? `Start with ${firstExercise}` : null,
+  ].filter(Boolean);
+
+  return parts.length ? parts.join(" - ") : "Workout protocol ready.";
+}
+
+function summarizeMeals(meals) {
+  if (!meals) return "No meal summary saved yet.";
+
+  if (typeof meals === "string") return meals;
+
+  const mealList = Array.isArray(meals) ? meals : meals.meals;
+  if (Array.isArray(mealList)) {
+    const breakfast =
+      mealList.find((meal) => meal.id === "meal1") || mealList[0];
+    return breakfast?.items || breakfast?.name || "Meal plan ready.";
+  }
+
+  return meals.breakfast || meals.lunch || meals.dinner || "Meal plan ready.";
+}
+
 export default async function DashboardPage() {
-  const [dashboardData, weightData, streak, profileData, plans] =
-    await Promise.all([
-      getDashboardData(),
-      getWeightData(),
-      getStreak(),
-      getProfileData(),
-      getPlans(),
-    ]);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const authContext = { supabase, userId: user?.id };
+
+  const athlete = getUserDisplay(user);
+
+  const [dashboardData, weightData, profileData, plans] = await Promise.all([
+    getDashboardData(authContext),
+    getWeightData(authContext),
+    getProfileData(authContext),
+    getPlans(authContext),
+  ]);
 
   const goal = profileData?.target_weight || 72;
 
   const heightInMeters = profileData?.height ? profileData.height / 100 : 1;
   const bmiHistory = (weightData || []).map((item) => {
     return {
-      date: new Date(item.created_at).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-      }),
+      date: new Date(item.entry_date || item.created_at).toLocaleDateString(
+        "en-IN",
+        {
+          day: "2-digit",
+          month: "short",
+        },
+      ),
       bmi: Number((item.weight / (heightInMeters * heightInMeters)).toFixed(1)),
     };
   });
@@ -71,16 +124,19 @@ export default async function DashboardPage() {
     goal,
   });
 
-  const todayLogged = (weightData || []).some(
-    (entry) =>
-      new Date(entry.created_at).toDateString() === new Date().toDateString(),
-  );
+  const todayLogged = (weightData || []).some((entry) => {
+    const entryDate =
+      entry.entry_date || new Date(entry.created_at).toISOString().slice(0, 10);
+    return entryDate === new Date().toISOString().slice(0, 10);
+  });
 
   const currentWeight = weightData?.[weightData.length - 1]?.weight;
 
   // Separate Current and Previous Plans
   const currentPlan = (plans || []).find((p) => p.is_active === true);
   const previousPlan = (plans || []).find((p) => p.is_active === false);
+  const currentWorkoutSummary = summarizeWorkout(currentPlan?.workout);
+  const currentMealSummary = summarizeMeals(currentPlan?.meals);
 
   // UI
   return (
@@ -88,7 +144,9 @@ export default async function DashboardPage() {
       <div className="max-w-4xl mx-auto ">
         <div className="space-y-8 pb-32">
           {/* Heading */}
-          <h2 className="text-2xl font-bold">Welcome back 👋</h2>
+          <h2 className="text-2xl font-bold">
+            Welcome {athlete.name || "back"} 👋
+          </h2>
 
           {/* HERO SECTION */}
           <PremiumHeader profile={profileData} />
@@ -142,7 +200,7 @@ export default async function DashboardPage() {
                     No Active Protocol
                   </h2>
                   <p className="text-zinc-400 mb-6 text-sm">
-                    You haven't generated or set any plan as active yet.
+                    You have not generated or set any plan as active yet.
                   </p>
                   <Link
                     href="/start"
@@ -167,10 +225,10 @@ export default async function DashboardPage() {
                       <div>
                         <div className="flex flex-wrap gap-2 mb-3">
                           <span className="px-3 py-1 bg-emerald-500 text-black text-[10px] font-black rounded-md uppercase">
-                            {currentPlan.goal?.replace("_", " ")}
+                            {formatPlanLabel(currentPlan.goal)}
                           </span>
                           <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-[10px] font-bold text-zinc-300 rounded-md uppercase">
-                            {currentPlan.level}
+                            {formatPlanLabel(currentPlan.level)}
                           </span>
                         </div>
                         <h3 className="text-xl font-black text-zinc-50">
@@ -207,7 +265,7 @@ export default async function DashboardPage() {
                           Workout
                         </h4>
                         <p className="text-sm text-zinc-300 line-clamp-2">
-                          {currentPlan.workout?.[0]}
+                          {currentWorkoutSummary}
                         </p>
                       </div>
                       <div className="bg-zinc-950/50 border border-zinc-800/50 p-4 rounded-xl">
@@ -216,14 +274,8 @@ export default async function DashboardPage() {
                           Meals
                         </h4>
                         <p className="text-sm text-zinc-300 line-clamp-2">
-                          {/* 🧠 SMART FETCHING: V2 (Array) ya V1 (Object) */}
-                          {
-                            currentPlan.meals?.meals // Check if it's V2
-                              ? currentPlan.meals.meals.find(
-                                  (m) => m.id === "meal1",
-                                )?.items // Fetch Breakfast from V2
-                              : currentPlan.meals?.breakfast // Fetch Breakfast from V1
-                          }
+                          {/* SMART FETCHING: V2 (Array) or V1 (Object) */}
+                          {currentMealSummary}
                         </p>
                       </div>
                     </div>
@@ -251,8 +303,8 @@ export default async function DashboardPage() {
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                       <div>
                         <span className="text-[10px] font-bold text-zinc-500 uppercase mb-1 block">
-                          {previousPlan.goal?.replace("_", " ")} &bull;{" "}
-                          {previousPlan.level}
+                          {formatPlanLabel(previousPlan.goal)} &bull;{" "}
+                          {formatPlanLabel(previousPlan.level)}
                         </span>
                         <div className="flex items-center gap-4 mt-1">
                           <div className="flex items-center gap-1.5 text-zinc-400 text-sm">

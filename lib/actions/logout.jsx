@@ -20,7 +20,7 @@ export async function logout() {
 
   const isPrivatePage =
     pathname.includes("/dashboard") ||
-    pathname.includes("/progress") ||
+    pathname.includes("/profile") ||
     pathname.includes("/plans") ||
     pathname.includes("/start");
 

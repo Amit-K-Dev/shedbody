@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export default function Input({
-  lable,
+  label,
   type = "text",
   value,
   onChange,
@@ -24,13 +24,13 @@ export default function Input({
         onBlur={() => setFucused(false)}
         className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 pt-5 tex-sm outline-none focus:border-emerald-500 transition"
       />
-      <lable
+      <label
         className={`absolute left-4 transition-all text-zinc-400 pointer-events-none ${
           isActive ? "top-1 text-xs text-green-400" : "top-3 text-sm"
         }`}
       >
-        {lable}
-      </lable>
+        {label}
+      </label>
     </div>
   );
 }

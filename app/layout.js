@@ -1,5 +1,4 @@
 import { Oswald, Inter } from "next/font/google";
-import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 import BackToTop from "@/components/BackToTop";
 import { Toaster } from "@/components/ui/toaster";
@@ -91,12 +90,6 @@ const inter = Inter({
 });
 
 export default async function RootLayout({ children }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const schema = [
     {
       "@context": "https://schema.org",

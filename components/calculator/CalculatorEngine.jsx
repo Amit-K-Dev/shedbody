@@ -85,12 +85,24 @@ export default function CalculatorEngine({ config }) {
   };
 
   const saveResult = async (resultData, inputData) => {
+    const now = new Date().toISOString();
+
+    await supabase
+      .from("calculator_results")
+      .update({ is_latest: false, update_at: now })
+      .eq("user_id", user.id)
+      .eq("calculator_id", config.id)
+      .eq("is_latest", true)
+      .is("deleted_at", null);
+
     const { error } = await supabase.from("calculator_results").insert([
       {
         user_id: user.id,
         calculator_id: config.id,
         input_data: inputData,
         result_data: resultData,
+        is_latest: true,
+        update_at: now,
       },
     ]);
     if (!error) fetchHistory();
@@ -100,9 +112,10 @@ export default function CalculatorEngine({ config }) {
     if (!user) return;
     const { data } = await supabase
       .from("calculator_results")
-      .select("*")
+      .select("id, result_data, input_data, is_latest, created_at")
       .eq("calculator_id", config.id)
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(7);
 

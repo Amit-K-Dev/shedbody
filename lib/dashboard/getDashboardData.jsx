@@ -1,18 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 
-export async function getDashboardData() {
-  const supabase = await createClient();
+export async function getDashboardData(authContext) {
+  const supabase = authContext?.supabase || (await createClient());
+  let userId = authContext?.userId;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (!userId) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) return null;
+    userId = user?.id;
+  }
+
+  if (!userId) return null;
 
   const { data, error } = await supabase
     .from("calculator_results")
-    .select("*")
-    .eq("user_id", user.id)
+    .select("created_at, result_data")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(20);
 

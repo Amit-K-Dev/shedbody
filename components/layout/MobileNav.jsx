@@ -7,14 +7,14 @@ export default function MobileNav() {
   const pathname = usePathname();
 
   const items = [
-    { name: "Home", href: "/" },
+    { name: "Profile", href: "/profile" },
     { name: "BMI Calculator", href: "/calculators/bmi" },
     { name: "My Plan", href: "/plans" },
     { name: "New Plan", href: "/start" },
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex justify-around p-3 pb-20 mt-3 md:pb-6 md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex justify-around p-3 pb-10 mt-3 md:pb-6 md:hidden z-10">
       {items.map((item) => (
         <Link
           key={item.name}

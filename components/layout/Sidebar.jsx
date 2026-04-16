@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navItems = [
-  { name: "Home", href: "/" },
+  { name: "Profile", href: "/profile" },
   { name: "BMI Calculator", href: "/calculators/bmi" },
   { name: "My Plan", href: "/plans" },
   { name: "Start New Plan", href: "/start" },
@@ -25,9 +25,9 @@ export default function Sidebar({ user }) {
       {/* Toggle */}
       <button onClick={() => setCollapsed(!collapsed)} className="mb-6">
         {collapsed ? (
-          <SidebarOpen size={16} className="text-zinc-400" />
+          <SidebarOpen size={18} className="text-zinc-400" />
         ) : (
-          <SidebarClose size={16} className="text-zinc-400" />
+          <SidebarClose size={18} className="text-zinc-400" />
         )}
       </button>
 

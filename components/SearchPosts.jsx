@@ -21,13 +21,13 @@ export default function SearchPosts() {
 
         if (!data) return [];
 
-        const safePosts = Array.isArray(data) ? data : data?.posts || [];
+        const safePosts = Array.isArray(data?.data) ? data.data : [];
 
         const optimized = safePosts.map((p) => ({
           ...p,
           titleLower: p.title?.toLowerCase() || "",
           categoryLower: p.category?.toLowerCase() || "",
-          tagsLower: p.tags?.map((t) => t.toLowerCase() || []),
+          tagsLower: p.tags?.map((t) => t.toLowerCase()) || [],
         }));
 
         setPosts(optimized);
@@ -93,7 +93,8 @@ export default function SearchPosts() {
   function highlight(text, query) {
     if (!query) return text;
 
-    const regex = new RegExp(`(${query})`, "gi");
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`(${escapedQuery})`, "gi");
     return text.split(regex).map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <span key={i} className="bg-green-500/30 text-green-300">

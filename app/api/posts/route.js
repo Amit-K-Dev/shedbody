@@ -9,8 +9,13 @@ export async function GET() {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "id, title, slug, category, content, excerpt, published_at, updated_at, views",
-      );
+        "id, title, slug, category, excerpt, published_at, updated_at, views",
+      )
+      .not("title", "is", null)
+      .not("slug", "is", null)
+      .not("category", "is", null)
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false });
 
     // 3. Database Error Handling
     if (error) {

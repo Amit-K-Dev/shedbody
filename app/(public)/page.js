@@ -13,6 +13,10 @@ export default async function Home() {
       supabase
         .from("posts")
         .select("id, title, slug, category, excerpt, published_at, views")
+        .not("title", "is", null)
+        .not("slug", "is", null)
+        .not("category", "is", null)
+        .not("published_at", "is", null)
         .order("published_at", { ascending: false })
         .limit(7),
       getSmartFeed(6),

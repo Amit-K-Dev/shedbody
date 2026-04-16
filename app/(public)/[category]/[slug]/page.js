@@ -34,10 +34,13 @@ export async function generateMetadata({ params }) {
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/${post.category}/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      image: [
+      images: [
         {
           url: `${BASE_URL}/${post.category}/${post.slug}/og-image`,
           width: 1200,
@@ -46,6 +49,8 @@ export async function generateMetadata({ params }) {
       ],
       type: "article",
       siteName: "ShedBody",
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at || post.published_at,
     },
   };
 }

@@ -19,22 +19,38 @@ export async function POST(req) {
     }
 
     // Parse Request Body safely
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
+    if (!body) {
+      return NextResponse.json(
+        { success: false, error: "Invalid JSON body." },
+        { status: 400 },
+      );
+    }
+
     const weightValue = parseFloat(body.weight);
 
     // Input Validation: Check if weight is valid
-    if (!body.weight || isNaN(weightValue)) {
+    if (
+      !body.weight ||
+      isNaN(weightValue) ||
+      weightValue <= 0 ||
+      weightValue > 500
+    ) {
       return NextResponse.json(
         { success: false, error: "Please provide a valid weight number." },
         { status: 400 },
       );
     }
 
+    const entryDate = new Date().toISOString().slice(0, 10);
+
     // Database Insert
     const { error: dbError } = await supabase.from("progress_entries").insert([
       {
         user_id: user.id,
         weight: weightValue,
+        entry_date: entryDate,
+        updated_at: new Date().toISOString(),
       },
     ]);
 

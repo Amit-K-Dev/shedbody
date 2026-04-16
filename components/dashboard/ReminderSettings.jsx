@@ -18,7 +18,7 @@ export default function ReminderSettings({ initial }) {
         reminder_enabled: enabled,
         reminder_time: time,
       })
-      .eq("id", data.user.id);
+      .eq("user_id", data.user.id);
 
     alert("Saved");
   };

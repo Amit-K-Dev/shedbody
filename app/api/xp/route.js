@@ -20,12 +20,25 @@ export async function POST(req) {
     }
 
     // Safe Body Parsing & Validation
-    const body = await req.json();
-    const amount = Number(body.amount);
+    const XP_BY_ACTION = {
+      weight_logged: 10,
+      workout_completed: 25,
+    };
 
-    if (!amount || isNaN(amount)) {
+    const body = await req.json().catch(() => null);
+    if (!body) {
       return NextResponse.json(
-        { success: false, error: "Invalid XP amount" },
+        { success: false, error: "Invalid JSON body" },
+        { status: 400 },
+      );
+    }
+
+    const { action } = body;
+    const amount = XP_BY_ACTION[action];
+
+    if (!amount) {
+      return NextResponse.json(
+        { success: false, error: "Invalid action" },
         { status: 400 },
       );
     }

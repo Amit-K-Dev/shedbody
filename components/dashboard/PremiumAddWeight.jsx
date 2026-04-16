@@ -32,12 +32,12 @@ export default function PremiumAddWeight({ lastWeight }) {
       await fetch("/api/xp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 20 }),
+        body: JSON.stringify({ action: "weight_logged" }),
       });
       await fetch("/api/streak", { method: "POST" });
 
       toast.show({
-        title: "Weight logged! +20 XP 🔥",
+        title: "Weight logged! +10 XP",
         variant: "success",
       });
 
@@ -65,7 +65,7 @@ export default function PremiumAddWeight({ lastWeight }) {
           </div>
           <div>
             <h3 className="text-lg font-bold text-zinc-50 flex items-center gap-2">
-              Log Today's Weight
+              Log Today&apos;s Weight
             </h3>
             <p className="text-sm text-zinc-400 flex items-center gap-1 mt-0.5">
               Last log:{" "}
