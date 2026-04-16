@@ -35,13 +35,21 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
 ```
 └── 📁shedbody
     └── 📁app
+        └── 📁(auth)
+            └── 📁auth
+                └── 📁callback
+                    ├── route.js
+            └── 📁login
+                ├── page.js
+            └── 📁signup
+                ├── page.js
+            ├── layout.js
         └── 📁(dashboard)
-            └── 📁calculators
-                └── 📁bmi
-                    ├── page.js
             └── 📁dashboard
                 ├── page.js
-            └── 📁progress
+            └── 📁plans
+                ├── page.js
+            └── 📁profile
                 ├── page.js
             └── 📁start
                 ├── page.js
@@ -49,7 +57,7 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
         └── 📁(public)
             └── 📁[category]
                 └── 📁[slug]
-                    ├── opengraph-image.js
+                    ├── og-image.js
                     ├── page.js
                 ├── page.js
             └── 📁about
@@ -58,6 +66,9 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
                 ├── page.js
             └── 📁articles
                 ├── page.js
+            └── 📁calculators
+                └── 📁bmi
+                    ├── page.js
             └── 📁cookies-policy
                 ├── page.js
             └── 📁editorial-process
@@ -67,8 +78,6 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
             └── 📁pages
                 └── 📁[slug]
                     ├── page.js
-            └── 📁plans
-                ├── page.js
             └── 📁privacy-policy
                 ├── page.js
             └── 📁scientific-review-board
@@ -82,8 +91,6 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
             ├── layout.js
             ├── page.js
         └── 📁api
-            └── 📁plan
-                ├── route.js
             └── 📁posts
                 ├── route.js
             └── 📁progress
@@ -94,11 +101,7 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
                 ├── route.js
             └── 📁xp
                 ├── route.js
-        └── 📁auth
-            └── 📁callback
-                ├── route.js
-        └── 📁login
-            ├── page.js
+        ├── ads.txt
         ├── apple-icon.png
         ├── favicon-16x16.png
         ├── favicon-32x32.png
@@ -106,90 +109,110 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
         ├── globals.css
         ├── icon.png
         ├── layout.js
+        ├── og-image.png
         ├── robots.js
+        ├── shedbody-logo-black.png
+        ├── shedbody-logo-white.png
         ├── sitemap.js
     └── 📁components
         └── 📁calculator
-            ├── CalculatorEngine.js
+            ├── CalculatorEngine.jsx
         └── 📁dashboard
-            ├── AddWeightForm.js
-            ├── Badges.js
-            ├── BMIChart.js
-            ├── Insights.js
-            ├── LevelCard.js
-            ├── ReminderBanner.js
-            ├── ReminderSettings.js
-            ├── SetGoal.js
-            ├── StreakCard.js
-            ├── WeightChart.js
+            ├── Badges.jsx
+            ├── PremiumAddWeight.jsx
+            ├── PremiumBMI.jsx
+            ├── PremiumChart.jsx
+            ├── PremiumHeader.jsx
+            ├── PremiumInsights.jsx
+            ├── PremiumSetGoal.jsx
+            ├── ReminderBanner.jsx
+            ├── ReminderSettings.jsx
+            ├── StatCards.jsx
+        └── 📁icons
+            ├── FacebookIcon.jsx
+            ├── GoogleIcon.jsx
+            ├── LinkedInIcon.jsx
+            ├── XIcon.jsx
         └── 📁layout
-            ├── Footer.js
-            ├── Header.js
-            ├── MobileNav.js
-            ├── Sidebar.js
-            ├── Topbar.js
+            ├── Footer.jsx
+            ├── Header.jsx
+            ├── MobileNav.jsx
+            ├── Sidebar.jsx
+            ├── Topbar.jsx
         └── 📁ui
-            ├── MotionWrapper.js
-            ├── Skeleton.js
-            ├── toaster.js
-            ├── use-toast.js
-        ├── BackToTop.js
-        ├── Breadcrumbs.js
-        ├── ExpertInline.js
-        ├── InlineRelatedArticles.js
-        ├── LogoutButton.js
-        ├── Pagination.js
-        ├── PostCard.js
-        ├── ReadingProgress.js
-        ├── SearchBar.js
-        ├── SearchPosts.js
-        ├── SortFilter.js
-        ├── SourcesToggle.js
-        ├── TableOfContents.js
-        ├── ViewTracker.js
+            ├── Input.jsx
+            ├── MotionWrapper.jsx
+            ├── PasswordInput.jsx
+            ├── Skeleton.jsx
+            ├── SocialIcon.jsx
+            ├── toaster.jsx
+            ├── use-toast.jsx
+        ├── BackToTop.jsx
+        ├── Breadcrumbs.jsx
+        ├── ExpertInline.jsx
+        ├── InlineRelatedArticles.jsx
+        ├── LogoutButton.jsx
+        ├── Pagination.jsx
+        ├── PostCard.jsx
+        ├── ReadingProgress.jsx
+        ├── SearchBar.jsx
+        ├── SearchPosts.jsx
+        ├── SortFilter.jsx
+        ├── SourcesToggle.jsx
+        ├── TableOfContents.jsx
+        ├── UserAvatar.jsx
+        ├── ViewTracker.jsx
     └── 📁data
-        ├── diet.js
-        ├── workout.js
+        ├── diet.jsx
+        ├── workout.jsx
     └── 📁lib
         └── 📁actions
-            ├── logout.js
+            ├── logout.jsx
         └── 📁ai
-            ├── generateInsights.js
+            ├── generateInsights.jsx
         └── 📁auth
-            ├── getUser.js
+            ├── getUser.jsx
+            ├── userDisplay.js
         └── 📁calculations
-            ├── bmi.js
-            ├── index.js
+            ├── bmi.jsx
+            ├── index.jsx
         └── 📁calculators
-            ├── bmi.js
+            ├── bmi.jsx
         └── 📁dashboard
-            ├── getDashboardData.js
-            ├── getStreak.js
-            ├── getWeightData.js
+            ├── getDashboardData.jsx
+            ├── getProfileData.jsx
+            ├── getStreak.jsx
+            ├── getWeightData.jsx
         └── 📁gamification
-            ├── addXP.js
-            ├── checkBadges.js
+            ├── addXP.jsx
+            ├── checkBadges.jsx
         └── 📁streak
-            ├── updateStreak.js
+            ├── updateStreak.jsx
         └── 📁supabase
             ├── client.js
             ├── server.js
         └── 📁utils
-            ├── date.js
-        ├── contentParser.js
-        ├── expertMapping.js
-        ├── experts.js
-        ├── getExpert.js
-        ├── getExpertForPost.js
-        ├── posts.js
+            ├── date.jsx
+        ├── contentParser.jsx
+        ├── contentParserOld.js
+        ├── expertMapping.jsx
+        ├── experts.jsx
+        ├── getExpert.jsx
+        ├── getExpertForPost.jsx
+        ├── posts.jsx
         ├── schema.js
         ├── storage.js
         ├── supabase.js
     └── 📁public
+        └── 📁experts
+            ├── anjali-kumari.png
         ├── android-chrome-192x192.png
         ├── android-chrome-512x512.png
         ├── file.svg
+        ├── food-table.jpg
         ├── globe.svg
+        ├── hero-section.jpg
+        ├── newsletter-sign-up.svg
         ├── next.svg
         ├── site.webmanifest
         ├── vercel.svg
@@ -200,6 +223,7 @@ It delivers SEO-optimized articles with dynamic rendering, structured data, and 
     ├── .eslintignore
     ├── .gitignore
     ├── eslint.config.mjs
+    ├── forms.json
     ├── jsconfig.json
     ├── next.config.mjs
     ├── package-lock.json
