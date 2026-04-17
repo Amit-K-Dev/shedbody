@@ -3,7 +3,14 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard", "/plans", "/start", "/api/", "/_next/"],
+      disallow: [
+        "/dashboard",
+        "/plans",
+        "/start",
+        "/profile",
+        "/api/",
+        "/_next/",
+      ],
     },
     sitemap: "https://shedbody.com/sitemap.xml",
   };

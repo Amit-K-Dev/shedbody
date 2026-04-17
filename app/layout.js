@@ -16,6 +16,7 @@ export const metadata = {
 
   keywords: [
     "ShedBody",
+    "shed body",
     "fitness",
     "fat loss",
     "workout plans",

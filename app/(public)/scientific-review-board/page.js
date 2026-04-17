@@ -17,6 +17,7 @@ export const metadata = {
     "yoga guides",
     "nutrition advice",
     "weight loss india",
+    "shed body",
   ],
 
   alternates: {
