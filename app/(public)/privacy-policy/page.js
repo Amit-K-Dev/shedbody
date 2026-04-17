@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
           <article className="max-w-2xl mx-auto space-y-8 text-gray-300 leading-relaxed">
             {/* ARTICLE HEADER */}
             <header className="text-center space-y-4">
-              <h1 className="text-4xl md:text-5xl font-bold text-white">
+              <h1 className="text-4xl md:text-5xl font-bold text-zinc-50">
                 Privacy Policy
               </h1>
 
@@ -104,11 +104,11 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 What personal data we collect and why we collect it?
               </h2>
 
-              <h3 className="text-xl font-semibold text-white">Comments</h3>
+              <h3 className="text-xl font-semibold text-zinc-50">Comments</h3>
 
               <p>
                 When visitors leave comments on our website we collect the
@@ -117,7 +117,7 @@ export default function PrivacyPolicyPage() {
                 help/assist spam detection.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">Media</h3>
+              <h3 className="text-xl font-semibold text-zinc-50">Media</h3>
 
               <p>
                 If you upload images to our website, you must avoid uploading
@@ -126,7 +126,7 @@ export default function PrivacyPolicyPage() {
                 images on our website.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Cookies and Web Beacons
               </h3>
 
@@ -177,7 +177,7 @@ export default function PrivacyPolicyPage() {
                 post ID of your article you only edited. It expires after 1 day.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Google DoubleClick DART Cookie
               </h3>
 
@@ -203,7 +203,7 @@ export default function PrivacyPolicyPage() {
                 </a>
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Our Advertising Partners
               </h3>
 
@@ -228,7 +228,7 @@ export default function PrivacyPolicyPage() {
                 </li>
               </ul>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Privacy Policies
               </h3>
 
@@ -253,7 +253,7 @@ export default function PrivacyPolicyPage() {
                 cookies that are used by third-party advertisers.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Third-Party Privacy Policies
               </h3>
 
@@ -281,7 +281,7 @@ export default function PrivacyPolicyPage() {
                 ?
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Children’s Information
               </h3>
 
@@ -301,7 +301,7 @@ export default function PrivacyPolicyPage() {
                 promptly remove such information/data from our records.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Online Privacy Policy Only
               </h3>
 
@@ -313,7 +313,7 @@ export default function PrivacyPolicyPage() {
                 offline or via channels aside from this website.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 Embedded content from other websites
               </h3>
 
@@ -332,7 +332,7 @@ export default function PrivacyPolicyPage() {
                 logged in thereto website.
               </p>
 
-              <h4 className="text-lg font-semibold text-white">
+              <h4 className="text-lg font-semibold text-zinc-50">
                 Supporting Information
               </h4>
 
@@ -345,7 +345,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 How long we retain your data
               </h2>
 
@@ -366,7 +366,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 What rights you have over your data
               </h2>
 
@@ -382,7 +382,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 Where we send your data
               </h2>
 
@@ -391,7 +391,7 @@ export default function PrivacyPolicyPage() {
                 detection service.
               </p>
 
-              <h3 className="text-xl font-semibold text-white">Consent</h3>
+              <h3 className="text-xl font-semibold text-zinc-50">Consent</h3>
 
               <p>
                 By using our website, you hereby consent to ShedBody Privacy

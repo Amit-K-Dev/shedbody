@@ -47,7 +47,7 @@ export default function EditorialPolicy() {
           <article className="max-w-2xl mx-auto space-y-8 text-gray-300 leading-relaxed">
             <header className="text-center space-y-4">
               {/* Article Header */}
-              <h1 className="text-4xl md:text-5xl font-bold text-white">
+              <h1 className="text-4xl md:text-5xl font-bold text-zinc-50">
                 Editorial Process
               </h1>
 
@@ -55,7 +55,7 @@ export default function EditorialPolicy() {
                 At{" "}
                 <Link
                   href="/"
-                  className="text-green-400 no-underline hover:text-green-300"
+                  className="text-emerald-400 no-underline hover:text-emerald-300"
                 >
                   ShedBody
                 </Link>
@@ -102,7 +102,7 @@ export default function EditorialPolicy() {
             </div>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 Subject matter writer
               </h2>
 
@@ -128,7 +128,7 @@ export default function EditorialPolicy() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 Editorial team
               </h2>
 
@@ -141,7 +141,9 @@ export default function EditorialPolicy() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">Fact check</h2>
+              <h2 className="text-2xl font-semibold text-zinc-50">
+                Fact check
+              </h2>
 
               <p>
                 Our team of qualified and experienced fact checkers provides an
@@ -156,7 +158,7 @@ export default function EditorialPolicy() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white ">
+              <h2 className="text-2xl font-semibold text-zinc-50 ">
                 References, Sources, and Citations
               </h2>
 
@@ -177,7 +179,7 @@ export default function EditorialPolicy() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 Latest information
               </h2>
 
@@ -191,7 +193,7 @@ export default function EditorialPolicy() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semibold text-zinc-50">
                 The ShedBody voice
               </h2>
 
