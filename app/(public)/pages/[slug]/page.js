@@ -1,7 +1,9 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }) {
+  const supabase = createClient();
+
   const { slug } = await params;
 
   const cleanSlug = slug.trim().replace(/\/$/, "");
