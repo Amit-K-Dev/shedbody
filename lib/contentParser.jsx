@@ -5,7 +5,13 @@ export function cleanWordPressContent(html) {
   let cleaned = html;
 
   // Remove WordPress Gutenberg block comments
-  cleaned = cleaned.replace(/\/\//g, "");
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, "");
+
+  // Fix broken URLs (defensive layer)
+  cleaned = cleaned.replace(
+    /https:res\.cloudinary\.com/g,
+    "https://res.cloudinary.com",
+  );
 
   // Remove Ad Inserter shortcodes
   cleaned = cleaned.replace(/\[adinserter\s+[^\]]+\]/g, "");
@@ -128,7 +134,13 @@ export function optimizeImages(html) {
 
     if (!srcMatch) return match;
 
-    const src = srcMatch[1];
+    let src = srcMatch[1];
+
+    // Fix broken protocol if any
+    if (src.startsWith("https:res.")) {
+      src = src.replace("https:", "https://");
+    }
+
     const alt = altMatch ? altMatch[1] : "";
 
     return `
