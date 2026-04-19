@@ -1,15 +1,17 @@
 "use client";
 
 import { GraduationCap, Briefcase, ShieldCheck, Target } from "lucide-react";
+import Link from "next/link";
 import { experts } from "@/lib/experts";
+import ExpertAvatar from "@/components/ExpertAvatar";
 
 export default function ExpertSection() {
   return (
     <section className="mt-16 space-y-10">
       {/* Title */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold text-white">Meet Our Experts</h2>
-        <p className="text-gray-400 max-w-xl mx-auto">
+        <h2 className="text-3xl font-bold text-zinc-50">Meet Our Experts</h2>
+        <p className="text-zinc-400 max-w-xl mx-auto">
           Our Scientific Review Board consists of ceritfied professionals with
           years of experience in nutrition, fitness, and medical science.
         </p>
@@ -18,20 +20,20 @@ export default function ExpertSection() {
       {/* Grid */}
       <div className="grid md:grid-cols-3 gap-6">
         {experts.map((expert, i) => (
-          <div
-            key={i}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm hover:border-white/20 hover:scale-[1.02] transition-all duration-300"
+          <Link
+            href={`/experts/${expert.id}`}
+            key={expert.id}
+            className="bg-zinc-50/5 border border-zinc-50/10 rounded-2xl p-6 backdrop-blur-sm hover:border-zinc-50/20 hover:scale-[1.02] transition-all duration-300 block"
           >
             {/* Avatar */}
-            <div className="w-14 h-14 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-black font-bold text-lg mb-4">
-              {expert.name.charAt(4) === " "
-                ? expert.name.charAt(0).toUpperCase()
-                : expert.name.charAt(4).toUpperCase()}
-            </div>
+            <ExpertAvatar
+              expert={expert}
+              className="w-14 h-14 font-bold text-lg mb-4"
+            />
 
             {/* Name */}
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-zinc-50">
                 {expert.name}
               </h3>
               {expert.verified || expert.verified === null ? (
@@ -45,7 +47,7 @@ export default function ExpertSection() {
             <p className="text-green-400 text-sm mb-3">{expert.role}</p>
 
             {/* Info */}
-            <div className="space-y-2 text-sm text-gray-300">
+            <div className="space-y-2 text-sm text-zinc-300">
               <div className="flex items-center gap-2">
                 <GraduationCap size={16} />
                 <span>{expert.degree}</span>
@@ -61,7 +63,7 @@ export default function ExpertSection() {
                 <span>{expert.specialty}</span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

@@ -12,6 +12,9 @@ export default function robots() {
         "/_next/",
       ],
     },
-    sitemap: "https://shedbody.com/sitemap.xml",
+    sitemap: [
+      "https://shedbody.com/sitemap.xml",
+      "https://shedbody.com/news-sitemap.xml",
+    ],
   };
 }

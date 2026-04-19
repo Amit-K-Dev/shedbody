@@ -48,7 +48,7 @@ function formatCategoryName(str) {
 export async function generateMetadata({ params }) {
   const { category } = await params;
 
-  // ✅ Fixed formatting
+  // Fixed formatting
   const formattedCategory = formatCategoryName(category);
   const title = `${formattedCategory} Articles`;
   const description =

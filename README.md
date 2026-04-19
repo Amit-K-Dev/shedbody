@@ -1,275 +1,128 @@
 # ShedBody
 
-ShedBody is a modern **fitness and nutrition blog platform** built with **Next.js and Supabase**.  
-It delivers SEO-optimized articles with dynamic rendering, structured data, and automatic OpenGraph images.
+[![Next.js](https://img.shields.io/badge/Next.js-Black?logo=next.js)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+**ShedBody** is a modern, high-performance fitness and nutrition platform built with Next.js (App Router) and Supabase. It is designed to deliver evidence-based health articles, dynamic fitness calculators, and a personalized user dashboard with advanced gamification.
+
+The platform is strictly engineered to adhere to **Google's E-E-A-T (Experience, Expertise, Authoritativeness, and Trustworthiness)** guidelines, featuring verified expert profiles, technical SEO optimizations, and structured JSON-LD schemas.
 
 ---
 
-## Features
+## Core Features
 
-- Dynamic blog posts from Supabase database
-- Category-based routing
-- SEO-optimized article pages
-- Automatic OpenGraph image generation
-- JSON-LD structured data for articles
-- Automatic sitemap generation
-- Robots.txt generation
-- Table of contents extraction
-- Reading time calculation
-- Inline related articles
-- Responsive UI
+### Advanced SEO & Content Delivery
 
----
+- **E-E-A-T Compliant:** Dedicated expert profiles (`/experts/[id]`) and Scientific Review Board implementation.
+- **Dynamic Sitemaps:** Automated generic sitemap and a 48-hour recency **Google News Sitemap** with Edge caching.
+- **Bulletproof Metadata:** Regex-based fallback extraction for titles, excerpts, and images to prevent missing OG tags.
+- **Structured Data:** Automated JSON-LD generation for Articles, Organizations, and Person (Expert) schemas.
+- **Zero-Dependency Assets:** Custom-built SVGs for brand icons (X, LinkedIn, Facebook, WhatsApp) to strictly minimize bundle size.
 
-## Tech Stack
+### 🔐 User Experience & Dashboard
 
-- **Next.js (App Router)**
-- **Supabase (PostgreSQL)**
-- **Tailwind CSS**
-- **Vercel (Deployment)**
+- **Authentication:** Secure login and signup flows powered by Supabase Auth.
+- **Personalized Dashboard:** Track weight, BMI, and fitness goals with premium charts and insights.
+- **Gamification:** Integrated Streak tracking, XP system, and unlockable Badges for user retention.
+- **Smart Calculators:** Dynamic BMI calculator and progress trackers.
 
----
+### Architecture & Performance
 
-## Project Structure
-
-```
-└── 📁shedbody
-    └── 📁app
-        └── 📁(auth)
-            └── 📁auth
-                └── 📁callback
-                    ├── route.js
-            └── 📁login
-                ├── page.js
-            └── 📁signup
-                ├── page.js
-            ├── layout.js
-        └── 📁(dashboard)
-            └── 📁dashboard
-                ├── page.js
-            └── 📁plans
-                ├── page.js
-            └── 📁profile
-                ├── page.js
-            └── 📁start
-                ├── page.js
-            ├── layout.js
-        └── 📁(public)
-            └── 📁[category]
-                └── 📁[slug]
-                    ├── og-image.js
-                    ├── page.js
-                ├── page.js
-            └── 📁about
-                ├── page.js
-            └── 📁advertising-policy
-                ├── page.js
-            └── 📁articles
-                ├── page.js
-            └── 📁calculators
-                └── 📁bmi
-                    ├── page.js
-            └── 📁cookies-policy
-                ├── page.js
-            └── 📁editorial-process
-                ├── page.js
-            └── 📁gdpr-privacy-policy
-                ├── page.js
-            └── 📁pages
-                └── 📁[slug]
-                    ├── page.js
-            └── 📁privacy-policy
-                ├── page.js
-            └── 📁scientific-review-board
-                ├── ExpertSection.js
-                ├── faqData.js
-                ├── FAQSection.js
-                ├── page.js
-                ├── TrustSection.js
-            └── 📁terms-of-use
-                ├── page.js
-            ├── layout.js
-            ├── page.js
-        └── 📁api
-            └── 📁posts
-                ├── route.js
-            └── 📁progress
-                ├── route.js
-            └── 📁streak
-                ├── route.js
-            └── 📁view
-                ├── route.js
-            └── 📁xp
-                ├── route.js
-        ├── ads.txt
-        ├── apple-icon.png
-        ├── favicon-16x16.png
-        ├── favicon-32x32.png
-        ├── favicon.ico
-        ├── globals.css
-        ├── icon.png
-        ├── layout.js
-        ├── og-image.png
-        ├── robots.js
-        ├── shedbody-logo-black.png
-        ├── shedbody-logo-white.png
-        ├── sitemap.js
-    └── 📁components
-        └── 📁calculator
-            ├── CalculatorEngine.jsx
-        └── 📁dashboard
-            ├── Badges.jsx
-            ├── PremiumAddWeight.jsx
-            ├── PremiumBMI.jsx
-            ├── PremiumChart.jsx
-            ├── PremiumHeader.jsx
-            ├── PremiumInsights.jsx
-            ├── PremiumSetGoal.jsx
-            ├── ReminderBanner.jsx
-            ├── ReminderSettings.jsx
-            ├── StatCards.jsx
-        └── 📁icons
-            ├── FacebookIcon.jsx
-            ├── GoogleIcon.jsx
-            ├── LinkedInIcon.jsx
-            ├── XIcon.jsx
-        └── 📁layout
-            ├── Footer.jsx
-            ├── Header.jsx
-            ├── MobileNav.jsx
-            ├── Sidebar.jsx
-            ├── Topbar.jsx
-        └── 📁ui
-            ├── Input.jsx
-            ├── MotionWrapper.jsx
-            ├── PasswordInput.jsx
-            ├── Skeleton.jsx
-            ├── SocialIcon.jsx
-            ├── toaster.jsx
-            ├── use-toast.jsx
-        ├── BackToTop.jsx
-        ├── Breadcrumbs.jsx
-        ├── ExpertInline.jsx
-        ├── InlineRelatedArticles.jsx
-        ├── LogoutButton.jsx
-        ├── Pagination.jsx
-        ├── PostCard.jsx
-        ├── ReadingProgress.jsx
-        ├── SearchBar.jsx
-        ├── SearchPosts.jsx
-        ├── SortFilter.jsx
-        ├── SourcesToggle.jsx
-        ├── TableOfContents.jsx
-        ├── UserAvatar.jsx
-        ├── ViewTracker.jsx
-    └── 📁data
-        ├── diet.jsx
-        ├── workout.jsx
-    └── 📁lib
-        └── 📁actions
-            ├── logout.jsx
-        └── 📁ai
-            ├── generateInsights.jsx
-        └── 📁auth
-            ├── getUser.jsx
-            ├── userDisplay.js
-        └── 📁calculations
-            ├── bmi.jsx
-            ├── index.jsx
-        └── 📁calculators
-            ├── bmi.jsx
-        └── 📁dashboard
-            ├── getDashboardData.jsx
-            ├── getProfileData.jsx
-            ├── getStreak.jsx
-            ├── getWeightData.jsx
-        └── 📁gamification
-            ├── addXP.jsx
-            ├── checkBadges.jsx
-        └── 📁streak
-            ├── updateStreak.jsx
-        └── 📁supabase
-            ├── client.js
-            ├── server.js
-        └── 📁utils
-            ├── date.jsx
-        ├── contentParser.jsx
-        ├── contentParserOld.js
-        ├── expertMapping.jsx
-        ├── experts.jsx
-        ├── getExpert.jsx
-        ├── getExpertForPost.jsx
-        ├── posts.jsx
-        ├── schema.js
-        ├── storage.js
-        ├── supabase.js
-    └── 📁public
-        └── 📁experts
-            ├── anjali-kumari.png
-        ├── android-chrome-192x192.png
-        ├── android-chrome-512x512.png
-        ├── file.svg
-        ├── food-table.jpg
-        ├── globe.svg
-        ├── hero-section.jpg
-        ├── newsletter-sign-up.svg
-        ├── next.svg
-        ├── site.webmanifest
-        ├── vercel.svg
-        ├── window.svg
-    └── 📁scripts
-        ├── upload.js
-    ├── .env.local
-    ├── .eslintignore
-    ├── .gitignore
-    ├── eslint.config.mjs
-    ├── forms.json
-    ├── jsconfig.json
-    ├── next.config.mjs
-    ├── package-lock.json
-    ├── package.json
-    ├── postcss.config.mjs
-    ├── proxy.js
-    └── README.md
-```
+- **Server-Side Rendering (SSR):** Optimized data fetching with Next.js Server Components.
+- **Robust Error Handling:** Resilient Supabase fetch logic with case-insensitive slug matching and fallback states.
+- **Tailwind Styling:** Fully responsive, highly customized, and accessible UI.
 
 ---
 
-## Development
+## 🛠️ Tech Stack
 
-Install dependencies:
+- **Framework:** Next.js (App Router)
+- **Database & Auth:** Supabase (PostgreSQL)
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React & Custom SVGs
+- **Deployment:** Vercel
 
-```
-npm install
-```
+---
 
-Run development server:
+## Getting Started
 
-```
-npm run dev
-```
+### Prerequisites
 
-Open in browser:
+Make sure you have Node.js installed along with a Supabase project set up.
 
-```
-http://localhost:3000
-```
+### 1. Clone the repository
+
+> git clone https://github.com/your-username/shedbody.git
+> cd shedbody
+
+### 2. Install dependencies
+
+> npm install
+
+### 3. Environment Variables
+
+Create a `.env.local` file in the root directory and add your Supabase credentials:
+
+> NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+> NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+### 4. Run the development server
+
+> npm run dev
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+
+---
+
+## 📂 Project Structure
+
+<details>
+<summary><b>Click to expand the full directory tree</b></summary>
+<pre>
+└── shedbody
+    ├── app
+    │   ├── (auth)          # Login, Signup, Callback
+    │   ├── (dashboard)     # User Dashboard, Plans, Profile
+    │   ├── (public)        # Articles, Calculators, Policies, Experts
+    │   └── api             # REST APIs (Contact, Posts, Progress, Streak)
+    ├── components
+    │   ├── calculator      # BMI Engine
+    │   ├── dashboard       # Premium Charts, Badges, StatCards
+    │   ├── icons           # Zero-dependency custom SVGs
+    │   ├── layout          # Headers, Footers, Navigation
+    │   └── ui              # Reusable UI components
+    ├── data                # Static data (Diet, Workouts)
+    ├── lib
+    │   ├── actions         # Server Actions
+    │   ├── auth            # User verification
+    │   ├── calculations    # Math engines
+    │   ├── gamification    # XP and Badge logic
+    │   ├── supabase        # Client & Server initializers
+    │   └── utils           # Helper functions & SEO Schemas
+    ├── public              # Static assets, Expert avatars
+    └── scripts             # Utility scripts
+</pre>
+</details>
 
 ---
 
 ## Deployment
 
-The project is designed to deploy easily on **Vercel**.
+The project is fully optimized for **Vercel**.
 
-Steps:
-
-1. Push the project to GitHub
-2. Connect repository to Vercel
-3. Add environment variables
-4. Deploy
+1. Push your code to a GitHub repository.
+2. Import the project into Vercel.
+3. Add your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the Vercel Environment Variables.
+4. Click **Deploy**.
 
 ---
 
-## Author
+## License
+
+This project is licensed under the **Apache License 2.0**. See the [LICENSE](./LICENSE) and [NOTICE](./NOTICE) files for more details.
+
+## ✍️ Author
 
 **Amit Kumar**

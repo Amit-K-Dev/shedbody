@@ -6,7 +6,7 @@ export const experts = [
     degree: "MSc in Clinical Nutrition & Dietetics",
     experience: "7+ years experience",
     specialty: "Fat loss, metabolic health & performance nutrition",
-    image: "/experts/m-ranjan.png",
+    image: "/experts/m-ranjan.jpg",
     verified: true,
     sameAs: ["https://linkedin.com/in/m-ranjan", "https://twitter.com/mranjan"],
     alumniOf: "University of Delhi",
@@ -21,7 +21,7 @@ export const experts = [
     experience: "10+ years clinical experience",
 
     specialty: "Musculoskeletal injuries, injury prevention & rehabilitation",
-    image: "/experts/usha-devi.png",
+    image: "/experts/usha-devi.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/usha-devi",
@@ -40,7 +40,7 @@ export const experts = [
     experience: "8+ years research & coaching experience",
     specialty:
       "Muscle hypertrophy, strength training & performance optimization",
-    image: "/experts/r-k-nirmal.png",
+    image: "/experts/r-k-nirmal.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/r-k-nirmal",
@@ -58,7 +58,7 @@ export const experts = [
     degree: "MBBS, MS (Orthopedics)",
     experience: "11+ years clinical experience",
     specialty: "Joint health, sports injuries & mobility rehabilitation",
-    image: "/experts/ayush-raj.png",
+    image: "/experts/ayush-raj.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/ayush-raj",
@@ -75,7 +75,7 @@ export const experts = [
     degree: "MSc Clinical Nutrition & Dietetics",
     experience: "9+ years clinical experience",
     specialty: "Weight management, PCOS nutrition & metabolic health",
-    image: "/experts/kavita-desai.png",
+    image: "/experts/kavita-desai.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/kavita-desai",
@@ -92,7 +92,7 @@ export const experts = [
     degree: "MBBS, MD (General Medicine), DM (Endocrinology)",
     experience: "10+ years clinical experience",
     specialty: "Hormonal disorders, thyroid health & metabolic disorders",
-    image: "/experts/sneha-kapoor.png",
+    image: "/experts/sneha-kapoor.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/sneha-kapoor",
@@ -110,7 +110,7 @@ export const experts = [
     degree: "MSc in Sports Science",
     experience: "13+ years coaching experience",
     specialty: "Strength training, mobility, & athletic performance",
-    image: "/experts/amit.png",
+    image: "/experts/amit.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/amit-k-dev",
@@ -129,7 +129,7 @@ export const experts = [
     degree: "MBBS, MS (Obstetrics & Gynecology)",
     experience: "9+ years clinical experience",
     specialty: "Women's health, pregnancy care & postnatal recovery",
-    image: "/experts/ananya-bose.png",
+    image: "/experts/ananya-bose.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/ananya-bose",
@@ -146,7 +146,7 @@ export const experts = [
     degree: "BPT, MPT (Sports Physiotherapy)",
     experience: "8+ years clinical experience",
     specialty: "Injury rehabilitation, posture correction & pain management",
-    image: "/experts/prem-singh-rawat.png",
+    image: "/experts/prem-singh-rawat.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/prem-singh-rawat",
@@ -163,7 +163,7 @@ export const experts = [
     degree: "MSc in Psychology",
     experience: "7+ years experience",
     specialty: "Behavior change, habit formation & mental wellness",
-    image: "/experts/ruby-kapoor.png",
+    image: "/experts/ruby-kapoor.jpg",
     verified: true,
 
     sameAs: [
@@ -181,7 +181,7 @@ export const experts = [
     degree: "Diploma in Yoga Science",
     experience: "8+ years teaching experience",
     specialty: "Yoga for flexibility, stress relief & holistic wellness",
-    image: "/experts/neelam-sharma.png",
+    image: "/experts/neelam-sharma.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/neelam-sharma",
@@ -199,7 +199,7 @@ export const experts = [
     degree: "MBBS, Diploma in Dermatology",
     experience: "8+ years clinical experience",
     specialty: "Skin health, acne treatment & hair loss management",
-    image: "/experts/riya-malhotra.png",
+    image: "/experts/riya-malhotra.jpg",
     verified: true,
     sameAs: [
       "https://linkedin.com/in/riya-malhotra",

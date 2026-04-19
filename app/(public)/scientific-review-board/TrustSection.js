@@ -2,6 +2,7 @@
 
 import { ShieldCheck, FlaskConical, RefreshCcw } from "lucide-react";
 import { experts } from "@/lib/experts";
+import ExpertAvatar from "@/components/ExpertAvatar";
 
 export default function TrustSection() {
   return (
@@ -9,7 +10,7 @@ export default function TrustSection() {
       {/* Trust Badges */}
       <div className="flex flex-wrap justify-center gap-4 text-sm">
         {/* Expert Verified */}
-        <div className="flex items-center gap-2 bg-green-500/10 text-green-400 px-4 py-2 rounded-full border border-green-500/20 backdrop-blur-sm hover:scale-105 transition-all duration-300">
+        <div className="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/20 backdrop-blur-sm hover:scale-105 transition-all duration-300">
           <ShieldCheck size={16} strokeWidth={2.2} />
           <span>Expert Verified</span>
         </div>
@@ -28,7 +29,7 @@ export default function TrustSection() {
       </div>
 
       {/* Trust Text */}
-      <p className="text-center text-gray-400 text-sm max-w-lg mx-auto">
+      <p className="text-center text-zinc-400 text-sm max-w-lg mx-auto">
         Reviewd by ceritfied experts in nutrition, excercise science, and
         medical fields to ensure accuracy and reliability.
       </p>
@@ -37,21 +38,19 @@ export default function TrustSection() {
       <div className="flex flex-wrap justify-center items-center gap-3">
         <div className="flex -space-x-3">
           {experts.map((expert, i) => (
-            <div
+            <ExpertAvatar
               key={i}
-              className="w-10 h-10 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-xs font-semibold text-black border-2 border-black"
+              expert={expert}
+              className="w-10 h-10 font-semibold text-xs border-2 border-black"
+              sizes="40px"
               title={`${expert.name} - ${expert.role}`}
-            >
-              {expert.name.charAt(4) === " "
-                ? expert.name.charAt(0).toUpperCase()
-                : expert.name.charAt(4).toUpperCase()}
-            </div>
+            />
           ))}
         </div>
 
-        <span className="text-sm text-gray-400">
+        <span className="text-sm text-zinc-400">
           Reviewed by{" "}
-          <span className="text-white font-medium">
+          <span className="text-zinc-50 font-medium">
             {experts.length}+ experts
           </span>
         </span>

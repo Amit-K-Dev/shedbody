@@ -1,27 +1,47 @@
 import { createClient } from "@/lib/supabase/server";
+import { experts } from "@/lib/experts";
 
 export default async function sitemap() {
   const supabase = await createClient();
-
   const baseUrl = "https://shedbody.com";
 
+  const staticLastModified = "2024-05-01T00:00:00.000Z";
+
   const staticPages = [
-    { path: "", priority: 1.0 },
-    { path: "/articles", priority: 0.9 },
-    { path: "/about", priority: 0.7 },
-    { path: "/calculators/bmi", priority: 0.7 },
-    { path: "/scientific-review-board", priority: 0.6 },
-    { path: "/editorial-process", priority: 0.5 },
-    { path: "/advertising-policy", priority: 0.4 },
-    { path: "/privacy-policy", priority: 0.4 },
-    { path: "/terms-of-use", priority: 0.4 },
-    { path: "/cookies-policy", priority: 0.4 },
-    { path: "/gdpr-privacy-policy", priority: 0.4 },
+    { path: "", priority: 1.0, changeFrequency: "daily" },
+    { path: "/articles", priority: 0.9, changeFrequency: "daily" },
+    { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/calculators/bmi", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/contact-us", priority: 0.7, changeFrequency: "yearly" },
+    {
+      path: "/scientific-review-board",
+      priority: 0.6,
+      changeFrequency: "monthly",
+    },
+    { path: "/editorial-process", priority: 0.5, changeFrequency: "yearly" },
+    { path: "/advertising-policy", priority: 0.4, changeFrequency: "yearly" },
+    { path: "/privacy-policy", priority: 0.4, changeFrequency: "yearly" },
+    { path: "/terms-of-use", priority: 0.4, changeFrequency: "yearly" },
+    { path: "/cookies-policy", priority: 0.4, changeFrequency: "yearly" },
+    { path: "/gdpr-privacy-policy", priority: 0.4, changeFrequency: "yearly" },
+    {
+      path: "/cancellation-and-refund-policy",
+      priority: 0.4,
+      changeFrequency: "yearly",
+    },
+    { path: "/privacy-settings", priority: 0.4, changeFrequency: "yearly" },
   ].map((page) => ({
     url: `${baseUrl}${page.path}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: "weekly",
+    lastModified: staticLastModified,
+    changeFrequency: page.changeFrequency,
     priority: page.priority,
+  }));
+
+  const expertPages = experts.map((expert) => ({
+    url: `${baseUrl}/experts/${expert.id}`,
+    lastModified: staticLastModified,
+    changeFrequency: "monthly",
+    priority: 0.6,
   }));
 
   try {
@@ -34,7 +54,7 @@ export default async function sitemap() {
 
     if (error) {
       console.error(
-        "Supabase Error fetching posts for sitemap:",
+        "Database Error fetching posts for sitemap:",
         error.message,
       );
       throw error;
@@ -42,18 +62,19 @@ export default async function sitemap() {
 
     const dynamicUrls = (posts || []).map((post) => ({
       url: `${baseUrl}/${post.category.toLowerCase()}/${post.slug}`,
-
-      lastModified: new Date(post.updated_at || post.published_at).toISOString(),
+      lastModified: new Date(
+        post.updated_at || post.published_at,
+      ).toISOString(),
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.8,
     }));
 
-    return [...staticPages, ...dynamicUrls];
+    return [...staticPages, ...expertPages, ...dynamicUrls];
   } catch (error) {
     console.error(
-      "Sitemap Generation Failed! Falling back to static pages.",
+      "Sitemap Generation Failed! Falling back to static and expert pages.",
       error,
     );
-    return staticPages;
+    return [...staticPages, ...expertPages];
   }
 }

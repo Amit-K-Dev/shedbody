@@ -30,21 +30,16 @@ export const metadata = {
   creator: "ShedBody",
   publisher: "ShedBody",
 
-  alternates: {
-    canonical: "/",
-  },
-
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://shedbody.com",
     siteName: "ShedBody",
     title: "ShedBody",
     description:
       "Tranform your body with structured workouts, nutrition guidance, and consistency.",
     images: [
       {
-        url: "https://shedbody.com/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "ShedBody",
@@ -57,7 +52,7 @@ export const metadata = {
     title: "ShedBody",
     description:
       "Fitness, fat loss, yoga, and healthy lifestyle guidance that actually works.",
-    images: ["https://shedbody.com/og-image.png"],
+    images: ["/og-image.png"],
   },
 
   icons: {
@@ -91,35 +86,22 @@ const inter = Inter({
 });
 
 export default async function RootLayout({ children }) {
-  const schema = [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "ShedBody",
-      url: "https://shedbody.com",
-      logo: "https://shedbody.com/shedbody-logo-black.png",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://shedbody.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "ShedBody",
-      url: "https://shedbody.com",
-      logo: "https://shedbody.com/shedbody-logo-black.png",
-      sameAs: [
-        "https://youtube.com/@shed-body",
-        "https://linkedin.com/company/shedbody",
-        "https://facebook.com/shedbody",
-        "https://instagram.com/shedbody_",
-        "https://pinterest.com/shedbody",
-        "https://twitter.com/shedbody",
-      ],
-    },
-  ];
+  // Organization Schema (Globally applied to define the brand)
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ShedBody",
+    url: "https://shedbody.com",
+    logo: "https://shedbody.com/shedbody-logo-black.png",
+    sameAs: [
+      "https://youtube.com/@shed-body",
+      "https://linkedin.com/company/shedbody",
+      "https://facebook.com/shedbody",
+      "https://instagram.com/shedbody_",
+      "https://pinterest.com/shedbody",
+      "https://twitter.com/shedbody",
+    ],
+  };
 
   return (
     <html lang="en">

@@ -6,7 +6,7 @@ import { createClient as createStandardClient } from "@supabase/supabase-js";
 const logError = (context, error) => console.error(`${context} error:`, error);
 
 const publicPostFields =
-  "id, title, slug, excerpt, category, views, updated_at, published_at";
+  "id, title, slug, excerpt, content, featured_image, category, views, updated_at, published_at";
 
 function applyPublicPostFilters(query) {
   return query
@@ -22,11 +22,11 @@ export const getPost = cache(async (slug) => {
   const query = supabase
     .from("posts")
     .select(
-      "id, title, slug, content, processed_content, excerpt, category, published_at, views, updated_at",
+      "id, title, slug, content, featured_image, processed_content, excerpt, category, published_at, views, updated_at",
     );
 
   const { data, error } = await applyPublicPostFilters(query)
-    .eq("slug", slug)
+    .ilike("slug", slug.trim())
     .maybeSingle();
 
   if (error) {
@@ -42,12 +42,12 @@ export const getPost = cache(async (slug) => {
   };
 });
 
-// GET RELATED POSTS (Increased limit slightly for better UI options)
+// GET RELATED POSTS
 export const getRelatedPosts = cache(async (category, slug) => {
   const supabase = await createClient();
   const query = supabase
     .from("posts")
-    .select("id, title, slug, category, excerpt")
+    .select("id, title, slug, category, featured_image, excerpt, content")
     .eq("category", category);
 
   const { data, error } = await applyPublicPostFilters(query)
@@ -58,7 +58,7 @@ export const getRelatedPosts = cache(async (category, slug) => {
   return data || [];
 });
 
-// GET CATEGORIES (Performance Optimized)
+// GET CATEGORIES
 export const getCategories = cache(async () => {
   const supabase = await createClient();
 
@@ -69,34 +69,28 @@ export const getCategories = cache(async () => {
 
   if (error) return ["all"];
 
-  // Clean empty or null categories
   const unique = [
     ...new Set((data || []).map((item) => item.category).filter(Boolean)),
   ];
   return ["all", ...unique];
 });
 
-// GET TRENDING POSTS (With Safety Fallback)
+// GET TRENDING POSTS
 export const getTrendingPosts = cache(async (limit = 6) => {
   const supabase = await createClient();
   const sevenDaysAgo = new Date(
     Date.now() - 7 * 24 * 60 * 60 * 1000,
   ).toISOString();
 
-  const trendingQuery = supabase
-    .from("posts")
-    .select(publicPostFields);
+  const trendingQuery = supabase.from("posts").select(publicPostFields);
 
   let { data, error } = await applyPublicPostFilters(trendingQuery)
     .gte("updated_at", sevenDaysAgo)
     .order("views", { ascending: false })
     .limit(limit);
 
-  // Fallback
   if (!data || data.length === 0) {
-    const fallbackQuery = supabase
-      .from("posts")
-      .select(publicPostFields);
+    const fallbackQuery = supabase.from("posts").select(publicPostFields);
 
     const { data: fallbackData } = await applyPublicPostFilters(fallbackQuery)
       .order("views", { ascending: false })
@@ -111,9 +105,7 @@ export const getTrendingPosts = cache(async (limit = 6) => {
 export const getPopularPosts = cache(async (limit = 6) => {
   const supabase = await createClient();
 
-  const query = supabase
-    .from("posts")
-    .select(publicPostFields);
+  const query = supabase.from("posts").select(publicPostFields);
 
   const { data, error } = await applyPublicPostFilters(query)
     .order("views", { ascending: false })
@@ -141,9 +133,7 @@ export function calculatePostScore(post) {
 export const getSmartFeed = cache(async (limit = 6) => {
   const supabase = await createClient();
 
-  const query = supabase
-    .from("posts")
-    .select(publicPostFields);
+  const query = supabase.from("posts").select(publicPostFields);
 
   const { data, error } = await applyPublicPostFilters(query)
     .order("published_at", { ascending: false })
@@ -166,24 +156,24 @@ export const getAllPosts = cache(
 
     let query = applyPublicPostFilters(
       supabase
-      .from("posts")
-      .select(
-        "id, title, slug, excerpt, published_at, category, views, updated_at",
-        { count: "exact" },
-      ),
+        .from("posts")
+        .select(
+          "id, title, slug, featured_image, excerpt, content, published_at, category, views, updated_at",
+          { count: "exact" },
+        ),
     );
 
-    // 1. Search Logic
+    // Search Logic
     if (search && search.trim() !== "") {
       query = query.ilike("title", `%${search}%`);
     }
 
-    // 2. Category Filter
+    // Category Filter
     if (category && category !== "all") {
       query = query.eq("category", category);
     }
 
-    // 3. Sorting Logic
+    // Sorting Logic
     if (sort === "popular") {
       query = query.order("views", { ascending: false });
     } else if (sort === "oldest") {
@@ -192,7 +182,7 @@ export const getAllPosts = cache(
       query = query.order("published_at", { ascending: false });
     }
 
-    // 4. Pagination
+    // Pagination
     query = query.range(from, to);
 
     const { data, error, count } = await query;

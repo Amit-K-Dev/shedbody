@@ -16,6 +16,8 @@ import {
 import Link from "next/link";
 import ExpertInline from "@/components/ExpertInline";
 import { getExpertForPost } from "@/lib/getExpertForPost";
+import { getArticleSchema } from "@/lib/schema";
+import ShareArticle from "@/components/ShareArticle";
 
 const BASE_URL = "https://shedbody.com";
 
@@ -23,34 +25,75 @@ export const revalidate = 3600;
 
 // Generate Metadata
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-
+  const { slug, category } = await params;
   const post = await getPost(slug);
 
   if (!post) {
     return { title: "Post Not Found" };
   }
 
+  const expert = getExpertForPost(post);
+  const postUrl = `/${category.toLowerCase()}/${slug}`;
+
+  // Title Fallback (from h1)
+  const safeTitle =
+    post.title ||
+    post.content
+      ?.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
+      ?.replace(/<[^>]+>/g, "")
+      .trim() ||
+    "ShedBody Article";
+
+  // Excerpt Fallback (from first p tag)
+  let safeExcerpt = post.excerpt;
+  if (!safeExcerpt || safeExcerpt.trim() === "") {
+    const pMatch = post.content?.match(/<p[^>]*>(.*?)<\/p>/i);
+    const rawText =
+      pMatch && pMatch[1]
+        ? pMatch[1]
+        : post.content?.substring(0, 160) ||
+          "Evidence-based fitness & nutrition guide.";
+    safeExcerpt = rawText.replace(/<[^>]+>/g, "").trim();
+    if (safeExcerpt.length > 150)
+      safeExcerpt = safeExcerpt.substring(0, 150) + "...";
+  }
+
+  // Image Fallback (from img src or markdown image)
+  let safeImage = post.featured_image || post.image;
+  if (!safeImage && post.content) {
+    safeImage =
+      post.content.match(/<img[^>]+src=["']([^"']+)["']/i)?.[1] ||
+      post.content.match(/!\[.*?\]\((.*?)\)/i)?.[1];
+  }
+  safeImage = safeImage || `/og-image.png`;
+
   return {
-    title: post.title,
-    description: post.excerpt,
+    title: safeTitle,
+    description: safeExcerpt,
     alternates: {
-      canonical: `/${post.category}/${post.slug}`,
+      canonical: postUrl,
     },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: [
-        {
-          url: `${BASE_URL}/${post.category}/${post.slug}/og-image`,
-          width: 1200,
-          height: 630,
-        },
-      ],
-      type: "article",
+      title: safeTitle,
+      description: safeExcerpt,
+      url: postUrl,
       siteName: "ShedBody",
+      type: "article",
       publishedTime: post.published_at,
       modifiedTime: post.updated_at || post.published_at,
+      authors: expert ? ["ShedBody", expert.name] : ["ShedBody"],
+      images: [
+        {
+          url: safeImage,
+          alt: safeTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: safeTitle,
+      description: safeExcerpt,
+      images: [safeImage],
     },
   };
 }
@@ -80,20 +123,38 @@ function removeLegacyTOC(html) {
     );
 }
 
+// Generate Clean ID for Headings
+function generateHeadingId(text) {
+  return text
+    .replace(/<[^>]*>/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 // Extract Headings (TOC)
 function extractHeadings(html) {
-  const regex = /<h([2-3])[^>]*>(.*?)<\/h[2-3]>/gi;
+  const regex = /<h([2-3])[^>]*>(.*?)<\/h\1>/gi;
   const headings = [];
   let match;
 
   while ((match = regex.exec(html)) !== null) {
     const level = match[1];
     const text = match[2].replace(/<[^>]*>/g, "").trim();
-    const id = text
-      .toLowerCase()
-      .replace(/[^\w\s]/g, "")
-      .replace(/\s+/g, "-");
-    headings.push({ id, text, level });
+    const id = generateHeadingId(text);
+
+    if (level === "2") {
+      headings.push({ id, text, level, items: [] });
+    } else if (level === "3") {
+      if (headings.length > 0 && headings[headings.length - 1].level === "2") {
+        headings[headings.length - 1].items.push({ id, text, level });
+      } else {
+        // Fallback if H3 appears before any H2
+        headings.push({ id, text, level, items: [] });
+      }
+    }
   }
   return headings;
 }
@@ -101,13 +162,9 @@ function extractHeadings(html) {
 // Add Heading IDs (TOC)
 function addHeadingIds(html) {
   return html.replace(
-    /<h([2-3])([^>]*)>(.*?)<\/h[2-3]>/gi,
+    /<h([2-3])([^>]*)>(.*?)<\/h\1>/gi,
     (match, level, attrs, text) => {
-      const id = text
-        .replace(/<[^>]*>/g, "")
-        .toLowerCase()
-        .replace(/[^\w\s]/g, "")
-        .replace(/\s+/g, "-");
+      const id = generateHeadingId(text);
       return `<h${level} id="${id}" ${attrs}>${text}</h${level}>`;
     },
   );
@@ -183,50 +240,30 @@ export default async function PostPage({ params }) {
   const readingTime = calculateReadingTime(contentWithIds);
 
   // SCHEMA DATA
-  const articleSchema = {
+  const articleSchema = getArticleSchema(post, expert);
+  const breadcrumbSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
-    image: [`${BASE_URL}/${post.category}/${post.slug}/og-image.jpg`],
-    author: expert
-      ? {
-          "@type": "Person",
-          name: expert.name,
-          jobTitle: expert.role,
-          description: expert.specialty,
-        }
-      : {
-          "@type": "Organization",
-          name: "ShedBody",
-        },
-    reviewedBy: expert
-      ? {
-          "@type": "Person",
-          name: expert.name,
-          jobTitle: expert.role,
-        }
-      : undefined,
-    publisher: {
-      "@type": "Organization",
-      name: "ShedBody",
-      logo: {
-        "@type": "ImageObject",
-        url: `${BASE_URL}/logo.png`,
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
       },
-    },
-    datePublished: post.published_at,
-    dateModified: post.updated_at || post.published_at,
-    articleSection: post.category,
-    about: {
-      "@type": "Thing",
-      name: post.category,
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${BASE_URL}/${post.category}/${post.slug}`,
-    },
-    wordCount: post.content.replace(/<[^>]*>/g, "").split(/\s+/).length,
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: post.category.charAt(0).toUpperCase() + post.category.slice(1),
+        item: `${BASE_URL}/${post.category.toLowerCase()}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `${BASE_URL}/${post.category.toLowerCase()}/${post.slug}`,
+      },
+    ],
   };
 
   return (
@@ -242,6 +279,14 @@ export default async function PostPage({ params }) {
           }}
         />
       )}
+
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
 
       <ViewTracker postId={post.id} />
 
@@ -311,20 +356,30 @@ export default async function PostPage({ params }) {
                   <h2 className="text-lg font-semibold mb-4">
                     In This Article
                   </h2>
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-3 text-sm">
                     {headings.map((heading) => (
-                      <li
-                        key={heading.id}
-                        className={
-                          heading.level !== "2" ? "ml-4 text-zinc-400" : ""
-                        }
-                      >
+                      <li key={heading.id}>
                         <a
                           href={`#${heading.id}`}
-                          className="block py-1 no-underline text-emerald-400 hover:text-emerald-300 transition"
+                          className="block py-1 no-underline font-medium text-emerald-400 hover:text-emerald-300 transition"
                         >
                           {heading.text}
                         </a>
+                        {/* Render Nested H3s */}
+                        {heading.items && heading.items.length > 0 && (
+                          <ul className="ml-4 mt-1 space-y-1 border-l border-zinc-800 pl-4">
+                            {heading.items.map((subHeading) => (
+                              <li key={subHeading.id}>
+                                <a
+                                  href={`#${subHeading.id}`}
+                                  className="block py-1 no-underline text-zinc-400 hover:text-emerald-300 transition"
+                                >
+                                  {subHeading.text}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -332,7 +387,17 @@ export default async function PostPage({ params }) {
               )}
 
               {/* Article Content */}
-              <div dangerouslySetInnerHTML={{ __html: contentWithIds }} />
+              <div
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
+                suppressHydrationWarning
+              />
+
+              {/* Share Component */}
+              <ShareArticle
+                title={post.title}
+                category={post.category}
+                slug={post.slug}
+              />
 
               {/* Sources Toggle */}
               <SourcesToggle count={sourceCount}>
@@ -354,7 +419,9 @@ export default async function PostPage({ params }) {
           </article>
 
           {/* Sidebar TOC */}
-          <TableOfContents headings={headings} />
+          <TableOfContents
+            headings={headings.flatMap((h) => [h, ...(h.items || [])])}
+          />
         </div>
       </section>
     </>
