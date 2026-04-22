@@ -26,7 +26,7 @@ export default async function DashboardLayout({ children }) {
   return (
     <section className="flex h-screen bg-[radial-gradient(circle_at_top,rgba(34,197,94,0.15),transparent_50%)] text-zinc-300">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar user={user} />
 
       {/* Main */}
       <div className="flex flex-col flex-1 overflow-hidden">

@@ -1,15 +1,22 @@
 "use client";
 
-import { SidebarClose, SidebarOpen } from "lucide-react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {
+  SidebarClose,
+  SidebarOpen,
+  User,
+  Calculator,
+  ClipboardList,
+  PlusCircle,
+} from "lucide-react";
 
 const navItems = [
-  { name: "Profile", href: "/profile" },
-  { name: "BMI Calculator", href: "/calculators/bmi" },
-  { name: "My Plan", href: "/plans" },
-  { name: "Start New Plan", href: "/start" },
+  { name: "Profile", href: "/profile", icon: User },
+  { name: "BMI Calculator", href: "/calculators/bmi", icon: Calculator },
+  { name: "My Plan", href: "/plans", icon: ClipboardList },
+  { name: "Start New Plan", href: "/start", icon: PlusCircle },
 ];
 
 export default function Sidebar({ user }) {
@@ -20,24 +27,38 @@ export default function Sidebar({ user }) {
     <aside
       className={`${
         collapsed ? "w-20" : "w-64"
-      } bg-zinc-900 border-r border-zinc-800 p-4 transition-all duration-300 hidden md:block`}
+      } bg-zinc-950 border-r border-zinc-800 p-4 transition-all duration-300 hidden md:flex md:flex-col min-h-[calc(100vh-64px)]`}
     >
-      {/* Toggle */}
-      <button onClick={() => setCollapsed(!collapsed)} className="mb-6">
+      {/* Toggle Button */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="mb-6 flex items-center justify-center p-2 hover:bg-zinc-900 rounded-lg transition self-start"
+      >
         {collapsed ? (
-          <SidebarOpen size={18} className="text-zinc-400" />
+          <SidebarOpen
+            size={20}
+            className="text-zinc-400 hover:text-emerald-400"
+          />
         ) : (
-          <SidebarClose size={18} className="text-zinc-400" />
+          <SidebarClose
+            size={20}
+            className="text-zinc-400 hover:text-emerald-400"
+          />
         )}
       </button>
 
-      {/* User */}
+      {/* User Info */}
       {!collapsed && (
-        <p className="text-sm text-zinc-400 mb-6">{user?.email}</p>
+        <div className="mb-6 px-2">
+          <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+            Logged In As
+          </p>
+          <p className="text-sm text-zinc-300 truncate">{user?.email}</p>
+        </div>
       )}
 
-      {/* Nav */}
-      <nav className="space-y-2">
+      {/* Navigation */}
+      <nav className="space-y-2 flex-1">
         {navItems.map((item) => {
           const active = pathname === item.href;
 
@@ -45,13 +66,23 @@ export default function Sidebar({ user }) {
             <Link
               key={item.name}
               href={item.href}
-              className={`block px-3 py-2 rounded-lg transition ${
+              title={collapsed ? item.name : ""}
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
                 active
-                  ? "text-emerald-400 bg-emerald-500/10"
-                  : "text-zinc-400 hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400"
-              }`}
+                  ? "text-emerald-400 bg-emerald-500/10 shadow-[inset_2px_0_0_0_#34d399]"
+                  : "text-zinc-400 hover:bg-zinc-900 hover:text-emerald-400"
+              } ${collapsed ? "justify-center" : ""}`}
             >
-              {collapsed ? item.name[0] : item.name}
+              <item.icon
+                size={20}
+                className={active ? "text-emerald-400" : ""}
+              />
+
+              {!collapsed && (
+                <span className="font-medium text-sm whitespace-nowrap">
+                  {item.name}
+                </span>
+              )}
             </Link>
           );
         })}

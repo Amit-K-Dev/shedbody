@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+
 import {
   Flame,
   Dumbbell,
@@ -12,6 +14,10 @@ import {
   Activity,
   Menu,
   X,
+  User,
+  Settings,
+  LogOut,
+  LayoutDashboard,
 } from "lucide-react";
 import SearchPosts from "@/components/SearchPosts";
 
@@ -20,22 +26,74 @@ const categories = [
   { name: "Exercises", slug: "exercises", icon: Dumbbell },
   { name: "Nutrition", slug: "nutrition", icon: Apple },
   { name: "Recipes", slug: "recipes", icon: Salad },
-  { name: "Progress", slug: "dashboard", icon: Activity },
+  { name: "BMI", slug: "calculators/bmi", icon: Activity },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Auth States
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const pathname = usePathname();
+  const router = useRouter();
   const isActive = (path) => pathname === path;
 
-  // Scroll Effect (Shrink Navbar)
+  // Supabase Auth Check & Real-time Listener
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const supabase = createClient();
+
+    // Function to fetch user data
+    const fetchUserData = async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        // Fetch role from database
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role, avatar_url")
+          .eq("id", currentUser.id)
+          .single();
+
+        setRole(profile?.role || "user");
+        setAvatar(profile?.avatar_url || null);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
+      setLoading(false);
     };
 
+    // Initial Check
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      fetchUserData(user);
+    });
+
+    // The Magic Listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      fetchUserData(session?.user || null);
+    });
+
+    // Cleanup
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
+
+  // Scroll Effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -44,11 +102,10 @@ export default function Header() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-zinc-950/60 backdrop-blur-xl shadow-lg border-b border-zinc-800 py-2"
+          ? "bg-zinc-950/80 backdrop-blur-xl shadow-lg border-b border-zinc-800 py-2"
           : "bg-zinc-950/60 backdrop-blur-md py-3"
       }`}
     >
-      {/* MAIN NAVBAR */}
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link
@@ -69,7 +126,7 @@ export default function Header() {
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
-              className={`flex items-center gap-2 text-sm font-medium transition nav-link relative group ${
+              className={`flex items-center gap-2 text-sm font-medium transition ${
                 isActive(`/${cat.slug}`)
                   ? "text-emerald-400"
                   : "text-zinc-300 hover:text-zinc-50"
@@ -82,19 +139,77 @@ export default function Header() {
         </nav>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-3">
-          {/* Search Desktop */}
+        <div className="flex items-center gap-4">
           <div className="hidden md:block w-52">
             <SearchPosts />
           </div>
-          {/* CTA */}
-          <Link
-            href="/start"
-            className="hidden md:inline-block px-4 py-2 text-sm font-semibold rounded-lg bg-linear-to-r from-emerald-500 to-emerald-600 text-black hover:scale-105 transition shadow-md"
-          >
-            Start Plan
-          </Link>
+
+          {!loading && (
+            <div className="hidden md:flex items-center gap-4">
+              {user ? (
+                <>
+                  {/* Dynamic CTA Button based on Role */}
+                  <Link
+                    href={role === "admin" ? "/admin" : "/dashboard"}
+                    className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 text-zinc-100 border border-zinc-700 hover:bg-zinc-700 hover:border-emerald-500/50 transition flex items-center gap-2"
+                  >
+                    {role === "admin" ? (
+                      <Settings size={16} className="text-emerald-400" />
+                    ) : (
+                      <LayoutDashboard size={16} className="text-emerald-400" />
+                    )}
+                    {role === "admin" ? "Admin Panel" : "Dashboard"}
+                  </Link>
+
+                  {/* Profile Avatar */}
+                  <Link href="/profile">
+                    <div className="h-9 w-9 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center overflow-hidden cursor-pointer hover:bg-emerald-500/30 transition shadow-sm">
+                      {avatar ? (
+                        <img
+                          src={avatar}
+                          alt="User Avatar"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <User size={18} className="text-emerald-400" />
+                      )}
+                    </div>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-sm font-medium text-zinc-300 hover:text-zinc-50 transition"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/start"
+                    className="px-4 py-2 text-sm font-semibold rounded-lg bg-linear-to-r from-emerald-500 to-emerald-600 text-black hover:scale-105 transition shadow-md"
+                  >
+                    Start Plan
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+
           {/* Mobile Toggle */}
+          {/* Profile Avatar */}
+          <Link href="/profile" className="md:hidden">
+            <div className="h-9 w-9 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center overflow-hidden cursor-pointer hover:bg-emerald-500/30 transition shadow-sm">
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt="User Avatar"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <User size={18} className="text-emerald-400" />
+              )}
+            </div>
+          </Link>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden text-zinc-300 hover:text-zinc-50 transition cursor-pointer"
@@ -110,36 +225,88 @@ export default function Header() {
           menuOpen ? "max-h-150 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-4 pb-4 bg-zinc-950/60 border-t border-zinc-800">
-          {/* Mobile Search */}
-          <div className="mt-3 mb-4">
+        <div className="px-4 pb-6 bg-zinc-950 border-t border-zinc-800">
+          <div className="mt-4 mb-6">
             <SearchPosts />
           </div>
 
-          {/* Mobile Nav */}
-          {categories.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/${cat.slug}`}
-              onClick={() => setMenuOpen(false)}
-              className={`flex items-center gap-2 py-2 text-sm transition ${
-                isActive(`/${cat.slug}`)
-                  ? "text-emerald-400"
-                  : "text-zinc-300 hover:text-emerald-500"
-              }`}
-            >
-              <cat.icon size={16} />
-              {cat.name}
-            </Link>
-          ))}
+          <div className="space-y-1 mb-6">
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/${cat.slug}`}
+                onClick={() => setMenuOpen(false)}
+                className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition ${
+                  isActive(`/${cat.slug}`)
+                    ? "bg-emerald-500/10 text-emerald-400"
+                    : "text-zinc-300 hover:bg-zinc-900"
+                }`}
+              >
+                <cat.icon size={18} />
+                {cat.name}
+              </Link>
+            ))}
+          </div>
 
-          {/* Mobile CTA */}
-          <Link
-            href="/start"
-            className="block mt-4 text-center px-4 py-2 rounded-lg bg-linear-to-r from-emerald-500 to-emerald-600 text-black font-semibold hover:scale-102 transition shadow-md"
-          >
-            Start Plan
-          </Link>
+          {/* User Specific Mobile Section */}
+          {!loading && (
+            <div className="pt-4 border-t border-zinc-800">
+              {user ? (
+                <>
+                  {/* Section Divider Headname */}
+                  <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 px-3">
+                    {role === "admin" ? "Admin Controls" : "My Dashboard"}
+                  </h4>
+                  <div className="space-y-1">
+                    <Link
+                      href={role === "admin" ? "/admin" : "/dashboard"}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 transition"
+                    >
+                      {role === "admin" ? (
+                        <Settings size={18} />
+                      ) : (
+                        <LayoutDashboard size={18} />
+                      )}
+                      {role === "admin" ? "Open Admin Panel" : "My Progress"}
+                    </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 transition"
+                    >
+                      <User size={18} />
+                      Profile Settings
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition"
+                    >
+                      <LogOut size={18} />
+                      Log out
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-3 pt-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="block w-full text-center px-4 py-3 rounded-lg border border-zinc-800 text-zinc-300 font-medium hover:bg-zinc-900 transition"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/start"
+                    onClick={() => setMenuOpen(false)}
+                    className="block w-full text-center px-4 py-3 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-500 transition shadow-md"
+                  >
+                    Start Free Plan
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>
