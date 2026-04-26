@@ -2,14 +2,14 @@ export default function robots() {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      allow: ["/", "/_next/static/"],
       disallow: [
-        "/dashboard",
-        "/plans",
-        "/start",
-        "/profile",
+        "/admin/",
+        "/dashboard/",
+        "/plans/",
+        "/start/",
+        "/profile/",
         "/api/",
-        "/_next/",
       ],
     },
     sitemap: [

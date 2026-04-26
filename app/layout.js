@@ -3,6 +3,13 @@ import "./globals.css";
 import BackToTop from "@/components/BackToTop";
 import { Toaster } from "@/components/ui/toaster";
 import Script from "next/script";
+import { getOrganizationSchema } from "@/lib/schema";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#09090b",
+};
 
 export const metadata = {
   metadataBase: new URL("https://shedbody.com"),
@@ -36,7 +43,7 @@ export const metadata = {
     siteName: "ShedBody",
     title: "ShedBody",
     description:
-      "Tranform your body with structured workouts, nutrition guidance, and consistency.",
+      "Transform your body with structured workouts, nutrition guidance, and consistency.",
     images: [
       {
         url: "/og-image.png",
@@ -85,40 +92,25 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export default async function RootLayout({ children }) {
-  // Organization Schema (Globally applied to define the brand)
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "ShedBody",
-    url: "https://shedbody.com",
-    logo: "https://shedbody.com/shedbody-logo-black.png",
-    sameAs: [
-      "https://youtube.com/@shed-body",
-      "https://linkedin.com/company/shedbody",
-      "https://facebook.com/shedbody",
-      "https://instagram.com/shedbody_",
-      "https://pinterest.com/shedbody",
-      "https://twitter.com/shedbody",
-    ],
-  };
+export default function RootLayout({ children }) {
+  const schema = getOrganizationSchema();
 
   return (
     <html lang="en">
-      <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9117254807197165"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-      </head>
+      <Script
+        id="adsense-init"
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9117254807197165"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
       <body
         className={`${inter.variable} ${oswald.variable} font-sans antialiased`}
       >
         {/* SEO SCHEMA */}
         <script
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
 

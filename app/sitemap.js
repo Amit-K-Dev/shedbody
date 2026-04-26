@@ -47,7 +47,8 @@ export default async function sitemap() {
   try {
     const { data: posts, error } = await supabase
       .from("posts")
-      .select("slug, category, published_at, updated_at")
+      .select("slug, category, published_at, updated_at, status")
+      .eq("status", "published")
       .not("slug", "is", null)
       .not("category", "is", null)
       .not("published_at", "is", null);
@@ -60,14 +61,17 @@ export default async function sitemap() {
       throw error;
     }
 
-    const dynamicUrls = (posts || []).map((post) => ({
-      url: `${baseUrl}/${post.category.toLowerCase()}/${post.slug}`,
-      lastModified: new Date(
-        post.updated_at || post.published_at,
-      ).toISOString(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    }));
+    const dynamicUrls = (posts || []).map((post) => {
+      const safeCategory = post.category.toLowerCase().replace(/\s+/g, "-");
+      return {
+        url: `${baseUrl}/${safeCategory}/${post.slug}`,
+        lastModified: new Date(
+          post.updated_at || post.published_at,
+        ).toISOString(),
+        changeFrequency: "weekly",
+        priority: 0.8,
+      };
+    });
 
     return [...staticPages, ...expertPages, ...dynamicUrls];
   } catch (error) {

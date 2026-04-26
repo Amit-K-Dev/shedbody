@@ -3,14 +3,34 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "@/components/admin/RichTextEditor";
-import { Save, Send, Plus, X, Loader2 } from "lucide-react";
+import {
+  Save,
+  Send,
+  X,
+  Loader2,
+  ChevronLeft,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import SeoMetaBox from "@/components/admin/SeoMetaBox";
 import { createClient } from "@/lib/supabase/client";
 
 export default function NewPostPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
+  const [seoData, setSeoData] = useState({
+    seo_title: "",
+    seo_desc: "",
+    keywords: "",
+  });
+  const [isCannibalized, setIsCannibalized] = useState(false);
+  const [featuredImage, setFeaturedImage] = useState(null);
+  const [featuredImageFile, setFeaturedImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Category States
@@ -70,8 +90,32 @@ export default function NewPostPage() {
   };
 
   const generateExcerpt = (htmlContent) => {
-    const text = htmlContent.replace(/<[^>]*>?/gm, "");
-    return text.substring(0, 150) + (text.length > 150 ? "..." : "");
+    const pMatch = htmlContent.match(/<p[^>]*>(.*?)<\/p>/i);
+    let text = pMatch ? pMatch[1] : htmlContent.replace(/<[^>]*>?/gm, "");
+    text = text.replace(/<[^>]+>/g, "").trim();
+    return text.substring(0, 160) + (text.length > 160 ? "..." : "");
+  };
+
+  // IMAGE UPLOAD HANDLER
+  const uploadImageToStorage = async (file) => {
+    if (!file) return null;
+    const supabase = createClient();
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `post-images/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("images") // Make sure 'images' bucket exists
+      .upload(filePath, file);
+
+    if (uploadError) {
+      toast.error("Failed to upload featured image.");
+      console.error(uploadError);
+      return null;
+    }
+
+    const { data } = supabase.storage.from("images").getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   // MAIN SAVE FUNCTION
@@ -83,32 +127,65 @@ export default function NewPostPage() {
 
     setIsSubmitting(true);
     const supabase = createClient();
+    const finalSlug = slug.trim() ? generateSlug(slug) : generateSlug(title);
 
-    // 1. Get current logged-in Admin User
+    // 🟢 1. SLUG COLLISION CHECK (Unique URL Validation for NEW post)
+    const { data: existingSlugData } = await supabase
+      .from("posts")
+      .select("id")
+      .eq("slug", finalSlug)
+      .single(); // Yahan '.neq()' ki zaroorat nahi kyunki ye naya post hai
+
+    if (existingSlugData) {
+      toast.error(
+        `Error: The URL slug "${finalSlug}" is already used by another post. Please change the title or custom slug!`,
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
+    // 2. Get current logged-in Admin User
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // 2. Prepare Data
+    // 3. Handle Featured Image
+    let finalFeaturedImage = extractFirstImage(content); // Fallback to content image
+    if (featuredImageFile) {
+      const uploadedUrl = await uploadImageToStorage(featuredImageFile);
+      if (uploadedUrl) {
+        finalFeaturedImage = uploadedUrl;
+      }
+    } else if (
+      featuredImage &&
+      typeof featuredImage === "string" &&
+      featuredImage.startsWith("http")
+    ) {
+      finalFeaturedImage = featuredImage; // Keep existing if string URL
+    }
+
+    // 4. Prepare Data
+    const finalExcerpt = excerpt.trim() || generateExcerpt(content);
     const finalCategory = isNewCategory ? newCategoryName : category;
-    const slug = generateSlug(title);
-    const excerpt = generateExcerpt(content);
-    const featuredImage = extractFirstImage(content);
 
     const postData = {
-      title,
-      slug,
-      content,
-      excerpt,
+      title: title.trim(),
+      slug: finalSlug, // Safe slug
+      content: content,
+      excerpt: finalExcerpt,
       category: finalCategory || "General",
       status: status,
-      featured_image: featuredImage,
+      featured_image: finalFeaturedImage,
       author_id: user?.id,
       published_at: status === "published" ? new Date().toISOString() : null,
       views: 0,
+      seo_title: seoData.seo_title.trim(),
+      seo_desc: seoData.seo_desc.trim(),
+      keywords: seoData.keywords.trim(),
+      updated_at: new Date().toISOString(),
     };
 
-    // 3. Insert into Supabase
+    // 5. Insert into Supabase
     const { data, error } = await supabase
       .from("posts")
       .insert([postData])
@@ -122,7 +199,6 @@ export default function NewPostPage() {
       const newPostId = data[0].id;
 
       if (status === "draft") {
-        // Stay on page but move to edit mode
         toast.success("Draft saved! You can continue editing.");
         router.push(`/admin/posts/${newPostId}`);
       } else {
@@ -132,34 +208,69 @@ export default function NewPostPage() {
     }
   };
 
+  // UI
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
+      {/* Back Button */}
+      <Link
+        href="/admin/posts"
+        className="inline-flex items-center gap-2 text-zinc-400 hover:text-emerald-400 font-medium mb-6 transition"
+      >
+        <ChevronLeft size={18} /> Back to All Posts
+      </Link>
+
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-zinc-50">New Article</h1>
         <div className="flex gap-3">
           <button
-            onClick={() => savePost("draft")}
-            disabled={isSubmitting}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition disabled:opacity-50"
+            onClick={(e) => {
+              if (isCannibalized) {
+                e.preventDefault();
+                toast.error("Please fix SEO Cannibalization Error first!");
+                return;
+              }
+              savePost("draft");
+            }}
+            disabled={isSubmitting || isCannibalized}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
+              isCannibalized
+                ? "bg-zinc-800 text-zinc-600 opacity-50 cursor-not-allowed"
+                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+            }`}
           >
             {isSubmitting ? (
               <Loader2 size={18} className="animate-spin" />
             ) : (
               <Save size={18} />
             )}
-            Save
+            Save Draft
           </button>
+
           <button
-            onClick={() => savePost("published")}
+            onClick={(e) => {
+              if (isCannibalized) {
+                e.preventDefault();
+                toast.error(
+                  "SEO Error: Keyword Cannibalization! Please choose a unique Focus Keyword.",
+                  { duration: 4000 },
+                );
+                return;
+              }
+              savePost("published");
+            }}
             disabled={isSubmitting}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-zinc-50 hover:bg-emerald-500 transition shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition shadow-lg ${
+              isCannibalized
+                ? "bg-zinc-700 text-zinc-400 opacity-80 cursor-not-allowed"
+                : "bg-emerald-600 text-zinc-50 hover:bg-emerald-500 shadow-emerald-500/20"
+            }`}
           >
             {isSubmitting ? (
               <Loader2 size={18} className="animate-spin" />
             ) : (
               <Send size={18} />
             )}
-            Publish
+            {isCannibalized ? "Fix SEO Error" : "Publish"}
           </button>
         </div>
       </div>
@@ -177,6 +288,87 @@ export default function NewPostPage() {
             placeholder="e.g., 5 Yoga Poses for Absolute Beginners"
             className="w-full text-2xl bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-zinc-50 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           />
+
+          {/* ADVANCED SEO SLUG EDITOR */}
+          <div className="mt-4 px-2 bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/50">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-zinc-500">
+                shedbody.com/{category ? category.toLowerCase() : "[category]"}/
+              </span>
+              <input
+                type="text"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder={generateSlug(title) || "custom-url-slug"}
+                className={`flex-1 bg-transparent border-b border-dashed text-sm focus:outline-none transition pb-1 ${
+                  typeof seoData?.keywords === "string" &&
+                  seoData.keywords.split(",")[0].trim()
+                    ? (slug.trim()
+                        ? generateSlug(slug)
+                        : generateSlug(title)
+                      ).includes(
+                        generateSlug(seoData.keywords.split(",")[0].trim()),
+                      )
+                      ? "border-emerald-500/50 text-emerald-400 focus:border-emerald-500"
+                      : "border-amber-500/50 text-amber-400 focus:border-amber-500"
+                    : "border-zinc-700 text-zinc-400 focus:border-emerald-500"
+                }`}
+              />
+            </div>
+
+            {/* SAFE TRAFFIC LIGHT FEEDBACK MESSAGE */}
+            {(() => {
+              const focusKeyword =
+                typeof seoData?.keywords === "string"
+                  ? seoData.keywords.split(",")[0].trim().toLowerCase()
+                  : "";
+              if (!focusKeyword) return null;
+
+              const activeSlug = slug.trim()
+                ? generateSlug(slug)
+                : generateSlug(title);
+              const isKeywordInSlug = activeSlug.includes(
+                generateSlug(focusKeyword),
+              );
+
+              return (
+                <p
+                  className={`text-xs mt-2 flex items-center gap-1.5 ${isKeywordInSlug ? "text-emerald-500" : "text-amber-500"}`}
+                >
+                  {isKeywordInSlug ? (
+                    <>
+                      <CheckCircle2 size={14} /> Great! Focus keyword is in the
+                      URL.
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle size={14} /> Try including your focus keyword{" "}
+                      <strong>("{focusKeyword}")</strong> in the URL slug.
+                    </>
+                  )}
+                </p>
+              );
+            })()}
+          </div>
+
+          {/* Excerpt Section */}
+          <div className="mt-6">
+            <div className="flex justify-between mb-2">
+              <label className="text-sm font-medium text-zinc-400">
+                Excerpt / Short Description
+              </label>
+              <span className="text-xs text-zinc-500">
+                {excerpt?.length || 0} / 160
+              </span>
+            </div>
+            <textarea
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              placeholder="Briefly explain what this article is about..."
+              rows={3}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-zinc-50 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none text-sm"
+            />
+          </div>
         </div>
 
         {/* Dynamic Category Section */}
@@ -236,6 +428,22 @@ export default function NewPostPage() {
           </label>
           <RichTextEditor content={content} onChange={setContent} />
         </div>
+
+        {/* SEO PLUGIN */}
+        <SeoMetaBox
+          seoData={seoData}
+          setSeoData={setSeoData}
+          defaultTitle={title}
+          defaultExcerpt={excerpt.trim() || generateExcerpt(content)}
+          content={content}
+          postId={null}
+          onCannibalizeChange={setIsCannibalized}
+          featuredImage={featuredImage}
+          onImageChange={(data) => {
+            setFeaturedImage(data.previewUrl);
+            setFeaturedImageFile(data.file);
+          }}
+        />
       </div>
     </div>
   );

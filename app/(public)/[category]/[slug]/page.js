@@ -1,5 +1,5 @@
 import { formatPostDate } from "@/lib/utils/date";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TableOfContents from "@/components/TableOfContents";
 import ReadingProgress from "@/components/ReadingProgress";
@@ -7,7 +7,7 @@ import InlineRelatedArticle from "@/components/InlineRelatedArticles";
 import SourcesToggle from "@/components/SourcesToggle";
 import ViewTracker from "@/components/ViewTracker";
 
-import { getPost, getRelatedPosts } from "@/lib/posts";
+import { getPost, getRelatedPosts, getRedirectUrl } from "@/lib/posts";
 import {
   cleanWordPressContent,
   injectInlineRelated,
@@ -23,7 +23,7 @@ const BASE_URL = "https://shedbody.com";
 
 export const revalidate = 3600;
 
-// Generate Metadata
+// Generate Metadata with Custom SEO Data
 export async function generateMetadata({ params }) {
   const { slug, category } = await params;
   const post = await getPost(slug);
@@ -35,8 +35,9 @@ export async function generateMetadata({ params }) {
   const expert = getExpertForPost(post);
   const postUrl = `/${category.toLowerCase()}/${slug}`;
 
-  // Title Fallback (from h1)
+  // SMART TITLE: first SEO Title, then regular Title, then H1 fallback
   const safeTitle =
+    post.seo_title ||
     post.title ||
     post.content
       ?.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
@@ -44,8 +45,8 @@ export async function generateMetadata({ params }) {
       .trim() ||
     "ShedBody Article";
 
-  // Excerpt Fallback (from first p tag)
-  let safeExcerpt = post.excerpt;
+  // SMART EXCERPT: first SEO Desc, then excerpt, then content fallback
+  let safeExcerpt = post.seo_desc || post.excerpt;
   if (!safeExcerpt || safeExcerpt.trim() === "") {
     const pMatch = post.content?.match(/<p[^>]*>(.*?)<\/p>/i);
     const rawText =
@@ -58,7 +59,30 @@ export async function generateMetadata({ params }) {
       safeExcerpt = safeExcerpt.substring(0, 150) + "...";
   }
 
-  // Image Fallback (from img src or markdown image)
+  // THE MASTERSTROKE: SEO Keywords Implementation (Long-tail Fallback)
+  let keywordArray = [];
+  if (post.keywords && post.keywords.trim() !== "") {
+    keywordArray = post.keywords
+      .split(",")
+      .map((k) => k.trim())
+      .filter(Boolean);
+  } else {
+    const rawTitleForKeyword =
+      post.seo_title || post.title || "Fitness and Health Guide";
+    const longTailKeyword = rawTitleForKeyword
+      .replace(/,/g, "")
+      .trim()
+      .toLowerCase();
+
+    keywordArray = [
+      longTailKeyword,
+      post.category || "Fitness",
+      "ShedBody",
+      "Health",
+    ].filter(Boolean);
+  }
+
+  // Image Fallback
   let safeImage = post.featured_image || post.image;
   if (!safeImage && post.content) {
     safeImage =
@@ -70,6 +94,7 @@ export async function generateMetadata({ params }) {
   return {
     title: safeTitle,
     description: safeExcerpt,
+    keywords: keywordArray,
     alternates: {
       canonical: postUrl,
     },
@@ -106,7 +131,7 @@ function calculateReadingTime(html) {
   return Math.ceil(words / wordPerMinute);
 }
 
-// Remove SEO Yoast and SEO Rank Math TOC
+// Remove Legacy TOC
 function removeLegacyTOC(html) {
   return html
     .replace(
@@ -151,7 +176,6 @@ function extractHeadings(html) {
       if (headings.length > 0 && headings[headings.length - 1].level === "2") {
         headings[headings.length - 1].items.push({ id, text, level });
       } else {
-        // Fallback if H3 appears before any H2
         headings.push({ id, text, level, items: [] });
       }
     }
@@ -187,7 +211,6 @@ function transformCallouts(html) {
 function transformFootnotes(html) {
   let index = 1;
   const footnotes = [];
-
   const content = html.replace(/\(\((.*?)\)\)/g, (_, text) => {
     footnotes.push(text);
     const number = index++;
@@ -200,20 +223,24 @@ function transformFootnotes(html) {
       </sup>
     `;
   });
-
-  return {
-    content: content,
-    count: footnotes.length,
-    sources: footnotes,
-  };
+  return { content: content, count: footnotes.length, sources: footnotes };
 }
 
 export default async function PostPage({ params }) {
   const { slug, category } = await params;
-
   const post = await getPost(slug);
 
-  if (!post) notFound();
+  // SEO Redirect Logic Check
+  if (!post) {
+    const currentUrl = `/${category.toLowerCase()}/${slug}`;
+    const redirectUrl = await getRedirectUrl(currentUrl);
+
+    if (redirectUrl) {
+      permanentRedirect(redirectUrl);
+    } else {
+      notFound();
+    }
+  }
 
   const relatedPosts = await getRelatedPosts(category, slug);
   const expert = getExpertForPost(post);
@@ -239,18 +266,19 @@ export default async function PostPage({ params }) {
   const headings = extractHeadings(contentWithIds);
   const readingTime = calculateReadingTime(contentWithIds);
 
-  // SCHEMA DATA
-  const articleSchema = getArticleSchema(post, expert);
+  // SMART HACK
+  const schemaReadyPost = {
+    ...post,
+    title: post.seo_title || post.title,
+    excerpt: post.seo_desc || post.excerpt,
+  };
+  const articleSchema = getArticleSchema(schemaReadyPost, expert);
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: BASE_URL,
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
       {
         "@type": "ListItem",
         position: 2,
@@ -260,12 +288,13 @@ export default async function PostPage({ params }) {
       {
         "@type": "ListItem",
         position: 3,
-        name: post.title,
+        name: post.seo_title || post.title,
         item: `${BASE_URL}/${post.category.toLowerCase()}/${post.slug}`,
       },
     ],
   };
 
+  // UI
   return (
     <>
       <ReadingProgress />
@@ -274,18 +303,14 @@ export default async function PostPage({ params }) {
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(articleSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
         />
       )}
 
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <ViewTracker postId={post.id} />
@@ -314,11 +339,19 @@ export default async function PostPage({ params }) {
 
                 {sourceCount > 0 && (
                   <span className="text-xs px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded">
-                    &#10003; Evidence-Based &bull; {sourceCount} Sources
+                    &#10003;{" "}
+                    <Link
+                      href="/editorial-process"
+                      className="no-underline hover:text-emerald-300"
+                    >
+                      Evidence-Based
+                    </Link>{" "}
+                    &bull; {sourceCount} Sources
                   </span>
                 )}
               </div>
 
+              {/* Show always Original Title on UI, SEO title only for bots */}
               <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
                 {post.title}
               </h1>
@@ -334,17 +367,26 @@ export default async function PostPage({ params }) {
               <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-zinc-500">
                 <span>{postDate}</span>
                 <span>&bull;</span>
-
                 <span>
                   {readingTime} min{readingTime !== 1 ? "s" : ""} read
                 </span>
                 <span>&bull;</span>
-
                 <span>
                   {post.views || 0} view{post.views !== 1 ? "s" : ""}
                 </span>
               </div>
             </header>
+
+            {/* FEATURED IMAGE DISPLAY */}
+            {post.featured_image && (
+              <div className="w-full aspect-video md:aspect-2/1 rounded-2xl overflow-hidden mb-12 border border-zinc-800 shadow-2xl relative bg-zinc-900">
+                <img
+                  src={post.featured_image}
+                  alt={post.seo_title || post.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
             <div className="prose prose-invert prose-lg max-w-none">
               {/* TOC UI */}
@@ -365,7 +407,6 @@ export default async function PostPage({ params }) {
                         >
                           {heading.text}
                         </a>
-                        {/* Render Nested H3s */}
                         {heading.items && heading.items.length > 0 && (
                           <ul className="ml-4 mt-1 space-y-1 border-l border-zinc-800 pl-4">
                             {heading.items.map((subHeading) => (
@@ -392,7 +433,6 @@ export default async function PostPage({ params }) {
                 suppressHydrationWarning
               />
 
-              {/* Share Component */}
               <ShareArticle
                 title={post.title}
                 category={post.category}
@@ -413,7 +453,6 @@ export default async function PostPage({ params }) {
                 </ul>
               </SourcesToggle>
 
-              {/* Related Articles */}
               <InlineRelatedArticle posts={relatedPosts} />
             </div>
           </article>

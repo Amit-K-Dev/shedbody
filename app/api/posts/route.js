@@ -5,19 +5,19 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    // 2. Data Fetching
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "id, title, slug, category, excerpt, published_at, updated_at, views",
+        "id, title, slug, category, excerpt, keywords, status, published_at, updated_at, views",
       )
+      .eq("status", "published")
       .not("title", "is", null)
       .not("slug", "is", null)
       .not("category", "is", null)
       .not("published_at", "is", null)
       .order("published_at", { ascending: false });
 
-    // 3. Database Error Handling
+    // Database Error Handling
     if (error) {
       console.error("API Fetch Error (Posts):", error);
       return NextResponse.json(
@@ -26,13 +26,13 @@ export async function GET() {
       );
     }
 
-    // 4. Success Response
+    // Success Response
     return NextResponse.json(
       { success: true, data: data || [] },
       { status: 200 },
     );
   } catch (err) {
-    // 5. Server Crash Handling
+    // Server Crash Handling
     console.error("API Route Crash:", err);
     return NextResponse.json(
       { success: false, error: "Internal Server Error." },

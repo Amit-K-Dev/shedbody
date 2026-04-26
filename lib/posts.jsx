@@ -42,6 +42,23 @@ export const getPost = cache(async (slug) => {
   };
 });
 
+// GET REDIRECT URL (For SEO 301 Redirects)
+export const getRedirectUrl = cache(async (oldUrl) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("redirects")
+    .select("new_url")
+    .eq("old_url", oldUrl)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data.new_url;
+});
+
 // GET RELATED POSTS
 export const getRelatedPosts = cache(async (category, slug) => {
   const supabase = await createClient();
@@ -218,3 +235,70 @@ export const getCategoriesForBuild = async () => {
   ];
   return ["all", ...unique];
 };
+
+// ==========================================
+// ADMIN DASHBOARD QUERIES (NO PUBLIC FILTERS)
+// ==========================================
+
+// GET ADMIN STATS (Total Posts & Views)
+export const getAdminStats = cache(async () => {
+  const supabase = await createClient();
+
+  // Total Posts Count
+  const { count: totalPosts, error: countError } = await supabase
+    .from("posts")
+    .select("*", { count: "exact", head: true });
+
+  // Total Views Sum
+  const { data: allPostsViews, error: viewsError } = await supabase
+    .from("posts")
+    .select("views");
+
+  if (countError) logError("getAdminStats (Count)", countError);
+  if (viewsError) logError("getAdminStats (Views)", viewsError);
+
+  const totalViews =
+    allPostsViews?.reduce((sum, post) => sum + (post.views || 0), 0) || 0;
+  const avgViews = totalPosts > 0 ? Math.round(totalViews / totalPosts) : 0;
+
+  return {
+    totalPosts: totalPosts || 0,
+    totalViews,
+    avgViews,
+  };
+});
+
+// GET ADMIN RECENT POSTS (Includes Drafts)
+export const getAdminRecentPosts = cache(async (limit = 5) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, title, views, category, status, published_at, updated_at")
+    .order("updated_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    logError("getAdminRecentPosts", error);
+    return [];
+  }
+  return data || [];
+});
+
+// GET ADMIN TOP POSTS (Trending/Popular Live Posts)
+export const getAdminTopPosts = cache(async (limit = 5) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, title, slug, views, category, published_at")
+    .eq("status", "published")
+    .order("views", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    logError("getAdminTopPosts", error);
+    return [];
+  }
+  return data || [];
+});
