@@ -7,6 +7,15 @@ import HeroSection from "@/components/HeroSection";
 import { safeJsonLd } from "@/lib/security/html";
 import { normalizeImageUrl } from "@/lib/utils/imageUrl";
 import { formatPostDate } from "@/lib/utils/date";
+import {
+  Activity,
+  ArrowRight,
+  Dumbbell,
+  LineChart,
+  ShieldCheck,
+  Sparkles,
+  Utensils,
+} from "lucide-react";
 
 // Advanced SEO Metadata for Home Page
 export const metadata = {
@@ -191,6 +200,240 @@ function SidebarPost({ post }) {
   );
 }
 
+function TrustSection() {
+  const pillars = [
+    {
+      metric: "01",
+      label: "Evidence first",
+      text: "Every guide is built around practical, research-aware fitness and nutrition advice, not hype cycles.",
+    },
+    {
+      metric: "02",
+      label: "Reviewed expertise",
+      text: "Our review board connects articles with qualified specialists across training, nutrition, yoga, and recovery.",
+    },
+    {
+      metric: "03",
+      label: "Made for real life",
+      text: "We prioritize sustainable routines, clear tradeoffs, and steps people can actually repeat week after week.",
+    },
+  ];
+
+  return (
+    <section className="mb-24 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/30">
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+        <div className="relative p-7 md:p-10 lg:p-12">
+          <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 via-transparent to-transparent" />
+          <div className="relative">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
+              <ShieldCheck size={14} />
+              Trust standard
+            </div>
+            <h2 className="max-w-2xl text-3xl font-bold leading-tight tracking-tight text-zinc-50 md:text-5xl">
+              Why you can trust us on your fitness journey
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-zinc-400">
+              Fitness advice should feel clear, accountable, and usable. We
+              build ShedBody around transparent guidance that respects your
+              time, body, and long-term progress.
+            </p>
+
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              {["Clear", "Reviewed", "Practical"].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3 text-center"
+                >
+                  <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 border-t border-zinc-800 bg-zinc-950/80 p-6 md:grid-cols-3 lg:border-l lg:border-t-0 lg:p-8">
+          {pillars.map((pillar) => (
+            <div
+              key={pillar.label}
+              className="rounded-xl border border-zinc-800 bg-zinc-900/55 p-5 shadow-lg shadow-black/10 transition hover:border-emerald-500/50"
+            >
+              <p className="mb-8 text-3xl font-black leading-none text-zinc-800">
+                {pillar.metric}
+              </p>
+              <h3 className="mb-3 text-base font-semibold text-zinc-50">
+                {pillar.label}
+              </h3>
+              <p className="text-sm leading-relaxed text-zinc-400">
+                {pillar.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DashboardValueSection() {
+  const features = [
+    {
+      icon: Dumbbell,
+      label: "Workout plans",
+      text: "Generate goal-based routines for strength, fat loss, mobility, or beginner consistency.",
+    },
+    {
+      icon: Utensils,
+      label: "Diet guidance",
+      text: "Build practical nutrition plans around your body goals and daily routine.",
+    },
+    {
+      icon: Activity,
+      label: "Daily tracking",
+      text: "Log progress, stay accountable, and keep your plan visible inside your dashboard.",
+    },
+    {
+      icon: LineChart,
+      label: "Progress signals",
+      text: "See the patterns that matter so you know when to adjust training, food, or recovery.",
+    },
+  ];
+
+  return (
+    <section className="mb-24 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/30">
+      <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)]">
+        <div className="p-7 md:p-10 lg:p-12">
+          <div className="mb-6 inline-flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
+            <Sparkles size={14} />
+            Member dashboard
+          </div>
+
+          <h2 className="max-w-2xl text-3xl font-bold leading-tight tracking-tight text-zinc-50 md:text-5xl">
+            Your workout, diet, and progress system in one place
+          </h2>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-zinc-400 md:text-lg">
+            Create plans, track what you complete, and keep your fitness journey
+            moving with a dashboard built for daily action.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+
+              return (
+                <div
+                  key={feature.label}
+                  className="rounded-xl border border-zinc-800 bg-zinc-900/55 p-5 shadow-lg shadow-black/10 transition hover:border-emerald-500/50"
+                >
+                  <Icon className="mb-4 h-6 w-6 text-emerald-400" />
+                  <h3 className="text-base font-semibold text-zinc-50">
+                    {feature.label}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                    {feature.text}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-bold text-zinc-950 transition hover:bg-emerald-400"
+            >
+              Start free
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center rounded-full border border-zinc-700 px-6 py-3 text-sm font-semibold text-zinc-300 transition hover:border-emerald-500 hover:text-emerald-300"
+            >
+              Preview dashboard
+            </Link>
+          </div>
+        </div>
+
+        <div className="relative min-h-[520px] bg-zinc-900">
+          <Image
+            src="/hero-section.jpg"
+            alt="ShedBody dashboard preview"
+            fill
+            sizes="(max-width: 1024px) 100vw, 52vw"
+            className="object-cover opacity-35 mix-blend-luminosity"
+          />
+          <div className="absolute inset-0 bg-linear-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/20" />
+
+          <div className="absolute inset-0 flex items-center justify-center p-6">
+            <div className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-950/85 p-5 shadow-2xl backdrop-blur">
+              <div className="mb-5 flex items-center justify-between border-b border-zinc-800 pb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-emerald-400">
+                    Today
+                  </p>
+                  <h3 className="mt-1 text-xl font-bold text-zinc-50">
+                    Fitness dashboard
+                  </h3>
+                </div>
+                <div className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                  68% done
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                  <div className="mb-3 flex items-center justify-between text-sm">
+                    <span className="font-semibold text-zinc-100">
+                      Push strength session
+                    </span>
+                    <span className="text-emerald-400">5 moves</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+                    <div className="h-full w-3/4 bg-emerald-500" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                    <p className="text-xs uppercase tracking-widest text-zinc-500">
+                      Calories
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-zinc-50">
+                      2,180
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                    <p className="text-xs uppercase tracking-widest text-zinc-500">
+                      Protein
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-zinc-50">142g</p>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                  <p className="mb-3 text-sm font-semibold text-zinc-100">
+                    Weekly momentum
+                  </p>
+                  <div className="flex h-24 items-end gap-2">
+                    {[42, 64, 52, 78, 72, 88, 80].map((height, index) => (
+                      <div
+                        key={index}
+                        className="flex-1 rounded-t bg-emerald-500/80"
+                        style={{ height: `${height}%` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function Home() {
   const supabase = await createClient();
 
@@ -249,6 +492,9 @@ export default async function Home() {
         <HeroSection />
 
         <section className="mx-auto max-w-7xl px-6 pb-24">
+          <TrustSection />
+          <DashboardValueSection />
+
           {featured && (
             <section className="mb-24">
               <SectionHeader eyebrow="Featured" title="Editor's lead story" />
