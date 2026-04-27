@@ -6,6 +6,7 @@ import PostCard from "@/components/PostCard";
 import HeroSection from "@/components/HeroSection";
 import { safeJsonLd } from "@/lib/security/html";
 import { normalizeImageUrl } from "@/lib/utils/imageUrl";
+import { formatPostDate } from "@/lib/utils/date";
 
 // Advanced SEO Metadata for Home Page
 export const metadata = {
@@ -35,6 +36,161 @@ export const metadata = {
 
 export const revalidate = 3600;
 
+function getPostImage(post) {
+  if (!post) return null;
+  return normalizeImageUrl(post.featured_image);
+}
+
+function SectionHeader({ eyebrow, title }) {
+  return (
+    <div className="mb-7 flex items-end justify-between gap-6 border-b border-zinc-800/80 pb-4">
+      <div>
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-emerald-400">
+          {eyebrow}
+        </p>
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-50 md:text-3xl">
+          {title}
+        </h2>
+      </div>
+    </div>
+  );
+}
+
+function ArticleMeta({ post }) {
+  return (
+    <p className="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500">
+      <span>{post.category}</span>
+      <span className="text-zinc-700">&bull;</span>
+      <span>
+        {formatPostDate(post.updated_at || post.published_at, {
+          showUpdatedLabel: true,
+          isUpdated: !!post.updated_at,
+        })}
+      </span>
+    </p>
+  );
+}
+
+function EditorialArticle({ post, priority = false }) {
+  const image = getPostImage(post) || "/hero-section.jpg";
+
+  return (
+    <Link
+      href={`/${post.category}/${post.slug}`}
+      className="group grid overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950 transition hover:border-emerald-500/70 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,0.88fr)]"
+    >
+      <div className="relative min-h-80 overflow-hidden bg-zinc-900">
+        <Image
+          src={image}
+          alt={post.title}
+          fill
+          priority={priority}
+          sizes="(max-width: 1024px) 100vw, 58vw"
+          className="object-cover transition duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-zinc-950/45 via-transparent to-transparent" />
+      </div>
+
+      <div className="flex flex-col justify-center p-7 md:p-10">
+        <p className="mb-4 w-fit border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
+          {post.category}
+        </p>
+        <h3 className="text-3xl font-bold leading-tight tracking-tight text-zinc-50 transition group-hover:text-emerald-300 md:text-5xl">
+          {post.title}
+        </h3>
+        {post.excerpt && (
+          <p className="mt-5 line-clamp-3 text-base leading-relaxed text-zinc-400">
+            {post.excerpt}
+          </p>
+        )}
+        <ArticleMeta post={post} />
+      </div>
+    </Link>
+  );
+}
+
+function FeatureStripCard({ post, index }) {
+  const image = getPostImage(post) || "/hero-section.jpg";
+
+  return (
+    <Link
+      href={`/${post.category}/${post.slug}`}
+      className="group grid grid-cols-[112px_minmax(0,1fr)] gap-4 border-b border-zinc-800/70 py-5 first:pt-0 last:border-b-0 last:pb-0"
+    >
+      <div className="relative aspect-square overflow-hidden rounded-md bg-zinc-900">
+        <Image
+          src={image}
+          alt={post.title}
+          fill
+          sizes="112px"
+          className="object-cover transition duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div className="min-w-0">
+        <p className="mb-2 text-xs font-semibold text-zinc-500">
+          {String(index + 1).padStart(2, "0")} / {post.category}
+        </p>
+        <h3 className="line-clamp-3 text-base font-semibold leading-snug text-zinc-100 transition group-hover:text-emerald-300">
+          {post.title}
+        </h3>
+      </div>
+    </Link>
+  );
+}
+
+function CompactArticleList({ posts }) {
+  return (
+    <div className="divide-y divide-zinc-800/70 border-y border-zinc-800/70">
+      {posts.map((post) => (
+        <Link
+          key={post.id}
+          href={`/${post.category}/${post.slug}`}
+          className="group grid gap-4 py-5 transition md:grid-cols-[160px_minmax(0,1fr)]"
+        >
+          <div className="relative aspect-video overflow-hidden rounded-md bg-zinc-900">
+            <Image
+              src={getPostImage(post) || "/hero-section.jpg"}
+              alt={post.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 160px"
+              className="object-cover transition duration-500 group-hover:scale-105"
+            />
+          </div>
+          <div className="min-w-0">
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-zinc-500">
+              {post.category}
+            </p>
+            <h3 className="line-clamp-2 text-xl font-semibold leading-snug text-zinc-50 transition group-hover:text-emerald-300">
+              {post.title}
+            </h3>
+            {post.excerpt && (
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-500">
+                {post.excerpt}
+              </p>
+            )}
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function SidebarPost({ post }) {
+  return (
+    <Link
+      href={`/${post.category}/${post.slug}`}
+      className="group block rounded-lg border border-zinc-800 bg-zinc-950/70 p-5 transition hover:border-emerald-500/70"
+    >
+      <p className="mb-2 text-xs font-bold uppercase tracking-widest text-zinc-500">
+        {post.category}
+      </p>
+      <h3 className="line-clamp-2 text-lg font-semibold leading-snug text-zinc-50 transition group-hover:text-emerald-300">
+        {post.title}
+      </h3>
+    </Link>
+  );
+}
+
 export default async function Home() {
   const supabase = await createClient();
 
@@ -60,7 +216,6 @@ export default async function Home() {
     ]);
 
   const featured = posts?.[0];
-  const featuredImage = normalizeImageUrl(featured?.featured_image);
   const latest = posts?.slice(1, 5);
 
   const smartIds = new Set(smartFeed?.map((p) => p.id) || []);
@@ -68,10 +223,11 @@ export default async function Home() {
     trendingPosts?.filter((p) => !smartIds.has(p.id)) || [];
   const filteredPopular =
     popularPosts?.filter((p) => !smartIds.has(p.id)) || [];
+  const leadRecommended = smartFeed?.[0];
+  const sideRecommended = smartFeed?.slice(1, 6) || [];
 
   return (
     <>
-      {/* Website JSON-LD Schema for advanced SEO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -90,95 +246,87 @@ export default async function Home() {
       />
 
       <section>
-        {/* HERO SECTION */}
         <HeroSection />
 
-        <section className="max-w-6xl mx-auto px-6 py-24">
-          {/* RECOMMENDED ARTICLE */}
-          {smartFeed?.length > 0 && (
-            <section id="recommended" className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">
-                🔥 Recommended For You
-              </h2>
-              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-                {smartFeed.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* FEATURED ARTICLE */}
+        <section className="mx-auto max-w-7xl px-6 pb-24">
           {featured && (
-            <section className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">⭐ Featured</h2>
-              <Link
-                href={`/${featured.category}/${featured.slug}`}
-                className="group grid gap-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition hover:border-emerald-500 md:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]"
-              >
-                <div className="relative aspect-video min-h-64 bg-zinc-950 md:aspect-auto">
-                  <Image
-                    src={featuredImage || "/hero-section.jpg"}
-                    alt={featured.title}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 58vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-
-                <div className="flex flex-col justify-center p-6 md:p-8">
-                  <p className="mb-3 text-xs font-bold uppercase tracking-widest text-emerald-400">
-                    {featured.category}
-                  </p>
-                  <h3 className="text-3xl font-semibold leading-tight text-zinc-50 transition group-hover:text-emerald-400 md:text-4xl">
-                    {featured.title}
-                  </h3>
-                  {featured.excerpt && (
-                    <p className="mt-4 max-w-2xl text-zinc-400">
-                      {featured.excerpt}
-                    </p>
-                  )}
-                </div>
-              </Link>
+            <section className="mb-24">
+              <SectionHeader eyebrow="Featured" title="Editor's lead story" />
+              <EditorialArticle post={featured} priority />
             </section>
           )}
 
-          {/* LATEST ARTICLE */}
-          {latest?.length > 0 && (
-            <section id="latest" className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">🧾 Just In</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {latest.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
+          {smartFeed?.length > 0 && (
+            <section id="recommended" className="mb-24">
+              <SectionHeader
+                eyebrow="Recommended"
+                title="Picked for your next read"
+              />
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px]">
+                {leadRecommended && <PostCard post={leadRecommended} />}
+                {sideRecommended.length > 0 && (
+                  <div className="rounded-lg border border-zinc-800 bg-zinc-950/70 p-5">
+                    {sideRecommended.map((post, index) => (
+                      <FeatureStripCard
+                        key={post.id}
+                        post={post}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
           )}
 
-          {/* TRENDING POSTS */}
-          {filteredTrending?.length > 0 && (
-            <section id="trending" className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">🔥 Trending</h2>
-              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-                {filteredTrending.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
-          )}
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
+            {latest?.length > 0 && (
+              <section id="latest">
+                <SectionHeader eyebrow="Latest" title="Fresh from ShedBody" />
+                <CompactArticleList posts={latest} />
+              </section>
+            )}
 
-          {/* POPULAR POSTS */}
-          {filteredPopular?.length > 0 && (
-            <section id="popular" className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">🏆 Most Popular</h2>
-              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-                {filteredPopular.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
-          )}
+            <div className="space-y-12">
+              {filteredTrending?.length > 0 && (
+                <section id="trending">
+                  <SectionHeader eyebrow="Trending" title="Readers are into" />
+                  <div className="space-y-4">
+                    {filteredTrending.map((post) => (
+                      <SidebarPost key={post.id} post={post} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {filteredPopular?.length > 0 && (
+                <section id="popular">
+                  <SectionHeader eyebrow="Popular" title="Most opened" />
+                  <div className="space-y-4">
+                    {filteredPopular.map((post, index) => (
+                      <Link
+                        key={post.id}
+                        href={`/${post.category}/${post.slug}`}
+                        className="group flex gap-4 rounded-lg border border-zinc-800 bg-zinc-950/70 p-5 transition hover:border-emerald-500/70"
+                      >
+                        <span className="text-2xl font-black leading-none text-zinc-700 transition group-hover:text-emerald-500">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <div>
+                          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-zinc-500">
+                            {post.category}
+                          </p>
+                          <h3 className="line-clamp-2 text-lg font-semibold leading-snug text-zinc-50 transition group-hover:text-emerald-300">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+          </div>
         </section>
       </section>
     </>
