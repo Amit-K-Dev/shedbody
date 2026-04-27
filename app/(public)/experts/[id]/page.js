@@ -67,7 +67,9 @@ export default async function ExpertProfilePage({ params }) {
   if (expertCategories.length > 0) {
     const { data } = await supabase
       .from("posts")
-      .select("id, title, slug, category, excerpt, published_at, views")
+      .select(
+        "id, title, slug, category, excerpt, published_at, views, featured_image",
+      )
       .in("category", expertCategories)
       .not("title", "is", null)
       .not("slug", "is", null)
