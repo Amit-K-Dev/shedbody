@@ -18,6 +18,7 @@ const supabaseHostname = getHostname(SUPABASE_URL);
 const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 80],
     remotePatterns: [
       ...(r2Hostname ? [{ protocol: "https", hostname: r2Hostname }] : []),
       ...(supabaseHostname
