@@ -6,6 +6,7 @@ import ReadingProgress from "@/components/ReadingProgress";
 import InlineRelatedArticle from "@/components/InlineRelatedArticles";
 import SourcesToggle from "@/components/SourcesToggle";
 import ViewTracker from "@/components/ViewTracker";
+import Image from "next/image";
 
 import { getPost, getRelatedPosts, getRedirectUrl } from "@/lib/posts";
 import {
@@ -13,20 +14,43 @@ import {
   injectInlineRelated,
   optimizeImages,
 } from "@/lib/contentParser";
+import { safeJsonLd, sanitizeArticleHtml } from "@/lib/security/html";
 import Link from "next/link";
 import ExpertInline from "@/components/ExpertInline";
 import { getExpertForPost } from "@/lib/getExpertForPost";
-import { getArticleSchema } from "@/lib/schema";
+import {
+  getArticleSchema,
+  getArticleTableSchemas,
+  getTableOfContentsSchema,
+} from "@/lib/schema";
 import ShareArticle from "@/components/ShareArticle";
+import { normalizeImageUrl } from "@/lib/utils/imageUrl";
 
 const BASE_URL = "https://shedbody.com";
 
 export const revalidate = 3600;
 
+function normalizeKeywords(keywords) {
+  if (typeof keywords === "string") {
+    return keywords
+      .split(",")
+      .map((keyword) => keyword.trim())
+      .filter(Boolean);
+  }
+
+  if (Array.isArray(keywords)) {
+    return keywords
+      .map((keyword) => (typeof keyword === "string" ? keyword.trim() : ""))
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
 // Generate Metadata with Custom SEO Data
 export async function generateMetadata({ params }) {
   const { slug, category } = await params;
-  const post = await getPost(slug);
+  const post = await getPost(slug, category);
 
   if (!post) {
     return { title: "Post Not Found" };
@@ -60,13 +84,8 @@ export async function generateMetadata({ params }) {
   }
 
   // THE MASTERSTROKE: SEO Keywords Implementation (Long-tail Fallback)
-  let keywordArray = [];
-  if (post.keywords && post.keywords.trim() !== "") {
-    keywordArray = post.keywords
-      .split(",")
-      .map((k) => k.trim())
-      .filter(Boolean);
-  } else {
+  let keywordArray = normalizeKeywords(post.keywords);
+  if (keywordArray.length === 0) {
     const rawTitleForKeyword =
       post.seo_title || post.title || "Fitness and Health Guide";
     const longTailKeyword = rawTitleForKeyword
@@ -89,7 +108,7 @@ export async function generateMetadata({ params }) {
       post.content.match(/<img[^>]+src=["']([^"']+)["']/i)?.[1] ||
       post.content.match(/!\[.*?\]\((.*?)\)/i)?.[1];
   }
-  safeImage = safeImage || `/og-image.png`;
+  safeImage = normalizeImageUrl(safeImage || `/og-image.png`);
 
   return {
     title: safeTitle,
@@ -159,6 +178,13 @@ function generateHeadingId(text) {
     .replace(/-+/g, "-");
 }
 
+function stripHtml(text) {
+  return text
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 // Extract Headings (TOC)
 function extractHeadings(html) {
   const regex = /<h([2-3])[^>]*>(.*?)<\/h\1>/gi;
@@ -183,6 +209,18 @@ function extractHeadings(html) {
   return headings;
 }
 
+// Add stable IDs to article tables for schema and anchor targeting
+function addTableIds(html) {
+  let tableIndex = 0;
+
+  return html.replace(/<table\b([^>]*)>/gi, (match, attrs) => {
+    if (/\sid=(["'])[^"']+\1/i.test(attrs)) return match;
+
+    tableIndex++;
+    return `<table id="article-table-${tableIndex}"${attrs}>`;
+  });
+}
+
 // Add Heading IDs (TOC)
 function addHeadingIds(html) {
   return html.replace(
@@ -192,6 +230,61 @@ function addHeadingIds(html) {
       return `<h${level} id="${id}" ${attrs}>${text}</h${level}>`;
     },
   );
+}
+
+// Extract visible post tables for Schema.org Table markup
+function extractTables(html) {
+  const tableRegex = /<table\b([^>]*)>([\s\S]*?)<\/table>/gi;
+  const tables = [];
+  let match;
+  let lastIndex = 0;
+  let fallbackHeading = "";
+
+  while ((match = tableRegex.exec(html)) !== null) {
+    const beforeTable = html.slice(lastIndex, match.index);
+    const headingsBeforeTable = [
+      ...beforeTable.matchAll(/<h([2-3])[^>]*>(.*?)<\/h\1>/gi),
+    ];
+    if (headingsBeforeTable.length > 0) {
+      const lastHeading = headingsBeforeTable[headingsBeforeTable.length - 1];
+      fallbackHeading = stripHtml(lastHeading[2]);
+    }
+
+    const attrs = match[1] || "";
+    const tableHtml = match[2] || "";
+    const id = attrs.match(/\sid=(["'])([^"']+)\1/i)?.[2];
+    const caption = tableHtml.match(
+      /<caption[^>]*>([\s\S]*?)<\/caption>/i,
+    )?.[1];
+    const headerCells = [
+      ...tableHtml.matchAll(/<th[^>]*>([\s\S]*?)<\/th>/gi),
+    ].map((cell) => stripHtml(cell[1]));
+    const tableText = stripHtml(tableHtml);
+    const name =
+      stripHtml(caption || "") ||
+      fallbackHeading ||
+      (headerCells.length > 0
+        ? `${headerCells.slice(0, 3).join(", ")} table`
+        : `Article table ${tables.length + 1}`);
+
+    if (id && tableText) {
+      tables.push({
+        id,
+        name,
+        description: headerCells.length
+          ? `Table columns: ${headerCells.slice(0, 8).join(", ")}`
+          : undefined,
+        text:
+          tableText.length > 500
+            ? `${tableText.slice(0, 497)}...`
+            : tableText,
+      });
+    }
+
+    lastIndex = tableRegex.lastIndex;
+  }
+
+  return tables;
 }
 
 // Transform Callouts (Pro Tip Block)
@@ -228,7 +321,7 @@ function transformFootnotes(html) {
 
 export default async function PostPage({ params }) {
   const { slug, category } = await params;
-  const post = await getPost(slug);
+  const post = await getPost(slug, category);
 
   // SEO Redirect Logic Check
   if (!post) {
@@ -249,6 +342,7 @@ export default async function PostPage({ params }) {
     showUpdatedLabel: true,
     isUpdated: !!post.updated_at,
   });
+  const featuredImage = normalizeImageUrl(post.featured_image);
 
   // PIPELINES
   let finalContent = cleanWordPressContent(post.content);
@@ -260,10 +354,13 @@ export default async function PostPage({ params }) {
   const footnoteResult = transformFootnotes(finalContent);
   const finalCleanHTML = footnoteResult.content;
   const sourceCount = footnoteResult.count;
-  const sources = footnoteResult.sources || [];
+  const sources = (footnoteResult.sources || []).map(sanitizeArticleHtml);
 
-  const contentWithIds = addHeadingIds(finalCleanHTML);
+  const contentWithIds = sanitizeArticleHtml(
+    addTableIds(addHeadingIds(finalCleanHTML)),
+  );
   const headings = extractHeadings(contentWithIds);
+  const tables = extractTables(contentWithIds);
   const readingTime = calculateReadingTime(contentWithIds);
 
   // SMART HACK
@@ -273,7 +370,19 @@ export default async function PostPage({ params }) {
     excerpt: post.seo_desc || post.excerpt,
   };
   const articleSchema = getArticleSchema(schemaReadyPost, expert);
-
+  const postUrl = `${BASE_URL}/${post.category.toLowerCase()}/${post.slug}`;
+  const articleTableSchemas = getArticleTableSchemas(tables, postUrl);
+  if (articleTableSchemas.length > 0) {
+    articleSchema.hasPart = [
+      ...(Array.isArray(articleSchema.hasPart) ? articleSchema.hasPart : []),
+      ...articleTableSchemas,
+    ];
+  }
+  const tableOfContentsSchema = getTableOfContentsSchema(
+    headings,
+    postUrl,
+    post.seo_title || post.title,
+  );
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -289,7 +398,7 @@ export default async function PostPage({ params }) {
         "@type": "ListItem",
         position: 3,
         name: post.seo_title || post.title,
-        item: `${BASE_URL}/${post.category.toLowerCase()}/${post.slug}`,
+        item: postUrl,
       },
     ],
   };
@@ -303,15 +412,25 @@ export default async function PostPage({ params }) {
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
         />
       )}
 
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
       />
+
+      {tableOfContentsSchema && (
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLd(tableOfContentsSchema),
+          }}
+        />
+      )}
 
       <ViewTracker postId={post.id} />
 
@@ -378,14 +497,18 @@ export default async function PostPage({ params }) {
             </header>
 
             {/* FEATURED IMAGE DISPLAY */}
-            {post.featured_image && (
-              <div className="w-full aspect-video md:aspect-2/1 rounded-2xl overflow-hidden mb-12 border border-zinc-800 shadow-2xl relative bg-zinc-900">
-                <img
-                  src={post.featured_image}
+            {featuredImage && (
+              <figure className="mb-12 flex justify-center">
+                <Image
+                  src={featuredImage}
                   alt={post.seo_title || post.title}
-                  className="w-full h-full object-cover"
+                  width={1200}
+                  height={800}
+                  priority
+                  sizes="(max-width: 1024px) calc(100vw - 48px), 896px"
+                  className="h-auto max-h-[82vh] w-auto max-w-full rounded-2xl shadow-2xl"
                 />
-              </div>
+              </figure>
             )}
 
             <div className="prose prose-invert prose-lg max-w-none">
@@ -437,6 +560,7 @@ export default async function PostPage({ params }) {
                 title={post.title}
                 category={post.category}
                 slug={post.slug}
+                url={postUrl}
               />
 
               {/* Sources Toggle */}

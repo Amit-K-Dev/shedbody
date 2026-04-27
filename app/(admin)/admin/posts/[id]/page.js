@@ -138,6 +138,15 @@ export default function EditPostPage() {
   // IMAGE UPLOAD HANDLER
   const uploadImageToStorage = async (file) => {
     if (!file) return null;
+    if (!file.type?.startsWith("image/")) {
+      toast.error("Only image uploads are allowed.");
+      return null;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Featured image must be under 5 MB.");
+      return null;
+    }
+
     const supabase = createClient();
     const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -167,6 +176,17 @@ export default function EditPostPage() {
     setIsSubmitting(true);
     const supabase = createClient();
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      toast.error("Your session expired. Please log in again.");
+      setIsSubmitting(false);
+      router.push("/login");
+      return;
+    }
+
     const finalSlug = slug.trim() ? generateSlug(slug) : generateSlug(title);
 
     // 1. SLUG COLLISION CHECK (Unique URL Validation)
@@ -175,7 +195,7 @@ export default function EditPostPage() {
       .select("id")
       .eq("slug", finalSlug)
       .neq("id", id)
-      .single();
+      .maybeSingle();
 
     if (existingSlugData) {
       toast.error(
@@ -389,7 +409,8 @@ export default function EditPostPage() {
                   ) : (
                     <>
                       <AlertCircle size={14} /> Try including your focus keyword{" "}
-                      <strong>("{focusKeyword}")</strong> in the URL slug.
+                      <strong>&quot;{focusKeyword}&quot;</strong> in the URL
+                      slug.
                     </>
                   )}
                 </p>

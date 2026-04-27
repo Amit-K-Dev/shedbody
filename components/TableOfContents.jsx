@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 export default function TableOfContents({ headings }) {
   const [activeId, setActiveId] = useState("");
 
-  if (!headings || headings.length === 0) return null;
-
   useEffect(() => {
+    if (!headings || headings.length === 0) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -28,6 +28,8 @@ export default function TableOfContents({ headings }) {
 
     return () => observer.disconnect();
   }, [headings]);
+
+  if (!headings || headings.length === 0) return null;
 
   return (
     <aside className="hidden lg:block">

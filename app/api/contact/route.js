@@ -60,10 +60,16 @@ export async function POST(req) {
 
     // Get user's IP address
     const ip =
-      req.headers.get("x-forwarded-for") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("x-real-ip") ||
       "unknown-ip";
     const currentTime = Date.now();
+
+    for (const [key, value] of rateLimitMap.entries()) {
+      if (currentTime - value.startTime > RATE_LIMIT_WINDOW) {
+        rateLimitMap.delete(key);
+      }
+    }
 
     // Check rate limit for the IP
     if (rateLimitMap.has(ip)) {
@@ -103,9 +109,27 @@ export async function POST(req) {
     }
 
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
-    const recaptchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptchaToken}`;
+    if (!recaptchaSecret) {
+      console.error("Missing RECAPTCHA_SECRET_KEY");
+      return NextResponse.json(
+        { error: "Security validation is unavailable." },
+        { status: 500 },
+      );
+    }
 
-    const recaptchaRes = await fetch(recaptchaVerifyUrl, { method: "POST" });
+    const recaptchaRes = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: recaptchaSecret,
+          response: recaptchaToken,
+        }),
+      },
+    );
     const recaptchaData = await recaptchaRes.json();
 
     // Score < 0.5 is usually a bot

@@ -1,4 +1,5 @@
 import { BicepsFlexed } from "lucide-react";
+import Link from "next/link";
 
 export default function AuthLayout({ children }) {
   return (
@@ -6,7 +7,7 @@ export default function AuthLayout({ children }) {
       <div className="text-center mb-6">
         <h1 className="inline-block text-2xl font-bold">
           {/* Logo */}
-          <a
+          <Link
             href="/"
             className="flex items-center justify-center tracking-wide group"
           >
@@ -16,7 +17,7 @@ export default function AuthLayout({ children }) {
             />
             <span className="text-zinc-50">Shed</span>
             <span className="text-emerald-400">Body</span>
-          </a>
+          </Link>
         </h1>
       </div>
 

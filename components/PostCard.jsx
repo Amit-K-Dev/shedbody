@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { formatPostDate } from "@/lib/utils/date";
 import { Dumbbell } from "lucide-react";
+import { normalizeImageUrl } from "@/lib/utils/imageUrl";
 
 // SEARCH HIGHLIGHTER
 function HighlightedText({ text, query }) {
@@ -33,14 +34,15 @@ function HighlightedText({ text, query }) {
 
 // FALLBACK EXTRACTORS
 function getPostImage(post) {
-  if (post.featured_image) return post.featured_image;
+  if (post.featured_image) return normalizeImageUrl(post.featured_image);
 
   if (post.content) {
     const htmlImgMatch = post.content.match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (htmlImgMatch && htmlImgMatch[1]) return htmlImgMatch[1];
+    if (htmlImgMatch && htmlImgMatch[1])
+      return normalizeImageUrl(htmlImgMatch[1]);
 
     const mdImgMatch = post.content.match(/!\[.*?\]\((.*?)\)/i);
-    if (mdImgMatch && mdImgMatch[1]) return mdImgMatch[1];
+    if (mdImgMatch && mdImgMatch[1]) return normalizeImageUrl(mdImgMatch[1]);
   }
 
   return null;
@@ -51,11 +53,14 @@ function getPostExcerpt(post) {
 
   if (post.content) {
     const pMatch = post.content.match(/<p[^>]*>(.*?)<\/p>/i);
-    let rawText = pMatch && pMatch[1] ? pMatch[1] : post.content.substring(0, 150);
-    
+    let rawText =
+      pMatch && pMatch[1] ? pMatch[1] : post.content.substring(0, 150);
+
     // Strip HTML
     const cleanText = rawText.replace(/<[^>]+>/g, "").trim();
-    return cleanText.length > 120 ? cleanText.substring(0, 120) + "..." : cleanText;
+    return cleanText.length > 120
+      ? cleanText.substring(0, 120) + "..."
+      : cleanText;
   }
   return "Read this evidence-based article to fuel your fitness journey.";
 }
@@ -101,7 +106,10 @@ export default function PostCard({ post, search = "" }) {
             {/* Overlay Gradient for readability */}
             <div className="absolute inset-0 bg-linear-to-t from-zinc-900 to-transparent"></div>
             {/* Icon overlay */}
-            <Dumbbell size={40} className="relative z-10 text-emerald-500/70 rotate-[-45deg]" />
+            <Dumbbell
+              size={40}
+              className="relative z-10 text-emerald-500/70 -rotate-45"
+            />
           </div>
         )}
 
@@ -114,12 +122,12 @@ export default function PostCard({ post, search = "" }) {
       </div>
 
       {/* Content Container */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-6 flex flex-col grow">
         <h2 className="text-xl font-semibold text-white mb-3 line-clamp-2 leading-snug group-hover:text-emerald-400 transition-colors">
           <HighlightedText text={post.title} query={search} />
         </h2>
 
-        <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+        <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-3 grow">
           {excerpt}
         </p>
 
@@ -127,7 +135,7 @@ export default function PostCard({ post, search = "" }) {
         <p className="flex items-center text-xs font-medium text-zinc-500 mt-auto pt-4 border-t border-zinc-800/50">
           <span>
             {formatPostDate(post.updated_at || post.published_at, {
-              showUpdatedLable: true,
+              showUpdatedLabel: true,
               isUpdated: !!post.updated_at,
             })}
           </span>

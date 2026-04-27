@@ -16,6 +16,8 @@ export default function BackToTop() {
     };
 
     window.addEventListener("scroll", toggleVisibility);
+    toggleVisibility();
+    return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
   const scrollToTop = () => {

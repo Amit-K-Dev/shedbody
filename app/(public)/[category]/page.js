@@ -4,6 +4,7 @@ import Pagination from "@/components/Pagination";
 import { getCategoriesForBuild, getAllPosts } from "@/lib/posts";
 import SortFilter from "@/components/SortFilter";
 import SearchBar from "@/components/SearchBar";
+import { safeJsonLd } from "@/lib/security/html";
 
 export const revalidate = 3600;
 
@@ -58,6 +59,21 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    alternates: {
+      canonical: `/${category}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `/${category}`,
+      siteName: "ShedBody",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -134,12 +150,12 @@ export default async function CategoryPage({ params, searchParams }) {
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbLd) }}
       />
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <section className="max-w-6xl mx-auto px-6 py-16">
@@ -163,8 +179,8 @@ export default async function CategoryPage({ params, searchParams }) {
         {!filteredPosts.length && search ? (
           <div className="text-center py-20">
             <h2 className="text-2xl font-bold text-zinc-300">
-              No results found for "
-              <span className="text-emerald-400">{search}</span>"
+              No results found for &quot;
+              <span className="text-emerald-400">{search}</span>&quot;
             </h2>
             <p className="text-zinc-500 mt-4">
               Try checking for typos or searching a different term.

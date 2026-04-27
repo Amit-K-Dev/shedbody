@@ -6,10 +6,11 @@ import { createClient as createStandardClient } from "@supabase/supabase-js";
 const logError = (context, error) => console.error(`${context} error:`, error);
 
 const publicPostFields =
-  "id, title, slug, excerpt, content, featured_image, category, views, updated_at, published_at";
+  "id, title, slug, excerpt, content, featured_image, category, views, updated_at, published_at, seo_title, seo_desc, keywords";
 
 function applyPublicPostFilters(query) {
   return query
+    .or("status.eq.published,status.eq.Published,status.eq.publish,status.is.null")
     .not("title", "is", null)
     .not("slug", "is", null)
     .not("category", "is", null)
@@ -17,13 +18,17 @@ function applyPublicPostFilters(query) {
 }
 
 // GET SINGLE POST
-export const getPost = cache(async (slug) => {
+export const getPost = cache(async (slug, category = null) => {
   const supabase = await createClient();
-  const query = supabase
+  let query = supabase
     .from("posts")
     .select(
-      "id, title, slug, content, featured_image, processed_content, excerpt, category, published_at, views, updated_at",
+      "id, title, slug, content, featured_image, processed_content, excerpt, category, published_at, views, updated_at, seo_title, seo_desc, keywords",
     );
+
+  if (category) {
+    query = query.ilike("category", category.trim());
+  }
 
   const { data, error } = await applyPublicPostFilters(query)
     .ilike("slug", slug.trim())
@@ -82,6 +87,7 @@ export const getCategories = cache(async () => {
   const { data, error } = await supabase
     .from("posts")
     .select("category")
+    .eq("status", "published")
     .not("category", "is", null);
 
   if (error) return ["all"];
@@ -175,7 +181,7 @@ export const getAllPosts = cache(
       supabase
         .from("posts")
         .select(
-          "id, title, slug, featured_image, excerpt, content, published_at, category, views, updated_at",
+          "id, title, slug, featured_image, excerpt, content, published_at, category, views, updated_at, seo_title, seo_desc, keywords",
           { count: "exact" },
         ),
     );
@@ -223,6 +229,7 @@ export const getCategoriesForBuild = async () => {
   const { data, error } = await supabase
     .from("posts")
     .select("category")
+    .eq("status", "published")
     .not("category", "is", null);
 
   if (error) {
@@ -243,6 +250,18 @@ export const getCategoriesForBuild = async () => {
 // GET ADMIN STATS (Total Posts & Views)
 export const getAdminStats = cache(async () => {
   const supabase = await createClient();
+
+  const { data: rpcStats, error: rpcError } = await supabase
+    .rpc("admin_post_stats")
+    .maybeSingle();
+
+  if (!rpcError && rpcStats) {
+    return {
+      totalPosts: Number(rpcStats.total_posts || 0),
+      totalViews: Number(rpcStats.total_views || 0),
+      avgViews: Math.round(Number(rpcStats.avg_views || 0)),
+    };
+  }
 
   // Total Posts Count
   const { count: totalPosts, error: countError } = await supabase

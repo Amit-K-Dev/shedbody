@@ -99,6 +99,15 @@ export default function NewPostPage() {
   // IMAGE UPLOAD HANDLER
   const uploadImageToStorage = async (file) => {
     if (!file) return null;
+    if (!file.type?.startsWith("image/")) {
+      toast.error("Only image uploads are allowed.");
+      return null;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Featured image must be under 5 MB.");
+      return null;
+    }
+
     const supabase = createClient();
     const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -134,7 +143,7 @@ export default function NewPostPage() {
       .from("posts")
       .select("id")
       .eq("slug", finalSlug)
-      .single(); // Yahan '.neq()' ki zaroorat nahi kyunki ye naya post hai
+      .maybeSingle(); // Yahan '.neq()' ki zaroorat nahi kyunki ye naya post hai
 
     if (existingSlugData) {
       toast.error(
@@ -148,6 +157,13 @@ export default function NewPostPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
+    if (!user) {
+      toast.error("Your session expired. Please log in again.");
+      setIsSubmitting(false);
+      router.push("/login");
+      return;
+    }
 
     // 3. Handle Featured Image
     let finalFeaturedImage = extractFirstImage(content); // Fallback to content image
@@ -343,7 +359,8 @@ export default function NewPostPage() {
                   ) : (
                     <>
                       <AlertCircle size={14} /> Try including your focus keyword{" "}
-                      <strong>("{focusKeyword}")</strong> in the URL slug.
+                      <strong>&quot;{focusKeyword}&quot;</strong> in the URL
+                      slug.
                     </>
                   )}
                 </p>

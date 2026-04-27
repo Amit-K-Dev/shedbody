@@ -169,7 +169,7 @@ export default function SearchPosts() {
             </div>
           ) : (
             <div className="p-6 text-center text-sm text-zinc-500">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
             </div>
           )}
         </div>

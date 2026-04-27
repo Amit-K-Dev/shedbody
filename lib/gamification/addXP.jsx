@@ -3,6 +3,20 @@ import { createClient } from "@/lib/supabase/server";
 export async function addXP(userId, amount) {
   const supabase = await createClient();
 
+  const { data: rpcResult, error: rpcError } = await supabase
+    .rpc("add_user_xp", {
+      target_user_id: userId,
+      xp_amount: amount,
+    })
+    .maybeSingle();
+
+  if (!rpcError && rpcResult) {
+    return {
+      xp: rpcResult.xp,
+      level: rpcResult.level,
+    };
+  }
+
   const { data: profile, error } = await supabase
     .from("user_profiles")
     .select("xp, gamification_level")

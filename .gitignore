@@ -43,4 +43,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-public/uploads
+# public/uploads
+
+# Supabase hardening
+scripts/supabase-hardening.sql

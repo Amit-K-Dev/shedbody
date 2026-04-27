@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Link2, Check } from "lucide-react"; // Send nikal diya yahan se
 
 // Saare Custom Icons
@@ -9,17 +9,12 @@ import LinkedInIcon from "@/components/icons/LinkedInIcon";
 import XIcon from "@/components/icons/XIcon";
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 
-export default function ShareArticle({ title, category, slug }) {
+export default function ShareArticle({ title, category, slug, url }) {
   const [copied, setCopied] = useState(false);
-  const [fullUrl, setFullUrl] = useState("");
-
-  useEffect(() => {
-    const baseUrl =
-      typeof window !== "undefined"
-        ? window.location.origin
-        : "https://shedbody.com";
-    setFullUrl(`${baseUrl}/${category.toLowerCase()}/${slug}`);
-  }, [category, slug]);
+  const fullUrl = useMemo(
+    () => url || `https://shedbody.com/${category.toLowerCase()}/${slug}`,
+    [category, slug, url],
+  );
 
   const handleCopy = async () => {
     try {

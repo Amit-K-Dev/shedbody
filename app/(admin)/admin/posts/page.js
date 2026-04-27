@@ -26,8 +26,9 @@ export default function AllPostsPage() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("posts")
-        .select("*")
-        .order("id", { ascending: false });
+        .select("id, title, category, status, published_at, updated_at")
+        .order("updated_at", { ascending: false })
+        .limit(100);
 
       if (!error && data) setPosts(data);
       setLoading(false);

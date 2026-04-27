@@ -10,7 +10,9 @@ export async function GET() {
       .select(
         "id, title, slug, category, excerpt, keywords, status, published_at, updated_at, views",
       )
-      .eq("status", "published")
+      .or(
+        "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
+      )
       .not("title", "is", null)
       .not("slug", "is", null)
       .not("category", "is", null)
@@ -29,7 +31,12 @@ export async function GET() {
     // Success Response
     return NextResponse.json(
       { success: true, data: data || [] },
-      { status: 200 },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+        },
+      },
     );
   } catch (err) {
     // Server Crash Handling

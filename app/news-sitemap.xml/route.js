@@ -40,6 +40,9 @@ export async function GET() {
     const { data: posts, error } = await supabase
       .from("posts")
       .select("slug, category, title, published_at")
+      .or(
+        "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
+      )
       .not("slug", "is", null)
       .not("category", "is", null)
       .not("title", "is", null)

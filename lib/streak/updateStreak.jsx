@@ -3,6 +3,17 @@ import { createClient } from "@/lib/supabase/server";
 export async function updateStreak(userId) {
   const supabase = await createClient();
 
+  const { data: rpcStreak, error: rpcError } = await supabase.rpc(
+    "update_user_streak",
+    {
+      target_user_id: userId,
+    },
+  );
+
+  if (!rpcError && rpcStreak !== null && rpcStreak !== undefined) {
+    return rpcStreak;
+  }
+
   const today = new Date();
   const todayKey = today.toISOString().slice(0, 10);
 

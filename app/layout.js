@@ -4,6 +4,7 @@ import BackToTop from "@/components/BackToTop";
 import { Toaster } from "@/components/ui/toaster";
 import Script from "next/script";
 import { getOrganizationSchema } from "@/lib/schema";
+import { safeJsonLd } from "@/lib/security/html";
 
 export const viewport = {
   width: "device-width",
@@ -111,7 +112,7 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
         />
 
         <main className="min-h-screen">{children}</main>

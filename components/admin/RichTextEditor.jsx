@@ -45,9 +45,8 @@ import { useEffect, useCallback } from "react";
 const lowlight = createLowlight(common);
 
 const MenuBar = ({ editor }) => {
-  if (!editor) return null;
-
   const setLink = useCallback(() => {
+    if (!editor) return;
     const previousUrl = editor.getAttributes("link").href;
     const url = window.prompt("Enter URL", previousUrl);
     if (url === null) return;
@@ -59,11 +58,14 @@ const MenuBar = ({ editor }) => {
   }, [editor]);
 
   const addImage = useCallback(() => {
+    if (!editor) return;
     const url = window.prompt("Enter Image URL");
     if (url) {
       editor.chain().focus().setImage({ src: url }).run();
     }
   }, [editor]);
+
+  if (!editor) return null;
 
   const btnClass = (isActive) =>
     `p-2 rounded-md transition ${isActive ? "bg-emerald-500/20 text-emerald-400" : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"}`;

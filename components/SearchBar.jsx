@@ -10,11 +10,6 @@ export default function SearchBar({ category }) {
   // Local state for the input
   const [query, setQuery] = useState(searchParams.get("search") || "");
 
-  useEffect(() => {
-    const currentSearch = searchParams.get("search") || "";
-    setQuery(currentSearch);
-  }, [searchParams]);
-
   // Debounced search logic
   useEffect(() => {
     const delay = setTimeout(() => {

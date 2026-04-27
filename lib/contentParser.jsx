@@ -1,4 +1,10 @@
 // Clean WordPress Content
+import {
+  R2_PUBLIC_URL,
+  getOptimizedImageUrl,
+  normalizeImageUrl,
+} from "@/lib/utils/imageUrl";
+
 export function cleanWordPressContent(html) {
   if (!html) return "";
 
@@ -7,10 +13,10 @@ export function cleanWordPressContent(html) {
   // Remove WordPress Gutenberg block comments
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, "");
 
-  // Fix broken URLs (defensive layer)
+  // Move legacy Cloudinary image URLs to the R2 public bucket.
   cleaned = cleaned.replace(
-    /https:res\.cloudinary\.com/g,
-    "https://res.cloudinary.com",
+    /https?:\/\/?res\.cloudinary\.co(?:m)?/gi,
+    R2_PUBLIC_URL,
   );
 
   // Remove Ad Inserter shortcodes
@@ -134,22 +140,18 @@ export function optimizeImages(html) {
 
     if (!srcMatch) return match;
 
-    let src = srcMatch[1];
-
-    // Fix broken protocol if any
-    if (src.startsWith("https:res.")) {
-      src = src.replace("https:", "https://");
-    }
+    const src = normalizeImageUrl(srcMatch[1]);
+    const optimizedSrc = getOptimizedImageUrl(src);
 
     const alt = altMatch ? altMatch[1] : "";
 
     return `
       <img 
-        src="${src}" 
+        src="${optimizedSrc}"
         alt="${alt}" 
         loading="lazy" 
         decoding="async" 
-        class="rounded-lg w-full my-6 bg-zinc-900 border border-zinc-800"
+        class="rounded-lg block mx-auto w-auto max-w-full h-auto max-h-[82vh] object-contain my-6"
       />
       `;
   });

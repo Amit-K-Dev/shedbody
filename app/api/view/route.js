@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req) {
+  if (process.env.NODE_ENV === "production" && !process.env.VIEW_HASH_SECRET) {
+    console.error("Missing VIEW_HASH_SECRET");
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+
   const body = await req.json().catch(() => null);
   const postId = Number(body?.postId);
 
@@ -11,6 +16,25 @@ export async function POST(req) {
   }
 
   const supabase = await createClient();
+
+  const { data: post, error: postError } = await supabase
+    .from("posts")
+    .select("id")
+    .eq("id", postId)
+    .or(
+      "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
+    )
+    .not("published_at", "is", null)
+    .maybeSingle();
+
+  if (postError) {
+    console.error("View API post lookup error:", postError);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+
+  if (!post) {
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
+  }
 
   const forwardedFor = req.headers.get("x-forwarded-for") || "";
   const ip =
