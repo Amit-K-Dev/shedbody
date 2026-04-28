@@ -16,7 +16,17 @@ export default function SearchPosts() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch("/api/posts");
+        const res = await fetch("/search-index");
+        const contentType = res.headers.get("content-type") || "";
+
+        if (!res.ok || !contentType.includes("application/json")) {
+          console.warn("Failed to fetch posts for search", {
+            status: res.status,
+            contentType,
+          });
+          return;
+        }
+
         const data = await res.json();
 
         if (!data) return [];
@@ -47,7 +57,7 @@ export default function SearchPosts() {
 
         setPosts(optimized);
       } catch (err) {
-        console.error(err);
+        console.warn("Failed to fetch posts for search", err);
       }
     }
 

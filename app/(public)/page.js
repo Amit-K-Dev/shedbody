@@ -101,7 +101,7 @@ function EditorialArticle({ post, priority = false }) {
       </div>
 
       <div className="flex flex-col justify-center p-7 md:p-10">
-        <p className="mb-4 w-fit border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
+        <p className="mb-4 w-fit rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
           {post.category}
         </p>
         <h3 className="text-3xl font-bold leading-tight tracking-tight text-zinc-50 transition group-hover:text-emerald-300 md:text-5xl">
@@ -304,7 +304,7 @@ function DashboardValueSection() {
     <section className="mb-24 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/30">
       <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)]">
         <div className="p-7 md:p-10 lg:p-12">
-          <div className="mb-6 inline-flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 shadow-[0_0_22px_rgba(16,185,129,0.14)]">
             <Sparkles size={14} />
             Member dashboard
           </div>
@@ -355,7 +355,7 @@ function DashboardValueSection() {
           </div>
         </div>
 
-        <div className="relative min-h-[520px] bg-zinc-900">
+        <div className="relative min-h-[620px] bg-zinc-900">
           <Image
             src="/hero-section.jpg"
             alt="ShedBody dashboard preview"
@@ -365,23 +365,23 @@ function DashboardValueSection() {
           />
           <div className="absolute inset-0 bg-linear-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/20" />
 
-          <div className="absolute inset-0 flex items-center justify-center p-6">
-            <div className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-950/85 p-5 shadow-2xl backdrop-blur">
-              <div className="mb-5 flex items-center justify-between border-b border-zinc-800 pb-4">
-                <div>
+          <div className="absolute inset-0 flex items-center justify-center p-8">
+            <div className="w-full max-w-md rounded-2xl border border-zinc-700/80 bg-zinc-950/90 p-5 shadow-2xl shadow-black/50 backdrop-blur">
+              <div className="mb-5 flex items-start justify-between gap-4 border-b border-zinc-800 pb-4">
+                <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-widest text-emerald-400">
                     Today
                   </p>
-                  <h3 className="mt-1 text-xl font-bold text-zinc-50">
+                  <h3 className="mt-1 text-xl font-bold leading-tight text-zinc-50">
                     Fitness dashboard
                   </h3>
                 </div>
-                <div className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                <div className="shrink-0 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
                   68% done
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
                   <div className="mb-3 flex items-center justify-between text-sm">
                     <span className="font-semibold text-zinc-100">
@@ -394,20 +394,20 @@ function DashboardValueSection() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3">
                     <p className="text-xs uppercase tracking-widest text-zinc-500">
                       Calories
                     </p>
-                    <p className="mt-2 text-2xl font-bold text-zinc-50">
+                    <p className="mt-2 text-xl font-bold text-zinc-50">
                       2,180
                     </p>
                   </div>
-                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3">
                     <p className="text-xs uppercase tracking-widest text-zinc-500">
                       Protein
                     </p>
-                    <p className="mt-2 text-2xl font-bold text-zinc-50">142g</p>
+                    <p className="mt-2 text-xl font-bold text-zinc-50">142g</p>
                   </div>
                 </div>
 
@@ -415,7 +415,7 @@ function DashboardValueSection() {
                   <p className="mb-3 text-sm font-semibold text-zinc-100">
                     Weekly momentum
                   </p>
-                  <div className="flex h-24 items-end gap-2">
+                  <div className="flex h-20 items-end gap-2">
                     {[42, 64, 52, 78, 72, 88, 80].map((height, index) => (
                       <div
                         key={index}

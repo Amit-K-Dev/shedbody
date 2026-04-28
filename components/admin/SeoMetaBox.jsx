@@ -41,13 +41,23 @@ export default function SeoMetaBox({
   useEffect(() => {
     async function fetchAllPosts() {
       try {
-        const res = await fetch("/api/posts");
+        const res = await fetch("/search-index");
+        const contentType = res.headers.get("content-type") || "";
+
+        if (!res.ok || !contentType.includes("application/json")) {
+          console.warn("Failed to fetch posts for SEO check", {
+            status: res.status,
+            contentType,
+          });
+          return;
+        }
+
         const data = await res.json();
         if (data.success && data.data) {
           setExistingPosts(data.data);
         }
       } catch (err) {
-        console.error("Failed to fetch posts for SEO check", err);
+        console.warn("Failed to fetch posts for SEO check", err);
       }
     }
     fetchAllPosts();

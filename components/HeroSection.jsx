@@ -28,19 +28,18 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full min-h-[85vh] lg:min-h-screen flex items-center bg-zinc-950 overflow-hidden mb-24">
-      
       {/* Background Image & Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/hero-section.jpg"
           alt="Fitness Hero Background"
           fill
-          className="object-cover object-top opacity-50 mix-blend-luminosity" 
+          className="object-cover object-top opacity-50 mix-blend-luminosity"
           priority
         />
 
         <div className="absolute inset-0 bg-linear-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
-        
+
         <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-zinc-950 to-transparent"></div>
       </div>
 
@@ -60,11 +59,15 @@ export default function HeroSection() {
         {/* Headline */}
         <motion.h1
           variants={itemVariants}
-          className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-[1.05] text-white"
+          className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-[1.05] text-zinc-50"
         >
+          <span className="mb-5 inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-bold uppercase tracking-[0.22em] text-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.16)] md:text-base">
+            ShedBody Fitness
+          </span>
+          <br />
           Build Muscle.
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-emerald-600">
             Lose Fat.
           </span>
           <br />
@@ -76,8 +79,9 @@ export default function HeroSection() {
           variants={itemVariants}
           className="text-zinc-300 mt-8 max-w-2xl text-lg md:text-xl font-medium leading-relaxed"
         >
-          Evidence-based workouts, fat loss strategies, and nutrition guides to
-          help you transform your body and unlock your true potential.
+          ShedBody brings evidence-based workouts, fat loss strategies, yoga,
+          and nutrition guidance into one practical fitness system built to help
+          you transform your body with confidence.
         </motion.p>
 
         {/* CTA Buttons */}
