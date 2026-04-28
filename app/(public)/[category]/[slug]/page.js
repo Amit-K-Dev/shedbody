@@ -519,6 +519,7 @@ export default async function PostPage({ params }) {
 
             <ArticleBodyClient
               title={post.title}
+              postId={post.id}
               category={post.category}
               slug={post.slug}
               postUrl={postUrl}

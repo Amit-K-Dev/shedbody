@@ -12,6 +12,24 @@ export default async function sitemap() {
     { path: "/articles", priority: 0.9, changeFrequency: "daily" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/calculators/bmi", priority: 0.7, changeFrequency: "monthly" },
+    {
+      path: "/calculators/calorie",
+      priority: 0.85,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/pregnancy",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/baby-percentile",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
     { path: "/contact-us", priority: 0.7, changeFrequency: "yearly" },
     {
       path: "/scientific-review-board",
@@ -32,7 +50,7 @@ export default async function sitemap() {
     { path: "/privacy-settings", priority: 0.4, changeFrequency: "yearly" },
   ].map((page) => ({
     url: `${baseUrl}${page.path}`,
-    lastModified: staticLastModified,
+    lastModified: page.lastModified || staticLastModified,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));

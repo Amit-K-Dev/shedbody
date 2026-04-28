@@ -12,6 +12,9 @@ import {
   Apple,
   Salad,
   Activity,
+  Baby,
+  Calculator,
+  ChevronDown,
   Menu,
   Search,
   X,
@@ -27,14 +30,42 @@ const categories = [
   { name: "Exercises", slug: "exercises", icon: Dumbbell },
   { name: "Nutrition", slug: "nutrition", icon: Apple },
   { name: "Recipes", slug: "recipes", icon: Salad },
-  { name: "BMI", slug: "calculators/bmi", icon: Activity },
+];
+
+const toolItems = [
+  {
+    name: "BMI Calculator",
+    description: "Check body mass index and category.",
+    href: "/calculators/bmi",
+    icon: Activity,
+  },
+  {
+    name: "Calorie Calculator",
+    description: "Calculate calories, macros, and diet plan.",
+    href: "/calculators/calorie",
+    icon: Calculator,
+  },
+  {
+    name: "Pregnancy Calculator",
+    description: "Estimate due date, week, and milestones.",
+    href: "/calculators/pregnancy",
+    icon: Baby,
+  },
+  {
+    name: "Baby Percentile Calculator",
+    description: "Estimate infant growth percentile bands.",
+    href: "/calculators/baby-percentile",
+    icon: Baby,
+  },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const desktopSearchRef = useRef(null);
+  const previousPathnameRef = useRef(null);
 
   // Auth States
   const [user, setUser] = useState(null);
@@ -45,9 +76,18 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isActive = (path) => pathname === path;
+  const toolsActive = pathname?.startsWith("/calculators");
 
   useEffect(() => {
-    setDesktopSearchOpen(false);
+    if (previousPathnameRef.current === pathname) return;
+    previousPathnameRef.current = pathname;
+
+    const frame = requestAnimationFrame(() => {
+      setDesktopSearchOpen(false);
+      setMobileToolsOpen(false);
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [pathname]);
 
   useEffect(() => {
@@ -159,6 +199,64 @@ export default function Header() {
               {cat.name}
             </Link>
           ))}
+          <div className="group relative">
+            <button
+              type="button"
+              className={`flex items-center gap-2 text-sm font-medium transition ${
+                toolsActive
+                  ? "text-emerald-400"
+                  : "text-zinc-300 hover:text-emerald-300"
+              }`}
+            >
+              <Calculator
+                size={16}
+                className="transition group-hover:text-emerald-400"
+              />
+              Tools
+              <ChevronDown
+                size={15}
+                className="transition group-hover:rotate-180"
+              />
+            </button>
+
+            <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-80 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/95 p-2 shadow-2xl shadow-black/40 backdrop-blur-xl">
+                <div className="border-b border-zinc-800 px-3 py-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+                    Calculators
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Premium fitness tools in one place
+                  </p>
+                </div>
+                <div className="py-2">
+                  {toolItems.map((tool) => (
+                    <Link
+                      key={tool.href}
+                      href={tool.href}
+                      className={`flex gap-3 rounded-xl p-3 transition ${
+                        isActive(tool.href)
+                          ? "bg-emerald-500/10 text-emerald-300"
+                          : "text-zinc-300 hover:bg-zinc-900 hover:text-emerald-300"
+                      }`}
+                    >
+                      <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-zinc-800 bg-zinc-900">
+                        <tool.icon size={18} />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-bold">
+                          {tool.name}
+                        </span>
+                        <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                          {tool.description}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </nav>
 
         {/* RIGHT SIDE */}
@@ -266,10 +364,10 @@ export default function Header() {
       {/* MOBILE MENU */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? "max-h-150 opacity-100" : "max-h-0 opacity-0"
+          menuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-4 pb-6 bg-zinc-950 border-t border-zinc-800">
+        <div className="overflow-y-auto px-4 pb-6 bg-zinc-950 border-t border-zinc-800">
           <div className="mt-4 mb-6">
             <SearchPosts />
           </div>
@@ -290,6 +388,59 @@ export default function Header() {
                 {cat.name}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={() => setMobileToolsOpen((open) => !open)}
+              className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition ${
+                toolsActive
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "text-zinc-300 hover:bg-emerald-500/10 hover:text-emerald-300"
+              }`}
+            >
+              <Calculator size={18} />
+              <span>Tools</span>
+              <ChevronDown
+                size={16}
+                className={`ml-auto transition ${mobileToolsOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <div
+              className={`grid transition-all duration-300 ${
+                mobileToolsOpen
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="mt-1 space-y-2 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-2">
+                  {toolItems.map((tool) => (
+                    <Link
+                      key={tool.href}
+                      href={tool.href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`flex gap-3 rounded-xl p-3 transition ${
+                        isActive(tool.href)
+                          ? "bg-emerald-500/10 text-emerald-300"
+                          : "text-zinc-300 hover:bg-zinc-800 hover:text-emerald-300"
+                      }`}
+                    >
+                      <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-zinc-800 bg-zinc-950">
+                        <tool.icon size={18} />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-bold">
+                          {tool.name}
+                        </span>
+                        <span className="mt-0.5 block text-xs leading-5 text-zinc-500">
+                          {tool.description}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* User Specific Mobile Section */}

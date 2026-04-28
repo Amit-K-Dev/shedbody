@@ -9,7 +9,7 @@ export default function MobileNav() {
 
   const items = [
     { name: "Profile", href: "/profile", icon: User },
-    { name: "BMI", href: "/calculators/bmi", icon: Calculator },
+    { name: "Calories", href: "/calculators/calorie", icon: Calculator },
     { name: "My Plan", href: "/plans", icon: ClipboardList },
     { name: "New Plan", href: "/start", icon: PlusCircle },
   ];

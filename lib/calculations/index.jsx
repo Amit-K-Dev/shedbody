@@ -1,4 +1,7 @@
 import { calculateBMI } from "./bmi";
+import { calculateBabyPercentile } from "./baby-percentile";
+import { calculateCalories } from "./calorie";
+import { calculatePregnancy } from "./pregnancy";
 
 export const calculatorMap = {
   bmi: (inputs) => {
@@ -13,19 +16,7 @@ export const calculatorMap = {
     return { ...result, category };
   },
 
-  calories: (inputs) => {
-    // Basic BMR calculation (Rough Draft)
-    // Formula: 10 * weight + 6.25 * height - 5 * age + (gender_offset)
-    const { weight = 0, height = 0, age = 0, gender = "male" } = inputs;
-
-    if (!weight || !height || !age) return { calories: 0, status: "pending" };
-
-    const genderOffset = gender === "male" ? 5 : -161;
-    const bmr = 10 * weight + 6.25 * height - 5 * age + genderOffset;
-
-    return {
-      calories: Math.round(bmr),
-      category: "Maintenance Calories (BMR)",
-    };
-  },
+  calories: calculateCalories,
+  pregnancy: calculatePregnancy,
+  "baby-percentile": calculateBabyPercentile,
 };

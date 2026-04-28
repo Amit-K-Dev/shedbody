@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ArticleHelpfulFeedback from "@/components/ArticleHelpfulFeedback";
 import InlineRelatedArticle from "@/components/InlineRelatedArticles";
 import ShareArticle from "@/components/ShareArticle";
 import SourcesToggle from "@/components/SourcesToggle";
@@ -9,6 +10,7 @@ export default function ArticleBodyClient({
   category,
   content,
   headings,
+  postId,
   postUrl,
   relatedPosts,
   slug,
@@ -64,6 +66,8 @@ export default function ArticleBodyClient({
       <div dangerouslySetInnerHTML={{ __html: content }} />
 
       <ShareArticle title={title} category={category} slug={slug} url={postUrl} />
+
+      <ArticleHelpfulFeedback postId={postId} slug={slug} />
 
       <SourcesToggle count={sourceCount}>
         <ul className="space-y-3 pl-5 text-zinc-300">

@@ -302,7 +302,7 @@ export default async function BMICalculatorPage() {
               <strong>Input Your Details</strong>: Enter your weight and height
               in either{" "}
               <Link
-                href="/calculators/calories-calculator"
+                href="/calculators/calorie"
                 className="text-emerald-400 no-underline hover:text-emerald-300 transition"
               >
                 metric or imperial units

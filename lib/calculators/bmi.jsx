@@ -9,19 +9,46 @@ export const bmiCalculator = {
 
   inputs: [
     {
+      key: "unit",
+      label: "Unit System",
+      type: "segmented",
+      defaultValue: "metric",
+      options: [
+        { label: "Metric", value: "metric" },
+        { label: "Imperial", value: "imperial" },
+      ],
+      required: true,
+    },
+    {
       key: "height",
-      label: "Height (cm)",
+      label: "Height",
       type: "number",
       placeholder: "e.g. 175",
+      unitLabels: {
+        metric: "cm",
+        imperial: "in",
+      },
+      placeholders: {
+        metric: "e.g. 175",
+        imperial: "e.g. 69",
+      },
       min: 50,
       max: 300,
       required: true,
     },
     {
       key: "weight",
-      label: "Weight (kg)",
+      label: "Weight",
       type: "number",
       placeholder: "e.g. 70",
+      unitLabels: {
+        metric: "kg",
+        imperial: "lb",
+      },
+      placeholders: {
+        metric: "e.g. 70",
+        imperial: "e.g. 154",
+      },
       min: 10,
       max: 500,
       required: true,

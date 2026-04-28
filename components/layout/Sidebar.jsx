@@ -7,6 +7,7 @@ import {
   SidebarClose,
   SidebarOpen,
   User,
+  Baby,
   Calculator,
   ClipboardList,
   PlusCircle,
@@ -15,6 +16,9 @@ import {
 const navItems = [
   { name: "Profile", href: "/profile", icon: User },
   { name: "BMI Calculator", href: "/calculators/bmi", icon: Calculator },
+  { name: "Calorie Calculator", href: "/calculators/calorie", icon: Calculator },
+  { name: "Pregnancy Calculator", href: "/calculators/pregnancy", icon: Baby },
+  { name: "Baby Percentile", href: "/calculators/baby-percentile", icon: Baby },
   { name: "My Plan", href: "/plans", icon: ClipboardList },
   { name: "Start New Plan", href: "/start", icon: PlusCircle },
 ];
