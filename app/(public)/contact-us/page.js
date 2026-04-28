@@ -2,7 +2,7 @@ import Link from "next/link";
 import ContactForm from "@/components/contact/ContactForm";
 
 export const metadata = {
-  title: "Contact for Fitness, Diet & Workout Support India",
+  title: "Contact for Fitness, Diet & Workout Support",
   description:
     "Get in touch with ShedBody for personalized fitness guidance, fat loss strategies, workout plans, yoga, and nutrition support. Start your transformation today.",
 

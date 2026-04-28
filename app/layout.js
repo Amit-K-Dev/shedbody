@@ -98,16 +98,17 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <Script
-        id="adsense-init"
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9117254807197165"
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
       <body
         className={`${inter.variable} ${oswald.variable} font-sans antialiased`}
       >
+        <Script
+          id="adsense-init"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9117254807197165"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
         {/* SEO SCHEMA */}
         <script
           type="application/ld+json"

@@ -4,13 +4,19 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
 
-export default function SearchPosts() {
+export default function SearchPosts({ autoFocus = false }) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [posts, setPosts] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus) {
+      inputRef.current?.focus();
+    }
+  }, [autoFocus]);
 
   // Fetch + preprocess
   useEffect(() => {

@@ -3,8 +3,6 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TableOfContents from "@/components/TableOfContents";
 import ReadingProgress from "@/components/ReadingProgress";
-import InlineRelatedArticle from "@/components/InlineRelatedArticles";
-import SourcesToggle from "@/components/SourcesToggle";
 import ViewTracker from "@/components/ViewTracker";
 import Image from "next/image";
 
@@ -23,7 +21,9 @@ import {
   getArticleTableSchemas,
   getTableOfContentsSchema,
 } from "@/lib/schema";
-import ShareArticle from "@/components/ShareArticle";
+import ArticleBodyClient from "@/components/ArticleBodyClient";
+import AffiliateDisclosure from "@/components/AffiliateDisclosure";
+import { hasAmazonAffiliateLink } from "@/lib/utils/affiliateLinks";
 import { normalizeImageUrl } from "@/lib/utils/imageUrl";
 
 const BASE_URL = "https://shedbody.com";
@@ -226,8 +226,10 @@ function addHeadingIds(html) {
   return html.replace(
     /<h([2-3])([^>]*)>(.*?)<\/h\1>/gi,
     (match, level, attrs, text) => {
+      if (/\sid=(["'])[^"']+\1/i.test(attrs)) return match;
+
       const id = generateHeadingId(text);
-      return `<h${level} id="${id}" ${attrs}>${text}</h${level}>`;
+      return `<h${level}${attrs} id="${id}">${text}</h${level}>`;
     },
   );
 }
@@ -342,6 +344,7 @@ export default async function PostPage({ params }) {
     showUpdatedLabel: true,
     isUpdated: !!post.updated_at,
   });
+  const viewCount = Number(post.views || 0);
   const featuredImage = normalizeImageUrl(post.featured_image);
 
   // PIPELINES
@@ -359,6 +362,7 @@ export default async function PostPage({ params }) {
   const contentWithIds = sanitizeArticleHtml(
     addTableIds(addHeadingIds(finalCleanHTML)),
   );
+  const showAffiliateDisclosure = hasAmazonAffiliateLink(contentWithIds);
   const headings = extractHeadings(contentWithIds);
   const tables = extractTables(contentWithIds);
   const readingTime = calculateReadingTime(contentWithIds);
@@ -490,8 +494,8 @@ export default async function PostPage({ params }) {
                   {readingTime} min{readingTime !== 1 ? "s" : ""} read
                 </span>
                 <span>&bull;</span>
-                <span>
-                  {post.views || 0} view{post.views !== 1 ? "s" : ""}
+                <span suppressHydrationWarning>
+                  {viewCount} view{viewCount !== 1 ? "s" : ""}
                 </span>
               </div>
             </header>
@@ -511,74 +515,19 @@ export default async function PostPage({ params }) {
               </figure>
             )}
 
-            <div className="prose prose-invert prose-lg max-w-none">
-              {/* TOC UI */}
-              {headings && headings.length > 0 && (
-                <nav
-                  aria-label="Article Table of contents"
-                  className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-8"
-                >
-                  <h2 className="text-lg font-semibold mb-4">
-                    In This Article
-                  </h2>
-                  <ul className="space-y-3 text-sm">
-                    {headings.map((heading) => (
-                      <li key={heading.id}>
-                        <a
-                          href={`#${heading.id}`}
-                          className="block py-1 no-underline font-medium text-emerald-400 hover:text-emerald-300 transition"
-                        >
-                          {heading.text}
-                        </a>
-                        {heading.items && heading.items.length > 0 && (
-                          <ul className="ml-4 mt-1 space-y-1 border-l border-zinc-800 pl-4">
-                            {heading.items.map((subHeading) => (
-                              <li key={subHeading.id}>
-                                <a
-                                  href={`#${subHeading.id}`}
-                                  className="block py-1 no-underline text-zinc-400 hover:text-emerald-300 transition"
-                                >
-                                  {subHeading.text}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              )}
+            {showAffiliateDisclosure && <AffiliateDisclosure />}
 
-              {/* Article Content */}
-              <div
-                dangerouslySetInnerHTML={{ __html: contentWithIds }}
-                suppressHydrationWarning
-              />
-
-              <ShareArticle
-                title={post.title}
-                category={post.category}
-                slug={post.slug}
-                url={postUrl}
-              />
-
-              {/* Sources Toggle */}
-              <SourcesToggle count={sourceCount}>
-                <ul className="space-y-3 pl-5 text-zinc-300">
-                  {sources.map((source, i) => (
-                    <li
-                      key={i}
-                      className="text-zinc-400 leading-relaxed text-sm"
-                    >
-                      <span dangerouslySetInnerHTML={{ __html: source }} />
-                    </li>
-                  ))}
-                </ul>
-              </SourcesToggle>
-
-              <InlineRelatedArticle posts={relatedPosts} />
-            </div>
+            <ArticleBodyClient
+              title={post.title}
+              category={post.category}
+              slug={post.slug}
+              postUrl={postUrl}
+              content={contentWithIds}
+              headings={headings}
+              sourceCount={sourceCount}
+              sources={sources}
+              relatedPosts={relatedPosts}
+            />
           </article>
 
           {/* Sidebar TOC */}

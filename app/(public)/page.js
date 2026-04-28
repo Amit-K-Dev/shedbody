@@ -492,15 +492,14 @@ export default async function Home() {
         <HeroSection />
 
         <section className="mx-auto max-w-7xl px-6 pb-24">
-          <TrustSection />
-          <DashboardValueSection />
-
           {featured && (
             <section className="mb-24">
               <SectionHeader eyebrow="Featured" title="Editor's lead story" />
               <EditorialArticle post={featured} priority />
             </section>
           )}
+
+          <TrustSection />
 
           {smartFeed?.length > 0 && (
             <section id="recommended" className="mb-24">
@@ -524,6 +523,8 @@ export default async function Home() {
               </div>
             </section>
           )}
+
+          <DashboardValueSection />
 
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
             {latest?.length > 0 && (

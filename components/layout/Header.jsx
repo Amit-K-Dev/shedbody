@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -13,6 +13,7 @@ import {
   Salad,
   Activity,
   Menu,
+  Search,
   X,
   User,
   Settings,
@@ -31,7 +32,9 @@ const categories = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const desktopSearchRef = useRef(null);
 
   // Auth States
   const [user, setUser] = useState(null);
@@ -42,6 +45,23 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isActive = (path) => pathname === path;
+
+  useEffect(() => {
+    setDesktopSearchOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!desktopSearchOpen) return;
+
+    function handlePointerDown(event) {
+      if (!desktopSearchRef.current?.contains(event.target)) {
+        setDesktopSearchOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [desktopSearchOpen]);
 
   // Supabase Auth Check & Real-time Listener
   useEffect(() => {
@@ -126,13 +146,16 @@ export default function Header() {
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
-              className={`flex items-center gap-2 text-sm font-medium transition ${
+              className={`group flex items-center gap-2 text-sm font-medium transition ${
                 isActive(`/${cat.slug}`)
                   ? "text-emerald-400"
-                  : "text-zinc-300 hover:text-zinc-50"
+                  : "text-zinc-300 hover:text-emerald-300"
               }`}
             >
-              <cat.icon size={16} />
+              <cat.icon
+                size={16}
+                className="transition group-hover:text-emerald-400"
+              />
               {cat.name}
             </Link>
           ))}
@@ -140,8 +163,29 @@ export default function Header() {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-4">
-          <div className="hidden md:block w-52">
-            <SearchPosts />
+          <div ref={desktopSearchRef} className="hidden md:flex items-center">
+            {desktopSearchOpen ? (
+              <div className="flex w-72 items-center gap-2">
+                <SearchPosts autoFocus />
+                <button
+                  type="button"
+                  onClick={() => setDesktopSearchOpen(false)}
+                  aria-label="Close search"
+                  className="grid size-10 shrink-0 place-items-center rounded-full border border-zinc-800 bg-zinc-900 text-zinc-400 transition hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-300"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDesktopSearchOpen(true)}
+                aria-label="Open search"
+                className="grid size-10 place-items-center rounded-full border border-zinc-800 bg-zinc-900/80 text-zinc-300 shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:border-emerald-500/60 hover:bg-emerald-500/10 hover:text-emerald-300 hover:shadow-emerald-500/10"
+              >
+                <Search size={18} />
+              </button>
+            )}
           </div>
 
           {!loading && (
@@ -239,7 +283,7 @@ export default function Header() {
                 className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition ${
                   isActive(`/${cat.slug}`)
                     ? "bg-emerald-500/10 text-emerald-400"
-                    : "text-zinc-300 hover:bg-zinc-900"
+                    : "text-zinc-300 hover:bg-emerald-500/10 hover:text-emerald-300"
                 }`}
               >
                 <cat.icon size={18} />

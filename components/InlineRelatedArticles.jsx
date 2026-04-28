@@ -1,7 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function InlineRelatedArticle({ posts }) {
-  if (!posts || posts.length === 0) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !posts || posts.length === 0) return null;
 
   return (
     <section className="mt-16 border border-zinc-800 rounded-xl p-6 bg-zinc-900/40">

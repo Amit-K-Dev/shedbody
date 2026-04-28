@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SourcesToggle({ count, children }) {
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
 
-  if (!count || count === 0) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !count || count === 0) return null;
 
   return (
     <div className="mt-10 border-t border-zinc-800 pt-6">
