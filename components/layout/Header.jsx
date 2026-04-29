@@ -15,8 +15,12 @@ import {
   Baby,
   Calculator,
   ChevronDown,
+  Droplets,
   Menu,
+  Ruler,
   Search,
+  Scale,
+  Target,
   X,
   User,
   Settings,
@@ -44,6 +48,30 @@ const toolItems = [
     description: "Calculate calories, macros, and diet plan.",
     href: "/calculators/calorie",
     icon: Calculator,
+  },
+  {
+    name: "Ideal Weight Calculator",
+    description: "Estimate ideal weight and healthy range.",
+    href: "/calculators/ideal-weight",
+    icon: Scale,
+  },
+  {
+    name: "Daily Hydration Calculator",
+    description: "Estimate water intake by weight and activity.",
+    href: "/calculators/daily-hydration",
+    icon: Droplets,
+  },
+  {
+    name: "Weight Goal Calculator",
+    description: "Plan your target weight timeline.",
+    href: "/calculators/weight-goal",
+    icon: Target,
+  },
+  {
+    name: "Hip-to-Waist Ratio Calculator",
+    description: "Calculate HWR, WHR, and body-shape category.",
+    href: "/calculators/hip-to-waist-ratio",
+    icon: Ruler,
   },
   {
     name: "Pregnancy Calculator",
@@ -219,7 +247,7 @@ export default function Header() {
               />
             </button>
 
-            <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-80 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+            <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-96 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
               <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/95 p-2 shadow-2xl shadow-black/40 backdrop-blur-xl">
                 <div className="border-b border-zinc-800 px-3 py-3">
                   <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
@@ -229,7 +257,7 @@ export default function Header() {
                     Premium fitness tools in one place
                   </p>
                 </div>
-                <div className="py-2">
+                <div className="max-h-[min(72vh,34rem)] overflow-y-auto py-2 pr-1 overscroll-contain">
                   {toolItems.map((tool) => (
                     <Link
                       key={tool.href}
@@ -363,11 +391,13 @@ export default function Header() {
 
       {/* MOBILE MENU */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
+        className={`md:hidden overflow-y-auto overscroll-contain transition-all duration-300 ${
+          menuOpen
+            ? "max-h-[calc(100dvh-5.5rem)] opacity-100"
+            : "max-h-0 opacity-0"
         }`}
       >
-        <div className="overflow-y-auto px-4 pb-6 bg-zinc-950 border-t border-zinc-800">
+        <div className="px-4 pb-28 bg-zinc-950 border-t border-zinc-800">
           <div className="mt-4 mb-6">
             <SearchPosts />
           </div>
@@ -413,7 +443,7 @@ export default function Header() {
               }`}
             >
               <div className="overflow-hidden">
-                <div className="mt-1 space-y-2 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-2">
+                <div className="mt-1 max-h-[42vh] space-y-2 overflow-y-auto overscroll-contain rounded-2xl border border-zinc-800 bg-zinc-900/60 p-2 pr-1">
                   {toolItems.map((tool) => (
                     <Link
                       key={tool.href}

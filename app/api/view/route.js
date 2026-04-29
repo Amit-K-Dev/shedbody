@@ -2,10 +2,14 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+const VIEW_HASH_SECRET =
+  process.env.VIEW_HASH_SECRET ||
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  "shedbody-view-hash-fallback";
+
 export async function POST(req) {
   if (process.env.NODE_ENV === "production" && !process.env.VIEW_HASH_SECRET) {
-    console.error("Missing VIEW_HASH_SECRET");
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.warn("VIEW_HASH_SECRET is missing; using fallback view hash salt.");
   }
 
   const body = await req.json().catch(() => null);
@@ -17,25 +21,6 @@ export async function POST(req) {
 
   const supabase = await createClient();
 
-  const { data: post, error: postError } = await supabase
-    .from("posts")
-    .select("id")
-    .eq("id", postId)
-    .or(
-      "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
-    )
-    .not("published_at", "is", null)
-    .maybeSingle();
-
-  if (postError) {
-    console.error("View API post lookup error:", postError);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
-  }
-
-  if (!post) {
-    return NextResponse.json({ error: "Post not found" }, { status: 404 });
-  }
-
   const forwardedFor = req.headers.get("x-forwarded-for") || "";
   const ip =
     forwardedFor.split(",")[0].trim() ||
@@ -45,48 +30,42 @@ export async function POST(req) {
 
   const userHash = crypto
     .createHash("sha256")
-    .update(`${ip}:${userAgent}:${process.env.VIEW_HASH_SECRET || "local-dev"}`)
+    .update(`${ip}:${userAgent}:${VIEW_HASH_SECRET}`)
     .digest("hex");
 
   try {
-    // 30 minuts window
     const viewedAt = new Date();
-    const THIRTY_MIN_AGO = new Date(
-      viewedAt.getTime() - 30 * 60 * 1000,
-    ).toISOString();
 
-    // Check recent view
-    const { data: existing, error: existingError } = await supabase
-      .from("post_views")
-      .select("id")
-      .eq("post_id", postId)
-      .eq("user_hash", userHash)
-      .gte("viewed_at", THIRTY_MIN_AGO)
-      .limit(1);
+    const { data, error } = await supabase.rpc("record_post_view", {
+      target_post_id: postId,
+      target_user_hash: userHash,
+      target_viewed_at: viewedAt.toISOString(),
+    });
 
-    if (existingError) throw existingError;
+    if (error) {
+      if (error.code !== "PGRST202") throw error;
 
-    if (existing && existing.length > 0) {
-      return NextResponse.json({ message: "Already counted" });
+      const { error: fallbackError } = await supabase.rpc("increment_views", {
+        post_id: postId,
+      });
+
+      if (fallbackError) throw fallbackError;
+
+      const { data: post } = await supabase
+        .from("posts")
+        .select("views")
+        .eq("id", postId)
+        .maybeSingle();
+
+      return NextResponse.json({
+        success: true,
+        counted: true,
+        fallback: true,
+        views: Number(post?.views || 0),
+      });
     }
 
-    // Insert view record
-    const { error: insertError } = await supabase.from("post_views").insert({
-      post_id: postId,
-      user_hash: userHash,
-      viewed_at: viewedAt.toISOString(),
-    });
-
-    if (insertError) throw insertError;
-
-    // Increment actual views
-    const { error: rpcError } = await supabase.rpc("increment_views", {
-      post_id: postId,
-    });
-
-    if (rpcError) throw rpcError;
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json(data || { success: true });
   } catch (err) {
     console.error("View API error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

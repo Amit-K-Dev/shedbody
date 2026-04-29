@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TableOfContents from "@/components/TableOfContents";
 import ReadingProgress from "@/components/ReadingProgress";
-import ViewTracker from "@/components/ViewTracker";
+import ArticleViewCount from "@/components/ArticleViewCount";
 import Image from "next/image";
 
 import { getPost, getRelatedPosts, getRedirectUrl } from "@/lib/posts";
@@ -436,8 +436,6 @@ export default async function PostPage({ params }) {
         />
       )}
 
-      <ViewTracker postId={post.id} />
-
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-16">
           <article className="mx-auto w-full">
@@ -494,9 +492,7 @@ export default async function PostPage({ params }) {
                   {readingTime} min{readingTime !== 1 ? "s" : ""} read
                 </span>
                 <span>&bull;</span>
-                <span suppressHydrationWarning>
-                  {viewCount} view{viewCount !== 1 ? "s" : ""}
-                </span>
+                <ArticleViewCount postId={post.id} initialViews={viewCount} />
               </div>
             </header>
 

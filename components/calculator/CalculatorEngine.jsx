@@ -10,6 +10,7 @@ import {
   Baby,
   Calendar,
   CalendarClock,
+  Droplets,
   Dumbbell,
   Flame,
   Leaf,
@@ -67,9 +68,16 @@ const inputIconMap = {
   age: Calendar,
   height: Ruler,
   weight: Weight,
+  currentWeight: Weight,
+  targetWeight: Target,
+  weeklyChange: CalendarClock,
+  activityMinutes: Dumbbell,
   activity: Dumbbell,
   goal: Target,
   dietType: Leaf,
+  climate: Droplets,
+  waist: Ruler,
+  hip: Ruler,
   lmpDate: Calendar,
   conceptionDate: Baby,
   cycleLength: CalendarClock,
@@ -365,6 +373,245 @@ function CalorieResult({ result }) {
   );
 }
 
+function IdealWeightResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              Estimated ideal weight
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.idealWeight}
+              <span className="ml-2 text-2xl text-zinc-500">{result.unit}</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Suggested range: {result.rangeLow}-{result.rangeHigh} {result.unit}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Scale size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="mb-3 flex items-center justify-between text-sm">
+            <span className="font-semibold text-zinc-200">Healthy BMI range</span>
+            <span className="text-zinc-500">BMI 18.5-24.9</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="rounded-2xl border border-sky-500/10 bg-sky-500/5 p-3">
+              <p className="text-zinc-500">Lower end</p>
+              <p className="mt-1 font-bold text-sky-300">
+                {result.healthyBmiLow} {result.unit}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/10 bg-emerald-500/5 p-3">
+              <p className="text-zinc-500">Upper end</p>
+              <p className="mt-1 font-bold text-emerald-300">
+                {result.healthyBmiHigh} {result.unit}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-5 shadow-xl shadow-black/20 backdrop-blur-xl">
+        <div className="mb-4 flex items-center gap-2">
+          <BarChart3 className="text-emerald-300" size={18} />
+          <h3 className="font-bold text-white">Formula Comparison</h3>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          {Object.entries(result.formulas).map(([name, value]) => (
+            <div
+              key={name}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3"
+            >
+              <p className="text-zinc-500">{name}</p>
+              <p className="mt-1 font-bold text-zinc-100">
+                {value} {result.unit}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DailyHydrationResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-sky-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-sky-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-300">
+              Daily water target
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.hydrationLiters}
+              <span className="ml-2 text-2xl text-zinc-500">L</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              {result.totalMl} ml or about {result.totalOz} fl oz
+            </p>
+          </div>
+          <div className="rounded-2xl border border-sky-500/20 bg-sky-500/10 p-3 text-sky-300 shadow-lg shadow-sky-950/20">
+            <Droplets size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Cups</p>
+            <p className="mt-1 font-bold text-zinc-100">{result.cups} cups</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">500 ml bottles</p>
+            <p className="mt-1 font-bold text-zinc-100">{result.bottles}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Exercise add-on</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.activityLiters} L
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Climate</p>
+            <p className="mt-1 font-bold text-zinc-100">{result.climateLabel}</p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function WeightGoalResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              {result.direction} timeline
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.weeksToGoal}
+              <span className="ml-2 text-2xl text-zinc-500">weeks</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Estimated date: {result.targetDateLabel}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Target size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Total change</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.totalChange} {result.unit}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Weekly pace</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.weeklyChange} {result.unit}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Current</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.currentWeight} {result.unit}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Target</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.targetWeight} {result.unit}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-emerald-400/10 bg-emerald-400/5 p-4 text-sm leading-6 text-zinc-300">
+          {result.paceNote}
+        </p>
+        <p className="mt-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function HipToWaistRatioResult({ result }) {
+  const details =
+    result.category === "Low risk"
+      ? "text-emerald-300 bg-emerald-500/10 border-emerald-500/25"
+      : result.category === "Moderate risk"
+        ? "text-amber-300 bg-amber-500/10 border-amber-500/25"
+        : "text-rose-300 bg-rose-500/10 border-rose-500/25";
+
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              Hip-to-waist ratio
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.hwr}
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              WHR companion value: {result.whr}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Ruler size={26} />
+          </div>
+        </div>
+
+        <div
+          className={`mt-6 inline-flex rounded-full border px-3 py-1 text-xs font-bold ${details}`}
+        >
+          {result.category}
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Waist</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.waist} {result.unit}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-zinc-500">Hip</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.hip} {result.unit}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-emerald-400/10 bg-emerald-400/5 p-4 text-sm leading-6 text-zinc-300">
+          {result.guidance}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function PregnancyResult({ result }) {
   const progressWidth = `${result.progressPercent}%`;
 
@@ -542,8 +789,20 @@ function ResultPanel({ config, result }) {
   if (config.result?.type === "baby-percentile") {
     return <BabyPercentileResult result={result} />;
   }
+  if (config.result?.type === "daily-hydration") {
+    return <DailyHydrationResult result={result} />;
+  }
+  if (config.result?.type === "hip-to-waist-ratio") {
+    return <HipToWaistRatioResult result={result} />;
+  }
+  if (config.result?.type === "ideal-weight") {
+    return <IdealWeightResult result={result} />;
+  }
   if (config.result?.type === "pregnancy") {
     return <PregnancyResult result={result} />;
+  }
+  if (config.result?.type === "weight-goal") {
+    return <WeightGoalResult result={result} />;
   }
   if (config.result?.type === "calories") return <CalorieResult result={result} />;
   return <BMIResult result={result} />;

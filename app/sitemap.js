@@ -13,6 +13,30 @@ export default async function sitemap() {
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/calculators/bmi", priority: 0.7, changeFrequency: "monthly" },
     {
+      path: "/calculators/ideal-weight",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/daily-hydration",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/weight-goal",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/hip-to-waist-ratio",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
       path: "/calculators/calorie",
       priority: 0.85,
       changeFrequency: "monthly",

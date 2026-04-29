@@ -1,7 +1,11 @@
 import { calculateBMI } from "./bmi";
 import { calculateBabyPercentile } from "./baby-percentile";
 import { calculateCalories } from "./calorie";
+import { calculateDailyHydration } from "./daily-hydration";
+import { calculateHipToWaistRatio } from "./hip-to-waist-ratio";
+import { calculateIdealWeight } from "./ideal-weight";
 import { calculatePregnancy } from "./pregnancy";
+import { calculateWeightGoal } from "./weight-goal";
 
 export const calculatorMap = {
   bmi: (inputs) => {
@@ -17,6 +21,10 @@ export const calculatorMap = {
   },
 
   calories: calculateCalories,
+  "daily-hydration": calculateDailyHydration,
+  "hip-to-waist-ratio": calculateHipToWaistRatio,
+  "ideal-weight": calculateIdealWeight,
   pregnancy: calculatePregnancy,
+  "weight-goal": calculateWeightGoal,
   "baby-percentile": calculateBabyPercentile,
 };

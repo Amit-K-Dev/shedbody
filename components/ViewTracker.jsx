@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export default function ViewTracker({ postId }) {
+export default function ViewTracker({ postId, onCounted }) {
   const hasFetched = useRef(false);
 
   useEffect(() => {
@@ -40,7 +40,12 @@ export default function ViewTracker({ postId }) {
         });
 
         if (res.ok) {
+          const data = await res.json().catch(() => null);
           localStorage.setItem(key, JSON.stringify({ time: Date.now() }));
+
+          if (data?.counted) {
+            onCounted?.(data.views);
+          }
         } else {
           hasFetched.current = false;
         }
@@ -51,7 +56,7 @@ export default function ViewTracker({ postId }) {
     };
 
     increment();
-  }, [postId]);
+  }, [onCounted, postId]);
 
   return null;
 }
