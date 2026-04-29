@@ -11,6 +11,12 @@ export default async function sitemap() {
     { path: "", priority: 1.0, changeFrequency: "daily" },
     { path: "/articles", priority: 0.9, changeFrequency: "daily" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+    {
+      path: "/calculators",
+      priority: 0.85,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
     { path: "/calculators/bmi", priority: 0.7, changeFrequency: "monthly" },
     {
       path: "/calculators/ideal-weight",
@@ -50,6 +56,42 @@ export default async function sitemap() {
     },
     {
       path: "/calculators/baby-percentile",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/keto",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/macro",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/micronutrient",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/meal",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/recipe",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/calories-burned-by-activity",
       priority: 0.8,
       changeFrequency: "monthly",
       lastModified: "2026-04-29T00:00:00.000Z",

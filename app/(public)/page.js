@@ -10,12 +10,24 @@ import { formatPostDate } from "@/lib/utils/date";
 import {
   Activity,
   ArrowRight,
+  Baby,
+  Bike,
+  Calculator,
+  ChefHat,
   Dumbbell,
+  Droplets,
   LineChart,
+  Flame,
+  PieChart,
+  Pill,
+  Ruler,
+  Scale,
   ShieldCheck,
   Sparkles,
+  Target,
   Utensils,
 } from "lucide-react";
+import { featuredCalculators } from "@/lib/calculators/archive";
 
 // Advanced SEO Metadata for Home Page
 export const metadata = {
@@ -200,6 +212,84 @@ function SidebarPost({ post }) {
   );
 }
 
+const calculatorIconMap = {
+  Activity,
+  Baby,
+  Bike,
+  Calculator,
+  ChefHat,
+  Droplets,
+  Flame,
+  PieChart,
+  Pill,
+  Ruler,
+  Scale,
+  Target,
+  Utensils,
+};
+
+function ShedBodyToolsSection() {
+  return (
+    <section className="mb-24">
+      <div className="mb-7 flex flex-col gap-5 border-b border-zinc-800/80 pb-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-emerald-400">
+            ShedBody Tools
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight text-zinc-50 md:text-3xl">
+            Important calculators for everyday fitness planning
+          </h2>
+        </div>
+        <Link
+          href="/calculators"
+          className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-bold text-zinc-300 transition hover:border-emerald-500 hover:text-emerald-300"
+        >
+          View all calculators
+          <ArrowRight size={16} />
+        </Link>
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {featuredCalculators.map((calculator) => {
+          const Icon = calculatorIconMap[calculator.icon] || Calculator;
+
+          return (
+            <Link
+              key={calculator.href}
+              href={calculator.href}
+              className="group flex h-full flex-col rounded-lg border border-zinc-800 bg-zinc-950/75 p-6 transition hover:-translate-y-1 hover:border-emerald-500/70 hover:bg-zinc-950"
+            >
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div className="grid size-11 place-items-center rounded-lg border border-emerald-500/25 bg-emerald-500/10 text-emerald-300">
+                  <Icon size={22} />
+                </div>
+                <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs font-bold uppercase tracking-widest text-zinc-500">
+                  {calculator.category}
+                </span>
+              </div>
+
+              <h3 className="text-lg font-bold tracking-tight text-zinc-50 transition group-hover:text-emerald-300">
+                {calculator.title}
+              </h3>
+              <p className="mt-3 line-clamp-3 text-sm leading-6 text-zinc-400">
+                {calculator.description}
+              </p>
+
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">
+                Use tool
+                <ArrowRight
+                  size={16}
+                  className="transition group-hover:translate-x-1"
+                />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function TrustSection() {
   const pillars = [
     {
@@ -355,7 +445,7 @@ function DashboardValueSection() {
           </div>
         </div>
 
-        <div className="relative min-h-[620px] bg-zinc-900">
+        <div className="relative min-h-155 bg-zinc-900">
           <Image
             src="/hero-section.jpg"
             alt="ShedBody dashboard preview"
@@ -399,9 +489,7 @@ function DashboardValueSection() {
                     <p className="text-xs uppercase tracking-widest text-zinc-500">
                       Calories
                     </p>
-                    <p className="mt-2 text-xl font-bold text-zinc-50">
-                      2,180
-                    </p>
+                    <p className="mt-2 text-xl font-bold text-zinc-50">2,180</p>
                   </div>
                   <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3">
                     <p className="text-xs uppercase tracking-widest text-zinc-500">
@@ -501,6 +589,8 @@ export default async function Home() {
 
           <TrustSection />
 
+          {/* <ShedBodyToolsSection /> */}
+
           {smartFeed?.length > 0 && (
             <section id="recommended" className="mb-24">
               <SectionHeader
@@ -526,7 +616,7 @@ export default async function Home() {
 
           <DashboardValueSection />
 
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px] mb-24">
             {latest?.length > 0 && (
               <section id="latest">
                 <SectionHeader eyebrow="Latest" title="Fresh from ShedBody" />
@@ -574,6 +664,8 @@ export default async function Home() {
               )}
             </div>
           </div>
+
+          <ShedBodyToolsSection />
         </section>
       </section>
     </>

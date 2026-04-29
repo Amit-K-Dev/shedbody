@@ -1,0 +1,95 @@
+export const ketoCalculator = {
+  id: "f18c0b55-73fb-47c3-a64e-6f73f61b0201",
+  slug: "keto",
+  name: "Keto Calculator",
+  category: "nutrition",
+  ctaLabel: "Calculate Keto Macros",
+  historyMetric: "targetCalories",
+  historyLabel: "Keto Calories",
+
+  description:
+    "Estimate keto calories, net carbs, protein, and fat targets from your body details and goal.",
+
+  inputs: [
+    {
+      key: "unit",
+      label: "Unit System",
+      type: "segmented",
+      defaultValue: "metric",
+      options: [
+        { label: "Metric", value: "metric" },
+        { label: "Imperial", value: "imperial" },
+      ],
+      required: true,
+    },
+    {
+      key: "gender",
+      label: "Gender",
+      type: "select",
+      defaultValue: "male",
+      options: [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" },
+      ],
+      required: true,
+    },
+    { key: "age", label: "Age", type: "number", placeholder: "e.g. 32", min: 12, max: 100, required: true },
+    {
+      key: "height",
+      label: "Height",
+      type: "number",
+      unitLabels: { metric: "cm", imperial: "in" },
+      placeholders: { metric: "e.g. 175", imperial: "e.g. 69" },
+      min: 50,
+      max: 300,
+      required: true,
+    },
+    {
+      key: "weight",
+      label: "Weight",
+      type: "number",
+      unitLabels: { metric: "kg", imperial: "lb" },
+      placeholders: { metric: "e.g. 78", imperial: "e.g. 172" },
+      min: 20,
+      max: 350,
+      required: true,
+    },
+    {
+      key: "activity",
+      label: "Activity Level",
+      type: "select",
+      defaultValue: "moderate",
+      options: [
+        { label: "Sedentary", value: "sedentary" },
+        { label: "Light training", value: "light" },
+        { label: "Moderate training", value: "moderate" },
+        { label: "Hard training", value: "active" },
+      ],
+      required: true,
+    },
+    {
+      key: "goal",
+      label: "Goal",
+      type: "select",
+      defaultValue: "fat_loss",
+      options: [
+        { label: "Fat loss", value: "fat_loss" },
+        { label: "Maintenance", value: "maintenance" },
+        { label: "Muscle gain", value: "muscle_gain" },
+      ],
+      required: true,
+    },
+    {
+      key: "netCarbs",
+      label: "Net Carbs",
+      type: "number",
+      placeholder: "e.g. 25",
+      min: 10,
+      max: 75,
+      defaultValue: 25,
+      required: true,
+    },
+  ],
+
+  result: { type: "keto", unit: "kcal/day", label: "Keto Target" },
+};

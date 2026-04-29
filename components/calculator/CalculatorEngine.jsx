@@ -71,10 +71,20 @@ const inputIconMap = {
   currentWeight: Weight,
   targetWeight: Target,
   weeklyChange: CalendarClock,
+  calories: Flame,
+  protein: Dumbbell,
+  carbs: Apple,
+  fats: Utensils,
+  servings: Utensils,
   activityMinutes: Dumbbell,
+  duration: CalendarClock,
   activity: Dumbbell,
+  activityType: Dumbbell,
   goal: Target,
   dietType: Leaf,
+  style: BarChart3,
+  lifeStage: UserRound,
+  netCarbs: Leaf,
   climate: Droplets,
   waist: Ruler,
   hip: Ruler,
@@ -94,7 +104,9 @@ function parseInputs(config, inputs) {
   return config.inputs.reduce((acc, input) => {
     const value = inputs[input.key] ?? input.defaultValue ?? "";
     acc[input.key] =
-      input.type === "select" || input.type === "segmented" || input.type === "date"
+      input.type === "select" ||
+      input.type === "segmented" ||
+      input.type === "date"
         ? value
         : parseFloat(value) || 0;
     return acc;
@@ -106,7 +118,8 @@ function getVisibleInputs(config, inputs) {
     if (!input.showWhen) return true;
     const currentValue =
       inputs[input.showWhen.key] ??
-      config.inputs.find((item) => item.key === input.showWhen.key)?.defaultValue;
+      config.inputs.find((item) => item.key === input.showWhen.key)
+        ?.defaultValue;
     return currentValue === input.showWhen.value;
   });
 }
@@ -196,23 +209,23 @@ function CalorieResult({ result }) {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur">
             <p className="text-zinc-500">BMR</p>
             <p className="mt-1 font-bold text-zinc-100">{result.bmr} kcal</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur">
             <p className="text-zinc-500">Maintenance</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.maintenanceCalories} kcal
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur">
             <p className="text-zinc-500">BMI</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.bmi} {result.bmiCategory}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3 backdrop-blur">
             <p className="text-zinc-500">Activity</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.activityLabel}
@@ -233,9 +246,24 @@ function CalorieResult({ result }) {
 
         <div className="space-y-3">
           {[
-            ["Protein", result.macros.protein, result.macroCalories.protein, "bg-emerald-400"],
-            ["Carbs", result.macros.carbs, result.macroCalories.carbs, "bg-sky-400"],
-            ["Fats", result.macros.fats, result.macroCalories.fats, "bg-amber-400"],
+            [
+              "Protein",
+              result.macros.protein,
+              result.macroCalories.protein,
+              "bg-emerald-400",
+            ],
+            [
+              "Carbs",
+              result.macros.carbs,
+              result.macroCalories.carbs,
+              "bg-sky-400",
+            ],
+            [
+              "Fats",
+              result.macros.fats,
+              result.macroCalories.fats,
+              "bg-amber-400",
+            ],
           ].map(([label, grams, calories, color]) => (
             <div key={label}>
               <div className="mb-1 flex justify-between text-sm">
@@ -245,7 +273,9 @@ function CalorieResult({ result }) {
               <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
                 <div
                   className={`h-full ${color}`}
-                  style={{ width: `${Math.max(8, (calories / macroTotal) * 100)}%` }}
+                  style={{
+                    width: `${Math.max(8, (calories / macroTotal) * 100)}%`,
+                  }}
                 />
               </div>
             </div>
@@ -264,7 +294,8 @@ function CalorieResult({ result }) {
                 Compare fat loss, maintenance, and muscle gain
               </h3>
               <p className="mt-1 text-xs leading-5 text-zinc-500">
-                Based on your BMR, TDEE, BMI, goal, and {result.dietLabel} preference.
+                Based on your BMR, TDEE, BMI, goal, and {result.dietLabel}{" "}
+                preference.
               </p>
             </div>
             <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-300">
@@ -282,7 +313,7 @@ function CalorieResult({ result }) {
                   className={`rounded-2xl border p-4 transition ${
                     plan.isSelected
                       ? "border-emerald-500/40 bg-emerald-500/10 shadow-lg shadow-emerald-950/20"
-                      : "border-white/10 bg-white/[0.03]"
+                      : "border-white/10 bg-white/3"
                   }`}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -360,7 +391,8 @@ function CalorieResult({ result }) {
 
                   {plan.totalMeals > featuredMeals.length && (
                     <p className="mt-3 text-xs font-medium text-zinc-500">
-                      Showing {featuredMeals.length} of {plan.totalMeals} plan blocks.
+                      Showing {featuredMeals.length} of {plan.totalMeals} plan
+                      blocks.
                     </p>
                   )}
                 </div>
@@ -387,7 +419,8 @@ function IdealWeightResult({ result }) {
               <span className="ml-2 text-2xl text-zinc-500">{result.unit}</span>
             </p>
             <p className="mt-2 text-sm text-zinc-500">
-              Suggested range: {result.rangeLow}-{result.rangeHigh} {result.unit}
+              Suggested range: {result.rangeLow}-{result.rangeHigh}{" "}
+              {result.unit}
             </p>
           </div>
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
@@ -395,9 +428,11 @@ function IdealWeightResult({ result }) {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/3 p-4">
           <div className="mb-3 flex items-center justify-between text-sm">
-            <span className="font-semibold text-zinc-200">Healthy BMI range</span>
+            <span className="font-semibold text-zinc-200">
+              Healthy BMI range
+            </span>
             <span className="text-zinc-500">BMI 18.5-24.9</span>
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -430,7 +465,7 @@ function IdealWeightResult({ result }) {
           {Object.entries(result.formulas).map(([name, value]) => (
             <div
               key={name}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3"
+              className="rounded-2xl border border-white/10 bg-white/3 p-3"
             >
               <p className="text-zinc-500">{name}</p>
               <p className="mt-1 font-bold text-zinc-100">
@@ -467,23 +502,25 @@ function DailyHydrationResult({ result }) {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Cups</p>
             <p className="mt-1 font-bold text-zinc-100">{result.cups} cups</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">500 ml bottles</p>
             <p className="mt-1 font-bold text-zinc-100">{result.bottles}</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Exercise add-on</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.activityLiters} L
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Climate</p>
-            <p className="mt-1 font-bold text-zinc-100">{result.climateLabel}</p>
+            <p className="mt-1 font-bold text-zinc-100">
+              {result.climateLabel}
+            </p>
           </div>
         </div>
 
@@ -518,25 +555,25 @@ function WeightGoalResult({ result }) {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Total change</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.totalChange} {result.unit}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Weekly pace</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.weeklyChange} {result.unit}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Current</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.currentWeight} {result.unit}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Target</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.targetWeight} {result.unit}
@@ -590,13 +627,13 @@ function HipToWaistRatioResult({ result }) {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Waist</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.waist} {result.unit}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Hip</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.hip} {result.unit}
@@ -633,10 +670,11 @@ function PregnancyResult({ result }) {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/3 p-4">
           <div className="mb-3 flex items-center justify-between text-sm">
             <span className="font-semibold text-zinc-200">
-              Week {result.gestationalWeeks}, day {result.gestationalRemainderDays}
+              Week {result.gestationalWeeks}, day{" "}
+              {result.gestationalRemainderDays}
             </span>
             <span className="text-zinc-500">{result.progressPercent}%</span>
           </div>
@@ -649,23 +687,23 @@ function PregnancyResult({ result }) {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Trimester</p>
             <p className="mt-1 font-bold text-zinc-100">{result.trimester}</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Days to due date</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.daysUntilDue >= 0 ? result.daysUntilDue : "Past due"}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Estimated conception</p>
             <p className="mt-1 font-bold text-zinc-100">
               {result.conceptionDateLabel}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
             <p className="text-zinc-500">Status</p>
             <p className="mt-1 font-bold text-zinc-100">{result.status}</p>
           </div>
@@ -685,7 +723,7 @@ function PregnancyResult({ result }) {
           {result.milestones.map((milestone) => (
             <div
               key={milestone.label}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+              className="rounded-2xl border border-white/10 bg-white/3 p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-semibold text-zinc-100">{milestone.label}</p>
@@ -720,7 +758,8 @@ function BabyPercentileResult({ result }) {
               <span className="text-2xl text-zinc-500">th</span>
             </p>
             <p className="mt-2 text-sm text-zinc-500">
-              {result.measurementLabel} for a {result.ageMonths}-month {result.sexLabel.toLowerCase()}
+              {result.measurementLabel} for a {result.ageMonths}-month{" "}
+              {result.sexLabel.toLowerCase()}
             </p>
           </div>
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
@@ -728,9 +767,11 @@ function BabyPercentileResult({ result }) {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/3 p-4">
           <div className="mb-3 flex items-center justify-between text-sm">
-            <span className="font-semibold text-zinc-200">{result.category}</span>
+            <span className="font-semibold text-zinc-200">
+              {result.category}
+            </span>
             <span className="text-zinc-500">
               {result.inputValue} {result.inputUnit}
             </span>
@@ -768,7 +809,7 @@ function BabyPercentileResult({ result }) {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3"
+              className="rounded-2xl border border-white/10 bg-white/3 p-3"
             >
               <p className="text-zinc-500">{label}</p>
               <p className="mt-1 font-bold text-zinc-100">
@@ -785,7 +826,232 @@ function BabyPercentileResult({ result }) {
   );
 }
 
+function MacroSummaryResult({ result, subtitle }) {
+  const total =
+    result.macroCalories?.protein +
+    result.macroCalories?.carbs +
+    result.macroCalories?.fats;
+
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              {subtitle ||
+                result.goalLabel ||
+                result.styleLabel ||
+                "Daily target"}
+            </p>
+            <p className="mt-2 text-4xl font-black tracking-tight text-white">
+              {result.targetCalories || result.calories}
+              <span className="ml-2 text-xl text-zinc-500">kcal</span>
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <BarChart3 size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          {[
+            [
+              "Protein",
+              result.macros.protein,
+              result.macroCalories.protein,
+              "bg-emerald-400",
+            ],
+            [
+              "Carbs",
+              result.macros.carbs,
+              result.macroCalories.carbs,
+              "bg-sky-400",
+            ],
+            [
+              "Fats",
+              result.macros.fats,
+              result.macroCalories.fats,
+              "bg-amber-400",
+            ],
+          ].map(([label, grams, calories, color]) => (
+            <div
+              key={label}
+              className="rounded-2xl border border-white/10 bg-white/3 p-4"
+            >
+              <p className="text-sm font-semibold text-zinc-100">{label}</p>
+              <p className="mt-2 text-2xl font-black text-white">{grams}g</p>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-800">
+                <div
+                  className={`h-full ${color}`}
+                  style={{ width: `${Math.max(6, (calories / total) * 100)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {result.note && (
+          <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+            {result.note}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MicronutrientResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          {result.genderLabel} / {result.lifeStageLabel}
+        </p>
+        <h3 className="mt-2 text-2xl font-black tracking-tight text-white">
+          Daily micronutrient targets
+        </h3>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          {result.targets.map((target) => (
+            <div
+              key={target.label}
+              className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/3 p-4"
+            >
+              <span className="text-sm font-semibold text-zinc-200">
+                {target.label}
+              </span>
+              <span className="text-right font-black text-emerald-300">
+                {target.value} {target.unit}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MealResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          {result.meals} meals per day
+        </p>
+        <p className="mt-2 text-4xl font-black tracking-tight text-white">
+          {result.perMealCalories}
+          <span className="ml-2 text-xl text-zinc-500">kcal / meal</span>
+        </p>
+        <div className="mt-6 grid gap-3">
+          {result.mealBlocks.map((meal) => (
+            <div
+              key={meal.label}
+              className="rounded-2xl border border-white/10 bg-white/3 p-4"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-bold text-zinc-100">{meal.label}</p>
+                <p className="text-sm font-black text-emerald-300">
+                  {meal.calories} kcal
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-zinc-400">
+                {meal.protein}g protein / {meal.carbs}g carbs / {meal.fats}g
+                fats
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RecipeResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          Per serving
+        </p>
+        <p className="mt-2 text-5xl font-black tracking-tight text-white">
+          {result.caloriesPerServing}
+          <span className="ml-2 text-2xl text-zinc-500">kcal</span>
+        </p>
+        <div className="mt-6 grid grid-cols-3 gap-3 text-center text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
+            <p className="font-black text-emerald-300">
+              {result.proteinPerServing}g
+            </p>
+            <p className="mt-1 text-zinc-500">Protein</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
+            <p className="font-black text-sky-300">{result.carbsPerServing}g</p>
+            <p className="mt-1 text-zinc-500">Carbs</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
+            <p className="font-black text-amber-300">
+              {result.fatsPerServing}g
+            </p>
+            <p className="mt-1 text-zinc-500">Fats</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CaloriesBurnedByActivityResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          {result.activityLabel} / {result.duration} minutes
+        </p>
+        <p className="mt-2 text-5xl font-black tracking-tight text-white">
+          {result.caloriesBurned}
+          <span className="ml-2 text-2xl text-zinc-500">kcal</span>
+        </p>
+        <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
+            <p className="text-zinc-500">Per minute</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.perMinute} kcal
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
+            <p className="text-zinc-500">MET value</p>
+            <p className="mt-1 font-black text-zinc-100">{result.met}</p>
+          </div>
+        </div>
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function ResultPanel({ config, result }) {
+  if (config.result?.type === "keto") {
+    return <MacroSummaryResult result={result} title="Keto Targets" />;
+  }
+  if (config.result?.type === "macro") {
+    return <MacroSummaryResult result={result} title="Macro Targets" />;
+  }
+  if (config.result?.type === "micronutrient") {
+    return <MicronutrientResult result={result} />;
+  }
+  if (config.result?.type === "meal") {
+    return <MealResult result={result} />;
+  }
+  if (config.result?.type === "recipe") {
+    return <RecipeResult result={result} />;
+  }
+  if (config.result?.type === "calories-burned-by-activity") {
+    return <CaloriesBurnedByActivityResult result={result} />;
+  }
   if (config.result?.type === "baby-percentile") {
     return <BabyPercentileResult result={result} />;
   }
@@ -804,7 +1070,8 @@ function ResultPanel({ config, result }) {
   if (config.result?.type === "weight-goal") {
     return <WeightGoalResult result={result} />;
   }
-  if (config.result?.type === "calories") return <CalorieResult result={result} />;
+  if (config.result?.type === "calories")
+    return <CalorieResult result={result} />;
   return <BMIResult result={result} />;
 }
 
@@ -906,7 +1173,10 @@ export default function CalculatorEngine({ config }) {
   const trend =
     history.length > 1
       ? Number(
-          (history[0].result_data?.[metricKey] - history[1].result_data?.[metricKey]).toFixed(1),
+          (
+            history[0].result_data?.[metricKey] -
+            history[1].result_data?.[metricKey]
+          ).toFixed(1),
         )
       : 0;
   const visibleInputs = getVisibleInputs(config, inputs);
@@ -946,17 +1216,20 @@ export default function CalculatorEngine({ config }) {
                     <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-zinc-950/70 p-1.5 shadow-inner shadow-black/20">
                       {input.options.map((option) => {
                         const active =
-                          (inputs[input.key] ?? input.defaultValue) === option.value;
+                          (inputs[input.key] ?? input.defaultValue) ===
+                          option.value;
 
                         return (
                           <button
                             key={option.value}
                             type="button"
-                            onClick={() => handleChange(input.key, option.value)}
+                            onClick={() =>
+                              handleChange(input.key, option.value)
+                            }
                             className={`rounded-xl px-3 py-3 text-sm font-bold transition ${
                               active
                                 ? "bg-emerald-400 text-black shadow-lg shadow-emerald-500/20"
-                                : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-100"
+                                : "text-zinc-400 hover:bg-white/4 hover:text-zinc-100"
                             }`}
                           >
                             {option.label}
@@ -965,37 +1238,43 @@ export default function CalculatorEngine({ config }) {
                       })}
                     </div>
                   ) : input.type === "select" ? (
-                  <select
-                    value={inputs[input.key] ?? input.defaultValue ?? ""}
-                    className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
-                    onChange={(event) => handleChange(input.key, event.target.value)}
-                  >
-                    {input.options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : input.type === "date" ? (
-                  <input
-                    type="date"
-                    className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition placeholder:text-zinc-700 hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
-                    value={inputs[input.key] ?? ""}
-                    onChange={(event) => handleChange(input.key, event.target.value)}
-                  />
-                ) : (
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    min={input.min}
-                    max={input.max}
-                    placeholder={presentation.placeholder}
-                    className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition placeholder:text-zinc-700 hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
-                    value={inputs[input.key] ?? ""}
-                    onChange={(event) => handleChange(input.key, event.target.value)}
-                  />
-                )}
-              </div>
+                    <select
+                      value={inputs[input.key] ?? input.defaultValue ?? ""}
+                      className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
+                      onChange={(event) =>
+                        handleChange(input.key, event.target.value)
+                      }
+                    >
+                      {input.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : input.type === "date" ? (
+                    <input
+                      type="date"
+                      className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition placeholder:text-zinc-700 hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
+                      value={inputs[input.key] ?? ""}
+                      onChange={(event) =>
+                        handleChange(input.key, event.target.value)
+                      }
+                    />
+                  ) : (
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      min={input.min}
+                      max={input.max}
+                      placeholder={presentation.placeholder}
+                      className="w-full rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-white shadow-inner shadow-black/20 transition placeholder:text-zinc-700 hover:border-emerald-400/30 focus:border-emerald-400 focus:outline-none"
+                      value={inputs[input.key] ?? ""}
+                      onChange={(event) =>
+                        handleChange(input.key, event.target.value)
+                      }
+                    />
+                  )}
+                </div>
               );
             })}
           </div>
@@ -1016,11 +1295,11 @@ export default function CalculatorEngine({ config }) {
           </button>
         </div>
 
-        <div className="min-h-[420px]">
+        <div className="min-h-105">
           {result ? (
             <ResultPanel config={config} result={result} />
           ) : (
-            <div className="relative flex h-full min-h-[420px] flex-col justify-center overflow-hidden rounded-3xl border border-white/10 bg-zinc-950/65 p-8 shadow-2xl shadow-black/25 backdrop-blur-xl">
+            <div className="relative flex h-full min-h-105 flex-col justify-center overflow-hidden rounded-3xl border border-white/10 bg-zinc-950/65 p-8 shadow-2xl shadow-black/25 backdrop-blur-xl">
               <div className="pointer-events-none absolute -left-20 -top-20 size-52 rounded-full bg-emerald-400/10 blur-3xl" />
               <div className="mb-4 grid size-14 place-items-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
                 <Target size={30} />
@@ -1062,7 +1341,11 @@ export default function CalculatorEngine({ config }) {
           <div className="h-44 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#27272a"
+                  vertical={false}
+                />
                 <XAxis dataKey="date" hide />
                 <YAxis domain={["dataMin - 2", "dataMax + 2"]} hide />
                 <Tooltip
