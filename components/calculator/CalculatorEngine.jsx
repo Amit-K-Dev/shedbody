@@ -70,6 +70,9 @@ const inputIconMap = {
   weight: Weight,
   currentWeight: Weight,
   targetWeight: Target,
+  surgeryWeight: Weight,
+  monthsSinceSurgery: CalendarClock,
+  expectedEwl: Target,
   weeklyChange: CalendarClock,
   calories: Flame,
   protein: Dumbbell,
@@ -1056,6 +1059,87 @@ function WeightWatchersPointsResult({ result }) {
   );
 }
 
+function GastricSleeveWeightLossResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          {result.expectedEwl}% expected excess weight loss
+        </p>
+        <p className="mt-2 text-5xl font-black tracking-tight text-white">
+          {result.estimatedLoss}
+          <span className="ml-2 text-2xl text-zinc-500">
+            {result.unitLabel}
+          </span>
+        </p>
+        <p className="mt-2 text-sm text-zinc-500">
+          Projected total loss by 12-18 months
+        </p>
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="mb-3 flex items-center justify-between text-sm">
+            <span className="font-semibold text-zinc-200">
+              Progress toward estimate
+            </span>
+            <span className="text-emerald-300">{result.progressPercent}%</span>
+          </div>
+          <div className="h-2.5 overflow-hidden rounded-full bg-zinc-800">
+            <div
+              className="h-full rounded-full bg-emerald-400"
+              style={{ width: `${result.progressPercent}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Actual loss so far</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.actualLoss} {result.unitLabel}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Remaining estimated loss</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.remainingLoss} {result.unitLabel}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+            <p className="text-emerald-100/70">Projected weight</p>
+            <p className="mt-1 font-black text-emerald-100">
+              {result.projectedWeight} {result.unitLabel}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Current BMI</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.currentBmi} {result.currentBmiCategory}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-4">
+          {result.milestones.map((milestone) => (
+            <div
+              key={milestone.label}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-center text-sm"
+            >
+              <p className="font-bold text-zinc-100">{milestone.label}</p>
+              <p className="mt-1 text-emerald-300">
+                {milestone.loss} {result.unitLabel}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CaloriesBurnedByActivityResult({ result }) {
   return (
     <div className="mt-8 space-y-4">
@@ -1292,6 +1376,9 @@ function ResultPanel({ config, result }) {
   if (config.result?.type === "macro") {
     return <MacroSummaryResult result={result} title="Macro Targets" />;
   }
+  if (config.result?.type === "iifym") {
+    return <MacroSummaryResult result={result} />;
+  }
   if (config.result?.type === "micronutrient") {
     return <MicronutrientResult result={result} />;
   }
@@ -1306,6 +1393,9 @@ function ResultPanel({ config, result }) {
   }
   if (config.result?.type === "weight-watchers-points") {
     return <WeightWatchersPointsResult result={result} />;
+  }
+  if (config.result?.type === "gastric-sleeve-weight-loss") {
+    return <GastricSleeveWeightLossResult result={result} />;
   }
   if (config.result?.type === "calories-burned-by-activity") {
     return <CaloriesBurnedByActivityResult result={result} />;

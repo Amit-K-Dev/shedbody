@@ -1,0 +1,107 @@
+export const iifymCalculator = {
+  id: "01a07a80-4ab4-407e-a5de-3c8955f1cb55",
+  slug: "iifym",
+  name: "IIFYM Calculator",
+  category: "nutrition",
+  ctaLabel: "Calculate IIFYM Macros",
+  historyMetric: "targetCalories",
+  historyLabel: "IIFYM Calories",
+
+  description:
+    "Estimate flexible dieting calories and macros using body details, activity level, goal, and macro preference.",
+
+  inputs: [
+    {
+      key: "unit",
+      label: "Unit System",
+      type: "segmented",
+      defaultValue: "metric",
+      options: [
+        { label: "Metric", value: "metric" },
+        { label: "Imperial", value: "imperial" },
+      ],
+      required: true,
+    },
+    {
+      key: "gender",
+      label: "Gender",
+      type: "select",
+      defaultValue: "male",
+      options: [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" },
+      ],
+      required: true,
+    },
+    {
+      key: "age",
+      label: "Age",
+      type: "number",
+      placeholder: "e.g. 30",
+      min: 12,
+      max: 100,
+      required: true,
+    },
+    {
+      key: "height",
+      label: "Height",
+      type: "number",
+      unitLabels: { metric: "cm", imperial: "in" },
+      placeholders: { metric: "e.g. 175", imperial: "e.g. 69" },
+      min: 50,
+      max: 300,
+      required: true,
+    },
+    {
+      key: "weight",
+      label: "Weight",
+      type: "number",
+      unitLabels: { metric: "kg", imperial: "lb" },
+      placeholders: { metric: "e.g. 75", imperial: "e.g. 165" },
+      min: 20,
+      max: 350,
+      required: true,
+    },
+    {
+      key: "activity",
+      label: "Activity Level",
+      type: "select",
+      defaultValue: "moderate",
+      options: [
+        { label: "Sedentary", value: "sedentary" },
+        { label: "Light training", value: "light" },
+        { label: "Moderate training", value: "moderate" },
+        { label: "Hard training", value: "active" },
+        { label: "Athlete level", value: "very_active" },
+      ],
+      required: true,
+    },
+    {
+      key: "goal",
+      label: "Goal",
+      type: "select",
+      defaultValue: "maintenance",
+      options: [
+        { label: "Fat loss", value: "fat_loss" },
+        { label: "Maintenance", value: "maintenance" },
+        { label: "Muscle gain", value: "muscle_gain" },
+      ],
+      required: true,
+    },
+    {
+      key: "style",
+      label: "Macro Preference",
+      type: "select",
+      defaultValue: "balanced",
+      options: [
+        { label: "Balanced", value: "balanced" },
+        { label: "High protein", value: "high_protein" },
+        { label: "Higher carb", value: "higher_carb" },
+        { label: "Lower carb", value: "lower_carb" },
+      ],
+      required: true,
+    },
+  ],
+
+  result: { type: "iifym", unit: "grams/day", label: "IIFYM Macros" },
+};

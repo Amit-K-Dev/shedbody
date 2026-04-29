@@ -73,6 +73,12 @@ export default async function sitemap() {
       lastModified: "2026-04-29T00:00:00.000Z",
     },
     {
+      path: "/calculators/iifym",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
       path: "/calculators/micronutrient",
       priority: 0.8,
       changeFrequency: "monthly",
@@ -98,6 +104,12 @@ export default async function sitemap() {
     },
     {
       path: "/calculators/weight-watchers-points",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/gastric-sleeve-weight-loss",
       priority: 0.8,
       changeFrequency: "monthly",
       lastModified: "2026-04-30T00:00:00.000Z",

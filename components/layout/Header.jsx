@@ -78,6 +78,12 @@ const toolItems = [
     icon: PieChart,
   },
   {
+    name: "IIFYM Calculator",
+    description: "Estimate flexible dieting macros.",
+    href: "/calculators/iifym",
+    icon: PieChart,
+  },
+  {
     name: "Micronutrient Calculator",
     description: "Estimate daily vitamin and mineral targets.",
     href: "/calculators/micronutrient",
@@ -106,6 +112,12 @@ const toolItems = [
     description: "Estimate food points from nutrition labels.",
     href: "/calculators/weight-watchers-points",
     icon: Calculator,
+  },
+  {
+    name: "Gastric Sleeve Weight Loss Calculator",
+    description: "Estimate post-surgery weight loss.",
+    href: "/calculators/gastric-sleeve-weight-loss",
+    icon: Scale,
   },
   {
     name: "Calories Burned by Activity",

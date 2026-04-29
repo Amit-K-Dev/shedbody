@@ -1,0 +1,95 @@
+export const gastricSleeveWeightLossCalculator = {
+  id: "f3e9678c-87de-4b13-8c18-0537f2f3b6e7",
+  slug: "gastric-sleeve-weight-loss",
+  name: "Gastric Sleeve Weight Loss Calculator",
+  category: "health",
+  ctaLabel: "Estimate Weight Loss",
+  historyMetric: "estimatedLoss",
+  historyLabel: "Estimated Loss",
+
+  description:
+    "Estimate possible gastric sleeve weight loss using surgery weight, height, current weight, and expected excess weight loss.",
+
+  inputs: [
+    {
+      key: "unit",
+      label: "Unit System",
+      type: "segmented",
+      defaultValue: "metric",
+      options: [
+        { label: "Metric", value: "metric" },
+        { label: "Imperial", value: "imperial" },
+      ],
+      required: true,
+    },
+    {
+      key: "gender",
+      label: "Gender",
+      type: "select",
+      defaultValue: "male",
+      options: [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" },
+      ],
+      required: true,
+    },
+    {
+      key: "height",
+      label: "Height",
+      type: "number",
+      unitLabels: { metric: "cm", imperial: "in" },
+      placeholders: { metric: "e.g. 170", imperial: "e.g. 67" },
+      min: 50,
+      max: 300,
+      required: true,
+    },
+    {
+      key: "surgeryWeight",
+      label: "Surgery Weight",
+      type: "number",
+      unitLabels: { metric: "kg", imperial: "lb" },
+      placeholders: { metric: "e.g. 125", imperial: "e.g. 275" },
+      min: 30,
+      max: 500,
+      required: true,
+    },
+    {
+      key: "currentWeight",
+      label: "Current Weight",
+      type: "number",
+      unitLabels: { metric: "kg", imperial: "lb" },
+      placeholders: { metric: "e.g. 118", imperial: "e.g. 260" },
+      min: 30,
+      max: 500,
+      required: true,
+    },
+    {
+      key: "monthsSinceSurgery",
+      label: "Months Since Surgery",
+      type: "number",
+      placeholder: "e.g. 3",
+      min: 0,
+      max: 120,
+      required: true,
+    },
+    {
+      key: "expectedEwl",
+      label: "Expected Excess Loss",
+      type: "select",
+      defaultValue: "60",
+      options: [
+        { label: "Conservative 50%", value: "50" },
+        { label: "Typical 60%", value: "60" },
+        { label: "Strong 70%", value: "70" },
+        { label: "High 80%", value: "80" },
+      ],
+      required: true,
+    },
+  ],
+
+  result: {
+    type: "gastric-sleeve-weight-loss",
+    unit: "weight loss",
+    label: "Sleeve Weight Loss Estimate",
+  },
+};
