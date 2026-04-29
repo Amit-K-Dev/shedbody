@@ -79,6 +79,12 @@ export default async function sitemap() {
       lastModified: "2026-04-29T00:00:00.000Z",
     },
     {
+      path: "/calculators/vitamin",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
       path: "/calculators/meal",
       priority: 0.8,
       changeFrequency: "monthly",
@@ -91,10 +97,34 @@ export default async function sitemap() {
       lastModified: "2026-04-29T00:00:00.000Z",
     },
     {
+      path: "/calculators/weight-watchers-points",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
       path: "/calculators/calories-burned-by-activity",
       priority: 0.8,
       changeFrequency: "monthly",
       lastModified: "2026-04-29T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/rmr",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/tdee",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
+    },
+    {
+      path: "/calculators/eer",
+      priority: 0.8,
+      changeFrequency: "monthly",
+      lastModified: "2026-04-30T00:00:00.000Z",
     },
     { path: "/contact-us", priority: 0.7, changeFrequency: "yearly" },
     {

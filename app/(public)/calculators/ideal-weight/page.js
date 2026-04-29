@@ -8,14 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/ideal-weight`;
 export const metadata = {
   title: "Ideal Weight Calculator - Healthy Weight Range | ShedBody",
   description:
-    "Use ShedBody Ideal Weight Calculator to estimate your ideal body weight and healthy weight range using height, gender, and medical reference formulas.",
+    "Ideal weight calculator estimates from ShedBody give you a useful target range, not a rigid rule. Compare height, gender, BMI range, and reference formulas in one place.",
   keywords: [
     "ideal weight calculator",
     "healthy weight calculator",
-    "ideal body weight",
+    "ideal body weight calculator",
     "IBW calculator",
     "height weight calculator",
-    "ShedBody ideal weight",
+    "BMI weight range",
+    "medical weight formulas",
   ],
   alternates: {
     canonical: PAGE_URL,

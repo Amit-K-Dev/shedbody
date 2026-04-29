@@ -8,13 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/daily-hydration`;
 export const metadata = {
   title: "Daily Hydration Calculator - Water Intake | ShedBody",
   description:
-    "Calculate daily water intake from body weight, exercise minutes, and climate. Estimate liters, cups, bottles, and fluid ounces.",
+    "Daily hydration calculator estimates from ShedBody give you a practical water target. Use your body weight, exercise minutes, and climate to plan fluids without guessing.",
   keywords: [
     "daily hydration calculator",
     "water intake calculator",
-    "how much water should I drink",
     "hydration calculator",
-    "ShedBody hydration",
+    "how much water should I drink",
+    "fluid ounces calculator",
+    "exercise hydration",
+    "climate hydration",
   ],
   alternates: {
     canonical: PAGE_URL,

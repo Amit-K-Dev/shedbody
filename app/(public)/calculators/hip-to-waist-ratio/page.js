@@ -8,13 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/hip-to-waist-ratio`;
 export const metadata = {
   title: "Hip-to-Waist Ratio Calculator - HWR & WHR | ShedBody",
   description:
-    "Calculate hip-to-waist ratio and waist-to-hip ratio from waist and hip measurements. Estimate body-shape risk category.",
+    "Hip to waist ratio calculator results can make body measurements easier to interpret. Enter waist and hip size to estimate HWR, WHR, and a simple risk category.",
   keywords: [
     "hip to waist ratio calculator",
-    "HWR calculator",
     "waist to hip ratio calculator",
+    "HWR calculator",
     "WHR calculator",
-    "body measurement calculator",
+    "waist measurement",
+    "hip measurement",
+    "body fat risk",
   ],
   alternates: {
     canonical: PAGE_URL,

@@ -9,13 +9,13 @@ const PAGE_IMAGE = `${BASE_URL}/food-table.jpg`;
 export const metadata = {
   title: "Calorie Calculator with Macros & Diet Plans - ShedBody",
   description:
-    "Calculate daily calories, BMR, TDEE, macros, and compare fat loss, maintenance, and muscle gain diet plans from ShedBody.",
+    "Calorie calculator estimates from ShedBody help you set a realistic daily intake. Check BMR, TDEE, macros, and goal-based calories for fat loss, maintenance, or muscle gain.",
   keywords: [
     "calorie calculator",
-    "macro calculator",
+    "daily calorie calculator",
     "tdee calculator",
     "bmr calculator",
-    "diet plan calculator",
+    "macro calculator",
     "maintenance calories",
     "fat loss calories",
   ],

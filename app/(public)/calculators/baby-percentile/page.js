@@ -8,15 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/baby-percentile`;
 export const metadata = {
   title: "Baby Percentile Calculator - ShedBody",
   description:
-    "Estimate baby weight, length, or head circumference percentile from birth to 24 months using sex, age, and measurement.",
+    "Baby percentile calculator estimates from ShedBody help you understand growth measurements with less confusion. Check weight, length, or head circumference percentile from birth to 24 months.",
   keywords: [
     "baby percentile calculator",
-    "infant growth chart",
+    "infant growth calculator",
+    "baby growth chart calculator",
     "baby weight percentile",
     "baby length percentile",
     "head circumference percentile",
     "WHO growth chart",
-    "baby growth calculator",
   ],
   alternates: {
     canonical: PAGE_URL,

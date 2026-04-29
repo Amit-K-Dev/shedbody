@@ -36,7 +36,16 @@ const iconMap = {
 export const metadata = {
   title: "ShedBody Calculators - Fitness, Nutrition & Health Tools",
   description:
-    "Browse every ShedBody calculator for BMI, calories, ideal weight, hydration, pregnancy, baby growth, and more health planning tools.",
+    "Fitness calculators from ShedBody help you estimate body metrics, nutrition targets, hydration, pregnancy milestones, baby growth, and activity burn with practical context.",
+  keywords: [
+    "fitness calculators",
+    "health calculators",
+    "nutrition calculators",
+    "BMI calculator",
+    "calorie calculator",
+    "macro calculator",
+    "hydration calculator",
+  ],
   alternates: {
     canonical: "/calculators",
   },

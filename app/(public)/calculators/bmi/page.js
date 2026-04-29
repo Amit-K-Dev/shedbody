@@ -7,12 +7,15 @@ const BASE_URL = "https://shedbody.com";
 export const metadata = {
   title: "BMI Calculator (Body Mass Index) - Free & Accurate",
   description:
-    "Use ShedBody BMI Calculator to check your body mass index instantly. Get accurate BMI results, health category, and fitness insights.",
+    "BMI calculator results can help you understand your weight category quickly. Use ShedBody to check body mass index and turn the number into a practical fitness starting point.",
   keywords: [
     "BMI calculator",
+    "body mass index calculator",
+    "BMI checker",
     "body mass index",
-    "ideal weight calculator",
-    "ShedBody BMI",
+    "healthy weight range",
+    "BMI category",
+    "weight status",
   ],
   alternates: {
     canonical: `${BASE_URL}/calculators/bmi`,

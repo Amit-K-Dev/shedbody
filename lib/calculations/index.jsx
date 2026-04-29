@@ -3,6 +3,7 @@ import { calculateBabyPercentile } from "./baby-percentile";
 import { calculateCalories } from "./calorie";
 import { calculateCaloriesBurnedByActivity } from "./calories-burned-by-activity";
 import { calculateDailyHydration } from "./daily-hydration";
+import { calculateEer } from "./eer";
 import { calculateHipToWaistRatio } from "./hip-to-waist-ratio";
 import { calculateIdealWeight } from "./ideal-weight";
 import { calculateKeto } from "./keto";
@@ -11,6 +12,10 @@ import { calculateMeal } from "./meal";
 import { calculateMicronutrients } from "./micronutrient";
 import { calculatePregnancy } from "./pregnancy";
 import { calculateRecipe } from "./recipe";
+import { calculateRmr } from "./rmr";
+import { calculateTdee } from "./tdee";
+import { calculateVitamins } from "./vitamin";
+import { calculateWeightWatchersPoints } from "./weight-watchers-points";
 import { calculateWeightGoal } from "./weight-goal";
 
 export const calculatorMap = {
@@ -28,6 +33,7 @@ export const calculatorMap = {
 
   calories: calculateCalories,
   "daily-hydration": calculateDailyHydration,
+  eer: calculateEer,
   "hip-to-waist-ratio": calculateHipToWaistRatio,
   "ideal-weight": calculateIdealWeight,
   pregnancy: calculatePregnancy,
@@ -39,4 +45,8 @@ export const calculatorMap = {
   meal: calculateMeal,
   recipe: calculateRecipe,
   "calories-burned-by-activity": calculateCaloriesBurnedByActivity,
+  rmr: calculateRmr,
+  tdee: calculateTdee,
+  vitamin: calculateVitamins,
+  "weight-watchers-points": calculateWeightWatchersPoints,
 };

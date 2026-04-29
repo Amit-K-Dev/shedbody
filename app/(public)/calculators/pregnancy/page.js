@@ -8,15 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/pregnancy`;
 export const metadata = {
   title: "Pregnancy Due Date Calculator - ShedBody",
   description:
-    "Estimate your pregnancy due date, current week, trimester, conception date, and key milestones using LMP or conception date.",
+    "Pregnancy calculator estimates from ShedBody help you map your due date with calm, clear context. Check pregnancy week, trimester, conception date, and milestones from LMP or conception.",
   keywords: [
     "pregnancy calculator",
     "due date calculator",
+    "pregnancy due date calculator",
     "pregnancy week calculator",
     "gestational age calculator",
     "trimester calculator",
     "LMP calculator",
-    "conception date calculator",
   ],
   alternates: {
     canonical: PAGE_URL,

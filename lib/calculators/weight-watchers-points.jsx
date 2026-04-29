@@ -1,0 +1,72 @@
+export const weightWatchersPointsCalculator = {
+  id: "d92b01f8-bf41-41ef-a037-9f50fb4ed69d",
+  slug: "weight-watchers-points",
+  name: "Weight Watchers Points Calculator",
+  category: "nutrition",
+  ctaLabel: "Calculate Points",
+  historyMetric: "points",
+  historyLabel: "WW Points",
+
+  description:
+    "Estimate food points from calories, saturated fat, sugar, protein, fiber, and serving count.",
+
+  inputs: [
+    {
+      key: "calories",
+      label: "Calories",
+      type: "number",
+      placeholder: "e.g. 240",
+      min: 0,
+      max: 5000,
+      required: true,
+    },
+    {
+      key: "saturatedFat",
+      label: "Saturated Fat",
+      type: "number",
+      placeholder: "e.g. 3",
+      min: 0,
+      max: 200,
+      required: true,
+    },
+    {
+      key: "sugar",
+      label: "Sugar",
+      type: "number",
+      placeholder: "e.g. 12",
+      min: 0,
+      max: 500,
+      required: true,
+    },
+    {
+      key: "protein",
+      label: "Protein",
+      type: "number",
+      placeholder: "e.g. 18",
+      min: 0,
+      max: 300,
+      required: true,
+    },
+    {
+      key: "fiber",
+      label: "Fiber",
+      type: "number",
+      placeholder: "e.g. 5",
+      min: 0,
+      max: 100,
+      required: true,
+    },
+    {
+      key: "servings",
+      label: "Servings",
+      type: "number",
+      placeholder: "e.g. 1",
+      min: 1,
+      max: 100,
+      defaultValue: 1,
+      required: true,
+    },
+  ],
+
+  result: { type: "weight-watchers-points", unit: "points", label: "Estimated Points" },
+};

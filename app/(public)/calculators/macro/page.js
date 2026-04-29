@@ -3,7 +3,7 @@ import { macroCalculator } from "@/lib/calculators/macro";
 
 const title = "Macro Calculator";
 const description =
-  "Use the ShedBody Macro Calculator to split daily calories into protein, carbohydrates, and fats for balanced, high-protein, low-carb, or keto eating.";
+  "Macro calculator results from ShedBody turn your calorie target into usable protein, carb, and fat goals. Choose balanced, high-protein, low-carb, or keto splits.";
 const path = "/calculators/macro";
 const features = [
   "Protein target in grams",
@@ -15,7 +15,15 @@ const features = [
 export const metadata = {
   title: "Macro Calculator - Protein, Carbs & Fats | ShedBody",
   description,
-  keywords: ["macro calculator", "macronutrient calculator", "protein carbs fats calculator"],
+  keywords: [
+    "macro calculator",
+    "macronutrient calculator",
+    "macros calculator",
+    "protein calculator",
+    "carb calculator",
+    "fat intake calculator",
+    "calorie split",
+  ],
   alternates: { canonical: path },
   openGraph: { title: "Macro Calculator - ShedBody", description, url: path, siteName: "ShedBody", type: "website" },
   twitter: { card: "summary", title: "Macro Calculator - ShedBody", description },

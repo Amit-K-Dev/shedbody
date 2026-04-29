@@ -3,7 +3,7 @@ import { micronutrientCalculator } from "@/lib/calculators/micronutrient";
 
 const title = "Micronutrient Calculator";
 const description =
-  "Use the ShedBody Micronutrient Calculator to estimate daily vitamin, mineral, fiber, sodium, potassium, calcium, iron, magnesium, and folate targets.";
+  "Micronutrient calculator targets from ShedBody make daily vitamins and minerals easier to review. Estimate fiber, sodium, potassium, calcium, iron, magnesium, folate, and more.";
 const path = "/calculators/micronutrient";
 const features = [
   "Vitamin and mineral targets",
@@ -15,7 +15,15 @@ const features = [
 export const metadata = {
   title: "Micronutrient Calculator - Vitamins & Minerals | ShedBody",
   description,
-  keywords: ["micronutrient calculator", "vitamin calculator", "mineral calculator", "daily nutrient targets"],
+  keywords: [
+    "micronutrient calculator",
+    "vitamin calculator",
+    "mineral calculator",
+    "daily nutrient targets",
+    "fiber target",
+    "iron intake",
+    "calcium intake",
+  ],
   alternates: { canonical: path },
   openGraph: { title: "Micronutrient Calculator - ShedBody", description, url: path, siteName: "ShedBody", type: "website" },
   twitter: { card: "summary", title: "Micronutrient Calculator - ShedBody", description },

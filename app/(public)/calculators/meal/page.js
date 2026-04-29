@@ -3,7 +3,7 @@ import { mealCalculator } from "@/lib/calculators/meal";
 
 const title = "Meal Calculator";
 const description =
-  "Use the ShedBody Meal Calculator to divide daily calories, protein, carbs, and fats into practical per-meal targets for meal prep and tracking.";
+  "Meal calculator planning from ShedBody helps turn daily calories and macros into meals you can actually follow. Split protein, carbs, fats, and calories across your day.";
 const path = "/calculators/meal";
 const features = [
   "Calories per meal",
@@ -15,7 +15,15 @@ const features = [
 export const metadata = {
   title: "Meal Calculator - Calories & Macros Per Meal | ShedBody",
   description,
-  keywords: ["meal calculator", "calories per meal", "macros per meal", "meal prep calculator"],
+  keywords: [
+    "meal calculator",
+    "meal planning calculator",
+    "macros per meal calculator",
+    "calories per meal",
+    "protein per meal",
+    "meal prep calculator",
+    "daily macro split",
+  ],
   alternates: { canonical: path },
   openGraph: { title: "Meal Calculator - ShedBody", description, url: path, siteName: "ShedBody", type: "website" },
   twitter: { card: "summary", title: "Meal Calculator - ShedBody", description },

@@ -75,6 +75,9 @@ const inputIconMap = {
   protein: Dumbbell,
   carbs: Apple,
   fats: Utensils,
+  saturatedFat: Utensils,
+  sugar: Apple,
+  fiber: Leaf,
   servings: Utensils,
   activityMinutes: Dumbbell,
   duration: CalendarClock,
@@ -82,8 +85,11 @@ const inputIconMap = {
   activityType: Dumbbell,
   goal: Target,
   dietType: Leaf,
+  dietPattern: Leaf,
   style: BarChart3,
+  formula: BarChart3,
   lifeStage: UserRound,
+  sunExposure: Activity,
   netCarbs: Leaf,
   climate: Droplets,
   waist: Ruler,
@@ -908,7 +914,7 @@ function MicronutrientResult({ result }) {
           {result.genderLabel} / {result.lifeStageLabel}
         </p>
         <h3 className="mt-2 text-2xl font-black tracking-tight text-white">
-          Daily micronutrient targets
+          {result.heading || "Daily micronutrient targets"}
         </h3>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {result.targets.map((target) => (
@@ -1002,6 +1008,54 @@ function RecipeResult({ result }) {
   );
 }
 
+function WeightWatchersPointsResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+          Estimated per serving
+        </p>
+        <p className="mt-2 text-5xl font-black tracking-tight text-white">
+          {result.points}
+          <span className="ml-2 text-2xl text-zinc-500">points</span>
+        </p>
+        <p className="mt-2 text-sm text-zinc-500">
+          Rounded estimate: {result.roundedPoints} points
+        </p>
+
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Total recipe estimate</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.totalPoints} points
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Servings</p>
+            <p className="mt-1 font-black text-zinc-100">{result.servings}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Calories per serving</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.perServingCalories} kcal
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Protein / Fiber</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.protein}g / {result.fiber}g
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CaloriesBurnedByActivityResult({ result }) {
   return (
     <div className="mt-8 space-y-4">
@@ -1033,7 +1087,205 @@ function CaloriesBurnedByActivityResult({ result }) {
   );
 }
 
+function RmrResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              {result.formulaLabel}
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.rmr}
+              <span className="ml-2 text-2xl text-zinc-500">kcal/day</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Estimated resting metabolic rate
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Flame size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Mifflin-St Jeor</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.mifflin} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Revised Harris-Benedict</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.harris} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Low activity estimate</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.lowActivityCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Moderate activity estimate</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.moderateActivityCalories} kcal/day
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TdeeResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              {result.activityLabel} / {result.formulaLabel}
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.tdee}
+              <span className="ml-2 text-2xl text-zinc-500">kcal/day</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Estimated total daily energy expenditure
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Activity size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Base metabolic estimate</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.bmr} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Activity multiplier</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.activityFactor}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 p-4">
+            <p className="text-rose-100/70">Fat loss</p>
+            <p className="mt-1 font-black text-rose-100">
+              {result.fatLossCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+            <p className="text-emerald-100/70">Maintenance</p>
+            <p className="mt-1 font-black text-emerald-100">
+              {result.maintenanceCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-sky-400/20 bg-sky-400/10 p-4">
+            <p className="text-sky-100/70">Mild fat loss</p>
+            <p className="mt-1 font-black text-sky-100">
+              {result.mildFatLossCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4">
+            <p className="text-amber-100/70">Muscle gain</p>
+            <p className="mt-1 font-black text-amber-100">
+              {result.muscleGainCalories} kcal/day
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function EerResult({ result }) {
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="overflow-hidden rounded-3xl border border-emerald-400/20 bg-zinc-950/70 p-6 shadow-2xl shadow-emerald-950/20 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
+              {result.activityLabel} / {result.lifeStageLabel}
+            </p>
+            <p className="mt-2 text-5xl font-black tracking-tight text-white">
+              {result.eer}
+              <span className="ml-2 text-2xl text-zinc-500">kcal/day</span>
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Estimated energy requirement
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-300 shadow-lg shadow-emerald-950/20">
+            <Flame size={26} />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Base EER</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.baseEer} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Activity coefficient</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.activityFactor}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-zinc-500">Life stage adjustment</p>
+            <p className="mt-1 font-black text-zinc-100">
+              {result.lifeStageAdjustment} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+            <p className="text-emerald-100/70">Maintenance</p>
+            <p className="mt-1 font-black text-emerald-100">
+              {result.maintenanceCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 p-4">
+            <p className="text-rose-100/70">Fat loss</p>
+            <p className="mt-1 font-black text-rose-100">
+              {result.fatLossCalories} kcal/day
+            </p>
+          </div>
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4">
+            <p className="text-amber-100/70">Muscle gain</p>
+            <p className="mt-1 font-black text-amber-100">
+              {result.muscleGainCalories} kcal/day
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+          {result.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function ResultPanel({ config, result }) {
+  if (config.result?.type === "eer") {
+    return <EerResult result={result} />;
+  }
   if (config.result?.type === "keto") {
     return <MacroSummaryResult result={result} title="Keto Targets" />;
   }
@@ -1043,14 +1295,26 @@ function ResultPanel({ config, result }) {
   if (config.result?.type === "micronutrient") {
     return <MicronutrientResult result={result} />;
   }
+  if (config.result?.type === "vitamin") {
+    return <MicronutrientResult result={result} />;
+  }
   if (config.result?.type === "meal") {
     return <MealResult result={result} />;
   }
   if (config.result?.type === "recipe") {
     return <RecipeResult result={result} />;
   }
+  if (config.result?.type === "weight-watchers-points") {
+    return <WeightWatchersPointsResult result={result} />;
+  }
   if (config.result?.type === "calories-burned-by-activity") {
     return <CaloriesBurnedByActivityResult result={result} />;
+  }
+  if (config.result?.type === "rmr") {
+    return <RmrResult result={result} />;
+  }
+  if (config.result?.type === "tdee") {
+    return <TdeeResult result={result} />;
   }
   if (config.result?.type === "baby-percentile") {
     return <BabyPercentileResult result={result} />;

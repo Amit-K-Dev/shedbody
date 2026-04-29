@@ -3,7 +3,7 @@ import { ketoCalculator } from "@/lib/calculators/keto";
 
 const title = "Keto Calculator";
 const description =
-  "Use the ShedBody Keto Calculator to estimate daily calories, net carbs, protein, and fat targets for fat loss, maintenance, or muscle gain on a ketogenic diet.";
+  "Keto calculator targets from ShedBody help you plan low-carb eating with clearer numbers. Estimate daily calories, net carbs, protein, and fat for your goal.";
 const path = "/calculators/keto";
 const features = [
   "Keto calorie target",
@@ -15,7 +15,15 @@ const features = [
 export const metadata = {
   title: "Keto Calculator - Keto Macros & Calories | ShedBody",
   description,
-  keywords: ["keto calculator", "keto macros", "net carbs calculator", "ketogenic diet calculator"],
+  keywords: [
+    "keto calculator",
+    "keto macro calculator",
+    "ketogenic diet calculator",
+    "net carbs calculator",
+    "keto calories",
+    "low carb macros",
+    "keto protein target",
+  ],
   alternates: { canonical: path },
   openGraph: { title: "Keto Calculator - ShedBody", description, url: path, siteName: "ShedBody", type: "website" },
   twitter: { card: "summary", title: "Keto Calculator - ShedBody", description },

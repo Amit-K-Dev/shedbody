@@ -3,7 +3,7 @@ import { recipeCalculator } from "@/lib/calculators/recipe";
 
 const title = "Recipe Calculator";
 const description =
-  "Use the ShedBody Recipe Calculator to convert total recipe calories, protein, carbs, and fats into accurate per-serving nutrition.";
+  "Recipe calculator nutrition from ShedBody helps you break a full dish into honest per-serving numbers. Convert total calories, protein, carbs, and fats for easier tracking.";
 const path = "/calculators/recipe";
 const features = [
   "Calories per serving",
@@ -15,7 +15,15 @@ const features = [
 export const metadata = {
   title: "Recipe Calculator - Nutrition Per Serving | ShedBody",
   description,
-  keywords: ["recipe calculator", "nutrition per serving", "recipe calorie calculator", "meal prep calculator"],
+  keywords: [
+    "recipe calculator",
+    "recipe nutrition calculator",
+    "recipe calorie calculator",
+    "nutrition per serving",
+    "calories per serving",
+    "meal prep nutrition",
+    "macro per serving",
+  ],
   alternates: { canonical: path },
   openGraph: { title: "Recipe Calculator - ShedBody", description, url: path, siteName: "ShedBody", type: "website" },
   twitter: { card: "summary", title: "Recipe Calculator - ShedBody", description },

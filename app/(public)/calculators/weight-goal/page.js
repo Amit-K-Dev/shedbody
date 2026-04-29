@@ -8,13 +8,15 @@ const PAGE_URL = `${BASE_URL}/calculators/weight-goal`;
 export const metadata = {
   title: "Weight Goal Calculator - Timeline Planner | ShedBody",
   description:
-    "Calculate how many weeks it may take to reach your target weight based on current weight, goal weight, and weekly progress pace.",
+    "Weight goal calculator timelines from ShedBody help you plan progress at a realistic pace. Estimate how many weeks your target may take from current weight, goal weight, and weekly change.",
   keywords: [
     "weight goal calculator",
     "weight loss timeline calculator",
-    "weight gain calculator",
     "target weight calculator",
-    "ShedBody weight goal",
+    "weight gain calculator",
+    "weekly weight loss",
+    "goal weight planner",
+    "fitness timeline",
   ],
   alternates: {
     canonical: PAGE_URL,

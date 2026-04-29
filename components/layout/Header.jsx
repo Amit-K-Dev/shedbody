@@ -84,6 +84,12 @@ const toolItems = [
     icon: Pill,
   },
   {
+    name: "Vitamin Calculator",
+    description: "Estimate daily vitamin targets.",
+    href: "/calculators/vitamin",
+    icon: Pill,
+  },
+  {
     name: "Meal Calculator",
     description: "Divide calories and macros by meal.",
     href: "/calculators/meal",
@@ -96,10 +102,34 @@ const toolItems = [
     icon: ChefHat,
   },
   {
+    name: "Weight Watchers Points Calculator",
+    description: "Estimate food points from nutrition labels.",
+    href: "/calculators/weight-watchers-points",
+    icon: Calculator,
+  },
+  {
     name: "Calories Burned by Activity",
     description: "Estimate exercise calorie burn.",
     href: "/calculators/calories-burned-by-activity",
     icon: Bike,
+  },
+  {
+    name: "RMR Calculator",
+    description: "Estimate resting metabolic rate.",
+    href: "/calculators/rmr",
+    icon: Flame,
+  },
+  {
+    name: "TDEE Calculator",
+    description: "Estimate total daily energy expenditure.",
+    href: "/calculators/tdee",
+    icon: Activity,
+  },
+  {
+    name: "EER Calculator",
+    description: "Estimate daily energy requirement.",
+    href: "/calculators/eer",
+    icon: Flame,
   },
   {
     name: "Weight Goal Calculator",
