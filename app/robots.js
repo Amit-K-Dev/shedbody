@@ -15,6 +15,8 @@ export default function robots() {
     sitemap: [
       "https://shedbody.com/sitemap.xml",
       "https://shedbody.com/news-sitemap.xml",
+      "https://shedbody.com/image-sitemap.xml",
+      "https://shedbody.com/rss.xml",
     ],
   };
 }

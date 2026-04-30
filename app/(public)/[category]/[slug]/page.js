@@ -277,9 +277,7 @@ function extractTables(html) {
           ? `Table columns: ${headerCells.slice(0, 8).join(", ")}`
           : undefined,
         text:
-          tableText.length > 500
-            ? `${tableText.slice(0, 497)}...`
-            : tableText,
+          tableText.length > 500 ? `${tableText.slice(0, 497)}...` : tableText,
       });
     }
 
@@ -477,11 +475,13 @@ export default async function PostPage({ params }) {
                 {post.title}
               </h1>
 
+              {/* 
               {post.excerpt && (
                 <p className="text-zinc-400 text-lg max-w-2xl mb-4">
                   {post.excerpt}
                 </p>
-              )}
+              )} 
+              */}
 
               <ExpertInline expert={expert} />
 
