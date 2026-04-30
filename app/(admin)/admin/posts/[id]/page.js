@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
+import { uploadToR2 } from "@/lib/r2/upload";
 
 export default function EditPostPage() {
   const router = useRouter();
@@ -138,32 +139,24 @@ export default function EditPostPage() {
   // IMAGE UPLOAD HANDLER
   const uploadImageToStorage = async (file) => {
     if (!file) return null;
+
     if (!file.type?.startsWith("image/")) {
       toast.error("Only image uploads are allowed.");
       return null;
     }
+
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Featured image must be under 5 MB.");
       return null;
     }
 
-    const supabase = createClient();
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-    const filePath = `post-images/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("images")
-      .upload(filePath, file);
-
-    if (uploadError) {
+    try {
+      return await uploadToR2(file, "blog");
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to upload featured image.");
-      console.error(uploadError);
       return null;
     }
-
-    const { data } = supabase.storage.from("images").getPublicUrl(filePath);
-    return data.publicUrl;
   };
 
   // MAIN UPDATE FUNCTION

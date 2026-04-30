@@ -1,7 +1,5 @@
 const R2_PUBLIC_URL =
-  process.env.NEXT_PUBLIC_R2_URL ||
-  "https://pub-a8eb42772a2245d9aea8505c8edbadd7.r2.dev";
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  process.env.NEXT_PUBLIC_R2_URL || "https://media.shedbody.com";
 
 function getHostname(url) {
   try {
@@ -12,7 +10,6 @@ function getHostname(url) {
 }
 
 const r2Hostname = getHostname(R2_PUBLIC_URL);
-const supabaseHostname = getHostname(SUPABASE_URL);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -20,10 +17,26 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 80],
     remotePatterns: [
-      ...(r2Hostname ? [{ protocol: "https", hostname: r2Hostname }] : []),
-      ...(supabaseHostname
-        ? [{ protocol: "https", hostname: supabaseHostname }]
-        : [{ protocol: "https", hostname: "**.supabase.co" }]),
+      {
+        protocol: "https",
+        hostname: "media.shedbody.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
+      },
+      ...(r2Hostname
+        ? [
+            {
+              protocol: "https",
+              hostname: r2Hostname,
+            },
+          ]
+        : []),
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
     ],
   },
 };
