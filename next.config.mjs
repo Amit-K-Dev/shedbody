@@ -14,8 +14,13 @@ const r2Hostname = getHostname(R2_PUBLIC_URL);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Cloudflare R2 CDN direct serve
+    // Vercel optimizer quota use (not serve)
+    unoptimized: true,
+
     formats: ["image/avif", "image/webp"],
     qualities: [75, 80],
+
     remotePatterns: [
       {
         protocol: "https",
