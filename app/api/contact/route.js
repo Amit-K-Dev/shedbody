@@ -92,7 +92,7 @@ export async function POST(req) {
     const supabase = await createClient();
     const body = await req.json();
 
-    const { name, email, inquiryType, message, honeypot, recaptchaToken } =
+    const { name, email, inquiryType, message, honeypot, turnstileToken } =
       body;
 
     // 1. Basic Spam protection (Honeypot)
@@ -100,43 +100,44 @@ export async function POST(req) {
       return NextResponse.json({ success: true });
     }
 
-    // 2. Google reCAPTCHA v3 Validation
-    if (!recaptchaToken) {
+    // 2. Cloudflare Turnstile Validation
+    if (!turnstileToken) {
       return NextResponse.json(
         { error: "Security validation missing. Please refresh and try again." },
         { status: 400 },
       );
     }
 
-    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
-    if (!recaptchaSecret) {
-      console.error("Missing RECAPTCHA_SECRET_KEY");
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+
+    if (!turnstileSecret) {
+      console.error("Missing TURNSTILE_SECRET_KEY");
       return NextResponse.json(
         { error: "Security validation is unavailable." },
         { status: 500 },
       );
     }
 
-    const recaptchaRes = await fetch(
-      "https://www.google.com/recaptcha/api/siteverify",
+    const turnstileRes = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          secret: recaptchaSecret,
-          response: recaptchaToken,
+          secret: turnstileSecret,
+          response: turnstileToken,
         }),
       },
     );
-    const recaptchaData = await recaptchaRes.json();
 
-    // Score < 0.5 is usually a bot
-    if (!recaptchaData.success || recaptchaData.score < 0.5) {
+    const turnstileData = await turnstileRes.json();
+
+    if (!turnstileData.success) {
       return NextResponse.json(
-        { error: "Security check failed. Automated bot behavior detected." },
-        { status: 403 },
+        { error: "Security check failed. Please try again." },
+        { status: 400 },
       );
     }
 
