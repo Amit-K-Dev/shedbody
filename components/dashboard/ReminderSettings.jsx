@@ -10,15 +10,12 @@ export default function ReminderSettings({ initial }) {
   const supabase = createClient();
 
   const save = async () => {
-    const { data } = await supabase.auth.getUser();
+    const { error } = await supabase.rpc("save_user_profile", {
+      p_reminder_enabled: enabled,
+      p_reminder_time: time,
+    }).single();
 
-    await supabase
-      .from("user_profiles")
-      .update({
-        reminder_enabled: enabled,
-        reminder_time: time,
-      })
-      .eq("user_id", data.user.id);
+    if (error) throw error;
 
     alert("Saved");
   };

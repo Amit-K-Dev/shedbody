@@ -36,11 +36,8 @@ export default function PremiumSetGoal({ currentTarget }) {
 
       // Update target weight in Database
       const { data: updatedProfile, error } = await supabase
-        .from("user_profiles")
-        .update({ target_weight: targetWeight })
-        .eq("user_id", user.id)
-        .select("user_id")
-        .maybeSingle();
+        .rpc("save_user_profile", { p_target_weight: targetWeight })
+        .single();
 
       if (error) throw error;
       if (!updatedProfile) throw new Error("Profile not found");
