@@ -202,9 +202,7 @@ export default function StartPlan() {
         level,
         diet_type: dietType,
         target_weight: weight,
-        xp: 0,
-        gamification_level: 1,
-        streak_count: 1,
+        gender,
       });
 
       await savePlan(result);

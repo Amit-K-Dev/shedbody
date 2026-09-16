@@ -1,0 +1,131 @@
+-- ShedBody Database Schema Documentation
+-- Source: scripts/supabase-hardening.sql + code analysis
+-- This is a schema security export, NOT a production data dump.
+-- Live database export was blocked (no Supabase CLI authentication).
+-- See docs/database-security-baseline.md for full baseline analysis.
+
+-- =============================================
+-- Tables
+-- =============================================
+
+-- Table: public.posts
+-- Columns referenced from application code and SQL script:
+--   id bigserial primary key
+--   title text not null
+--   slug text not null (unique, lower(slug) index)
+--   category text not null
+--   excerpt text
+--   keywords text
+--   status text (draft/published)
+--   published_at timestamptz
+--   views integer default 0
+--   featured_image text
+--   author_id uuid references auth.users (implied by admin RLS)
+--   seo_title text
+--   seo_desc text
+--   updated_at timestamptz not null default now()
+--   created_at timestamptz not null default now()
+-- Row Level Security: ENABLED
+--   - "Public can read published posts" (select to anon, authenticated where status='published')
+--   - "Admins manage posts" (all to authenticated where is_admin())
+
+-- Table: public.profiles
+-- Columns referenced from SQL script and RPCs:
+--   id uuid primary key (references auth.users)
+--   role text (e.g., 'admin')
+--   Row Level Security: ENABLED
+--   - "Users read own profile" (select to authenticated where id = auth.uid() or is_admin())
+--   - "Users update own profile" (update to authenticated where id = auth.uid() or is_admin())
+
+-- Table: public.user_profiles
+-- Columns referenced from application code and SQL script:
+--   id bigserial primary key
+--   user_id uuid references auth.users (not explicitly in script but used in code)
+--   xp integer default 0
+--   gamification_level integer default 1
+--   streak_count integer default 0
+--   last_active_date date
+--   goal text
+--   target_weight integer default 0
+--   Row Level Security: ENABLED
+--   - "Users manage own progress entries" (progress_entries)
+--   - "Users manage own calculator results" (calculator_results)
+--   - "Users read own user profile" (user_profiles: select where user_id = auth.uid() or is_admin())
+--   - "Users update own user profile" (user_profiles: update where user_id = auth.uid() or is_admin())
+
+-- Table: public.plans
+-- Columns referenced from storage.js and SQL script:
+--   id bigserial primary key
+--   user_id uuid
+--   goal text
+--   level text
+--   diet_type text
+--   calories integer
+--   protein integer
+--   workout text
+--   meals text
+--   is_active boolean default true
+--   created_at timestamptz
+--   updated_at timestamptz
+--   deleted_at timestamptz
+-- Row Level Security: ENABLED
+--   - Authenticated users can manage their own plans (via supabase code .eq("user_id", user.id))
+
+-- Table: public.progress_entries
+-- Columns referenced from storage.js and SQL script:
+--   id bigserial primary key
+--   user_id uuid
+--   entry_date date
+--   weight numeric
+--   body_fat numeric
+--   notes text
+--   created_at timestamptz
+--   updated_at timestamptz
+--   deleted_at timestamptz
+-- Row Level Security: ENABLED
+--   - "Users manage own progress entries" (all to authenticated where user_id = auth.uid() or is_admin())
+
+-- Table: public.contact_submissions
+-- Columns referenced from contact/route.js:
+--   id bigserial primary key
+--   name text not null
+--   email text not null
+--   inquiry_type text not null
+--   message text not null
+--   created_at timestamptz default now()
+-- Row Level Security: ENABLED
+--   - "Anyone can submit contact form" (insert to anon, authenticated with check(true))
+--   - "Admins can read contact submissions" (select to authenticated where is_admin())
+
+-- Table: public.post_views
+-- Columns referenced from view/route.sql:
+--   id bigserial primary key
+--   post_id bigint references public.posts
+--   user_hash text not null
+--   viewed_at timestamptz not null default now()
+-- Row Level Security: ENABLED
+--   - "Public can insert post views" (insert to anon, authenticated where post is published)
+--   - "Admins can read post views" (select to authenticated where is_admin())
+
+-- Table: public.article_feedback
+-- Columns referenced from article-feedback/route.sql and SQL script:
+--   id bigserial primary key
+--   post_id bigint references public.posts not null
+--   user_hash text not null
+--   vote text not null check (vote in ('yes', 'no'))
+--   reason text check (reason in ('clear','actionable','evidence','complete','unclear','missing_detail','outdated','hard_to_follow') or reason is null)
+--   note text check (char_length(note) <= 280) or note is null
+--   created_at timestamptz not null default now()
+--   updated_at timestamptz not null default now()
+-- Row Level Security: ENABLED
+--   - "Admins can read article feedback" (select to authenticated where is_admin())
+--   - Insert via RPC record_article_feedback (no direct RLS insert policy; uses RPC with conflict handling)
+
+-- Table: public.redirects
+-- Columns referenced from SQL script:
+--   id bigserial primary key
+--   old_url text not null
+--   new_url text
+-- Row Level Security: ENABLED
+--   - "Public can read redirects" (select to anon, authenticated where true)
+--   - "Admins manage redirects" (all to authenticated where is_admin())

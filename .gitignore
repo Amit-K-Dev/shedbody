@@ -47,3 +47,12 @@ next-env.d.ts
 
 # Supabase hardening
 scripts/supabase-hardening.sql
+
+# Supabase CLI temp artifacts
+supabase/.temp/
+
+# shedbody plan
+shedbody-plan.md
+
+# docs
+docs/audit.md
