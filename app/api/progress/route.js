@@ -42,12 +42,31 @@ export async function POST(req) {
       );
     }
 
+    // Optional Fields parsing
+    let p_body_fat = null;
+    if (body.body_fat !== undefined && body.body_fat !== null) {
+      p_body_fat = parseFloat(body.body_fat);
+      if (isNaN(p_body_fat) || p_body_fat < 0 || p_body_fat > 100) {
+        return NextResponse.json(
+          { success: false, error: "Please provide a valid body fat percentage." },
+          { status: 400 },
+        );
+      }
+    }
+
+    let p_notes = null;
+    if (body.notes !== undefined && body.notes !== null) {
+      p_notes = String(body.notes).trim();
+    }
+
     const entryDate = new Date().toISOString().slice(0, 10);
 
     // Database Insert
     const { error: dbError } = await supabase.rpc("upsert_progress_entry", {
       p_weight: weightValue,
       p_entry_date: entryDate,
+      p_body_fat: p_body_fat,
+      p_notes: p_notes,
     });
 
     // Database Error Handling

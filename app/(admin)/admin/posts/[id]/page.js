@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
-import { uploadToR2 } from "@/lib/r2/upload";
 
 export default function EditPostPage() {
   const router = useRouter();
@@ -151,9 +150,24 @@ export default function EditPostPage() {
     }
 
     try {
-      return await uploadToR2(file, "blog");
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        toast.error(result.error || "Failed to upload featured image.");
+        return null;
+      }
+
+      return result.url;
     } catch (error) {
-      console.error(error);
+      console.error("Upload error:", error);
       toast.error("Failed to upload featured image.");
       return null;
     }
