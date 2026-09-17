@@ -1,7 +1,7 @@
-import { getDashboardData } from "@/lib/dashboard/getDashboardData";
 import { getWeightData } from "@/lib/dashboard/getWeightData";
 import { generateInsights } from "@/lib/ai/generateInsights";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
+import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/server";
@@ -95,8 +95,7 @@ export default async function DashboardPage() {
 
   const athlete = getUserDisplay(user);
 
-  const [dashboardData, weightData, profileData, plans] = await Promise.all([
-    getDashboardData(authContext),
+  const [weightData, profileData, plans] = await Promise.all([
     getWeightData(authContext),
     getProfileData(authContext),
     getPlans(authContext),
@@ -104,23 +103,39 @@ export default async function DashboardPage() {
 
   const goal = profileData?.target_weight || 72;
 
-  const heightInMeters = profileData?.height ? profileData.height / 100 : 1;
-  const bmiHistory = (weightData || []).map((item) => {
-    return {
-      date: new Date(item.entry_date || item.created_at).toLocaleDateString(
-        "en-IN",
-        {
-          day: "2-digit",
-          month: "short",
-        },
-      ),
-      bmi: Number((item.weight / (heightInMeters * heightInMeters)).toFixed(1)),
-    };
-  });
+  const height = profileData?.height;
+  const bmiHistory = (weightData || [])
+    .map((item) => {
+      let bmiValue = null;
+      if (height && height > 0) {
+        const { bmi } = calculateBMI({
+          height,
+          weight: item.weight,
+          unit: "metric",
+        });
+        bmiValue = bmi;
+      }
+
+      return {
+        date: new Date(item.entry_date || item.created_at).toLocaleDateString(
+          "en-IN",
+          {
+            day: "2-digit",
+            month: "short",
+          },
+        ),
+        bmi: bmiValue,
+      };
+    })
+    .filter((item) => item.bmi !== null);
+
+  const bmiLogsForInsights = [...bmiHistory].reverse();
+  const latestBMI = bmiLogsForInsights[0]?.bmi || null;
+  const latestCategory = latestBMI ? getBmiCategory(latestBMI) : null;
 
   const insights = generateInsights({
     weightData: weightData || [],
-    bmiLogs: dashboardData?.bmiLogs || [],
+    bmiLogs: bmiLogsForInsights,
     goal,
   });
 
@@ -157,9 +172,9 @@ export default async function DashboardPage() {
           {/* STATS */}
           <MotionWrapper delay={0.1}>
             <StatCards
-              latestBMI={dashboardData?.latestBMI || "--"}
+              latestBMI={latestBMI || "--"}
               totalLogs={weightData?.length || 0}
-              category={dashboardData?.latestCategory || "--"}
+              category={latestCategory || "--"}
               currentWeight={currentWeight}
               goalWeight={goal}
             />

@@ -1,4 +1,5 @@
 import { dietPlans } from "@/data/diet";
+import { getBmiCategory } from "./bmi";
 
 const activityMap = {
   sedentary: { factor: 1.2, label: "Sedentary" },
@@ -86,13 +87,6 @@ function getMacroTargets(weight, targetCalories, goal) {
   };
 }
 
-function getBmiCategory(bmi) {
-  if (bmi < 18.5) return "Underweight";
-  if (bmi < 25) return "Normal";
-  if (bmi < 30) return "Overweight";
-  return "Obese";
-}
-
 function getPlanFitNote(goal, bmiCategory) {
   if (goal === "fat_loss") {
     if (bmiCategory === "Overweight" || bmiCategory === "Obese") {
@@ -156,7 +150,13 @@ export function calculateCalories(inputs) {
   const plan = getNearestPlan(goal, targetCalories, dietType);
   const heightInMeters = numericHeight / 100;
   const bmi = Number((numericWeight / (heightInMeters * heightInMeters)).toFixed(1));
-  const bmiCategory = getBmiCategory(bmi);
+  const rawCategory = getBmiCategory(bmi);
+  const isObeseClass =
+    rawCategory === "Obesity class I" ||
+    rawCategory === "Obesity class II" ||
+    rawCategory === "Obesity class III";
+  const bmiCategory = isObeseClass ? "Obese" : rawCategory;
+
   const planOptions = goalOrder
     .map((optionGoal) => {
       const optionCalories = getGoalCalories(maintenanceCalories, optionGoal);
