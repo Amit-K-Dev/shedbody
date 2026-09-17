@@ -28,13 +28,8 @@ export default function PremiumAddWeight({ lastWeight }) {
 
       if (!res.ok) throw new Error("Failed to save");
 
-      // The Gamification Magic! (XP & Streak)
-      await fetch("/api/xp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "weight_logged" }),
-      });
-      await fetch("/api/streak", { method: "POST" });
+      // The Gamification Magic is now handled automatically by a Postgres Trigger
+      // (on_progress_entries_inserted_gamification)
 
       toast.show({
         title: "Weight logged! +10 XP",

@@ -1027,23 +1027,23 @@ function WeightWatchersPointsResult({ result }) {
         </p>
 
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Total recipe estimate</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.totalPoints} points
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Servings</p>
             <p className="mt-1 font-black text-zinc-100">{result.servings}</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Calories per serving</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.perServingCalories} kcal
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Protein / Fiber</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.protein}g / {result.fiber}g
@@ -1076,7 +1076,7 @@ function GastricSleeveWeightLossResult({ result }) {
           Projected total loss by 12-18 months
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/3 p-4">
           <div className="mb-3 flex items-center justify-between text-sm">
             <span className="font-semibold text-zinc-200">
               Progress toward estimate
@@ -1092,13 +1092,13 @@ function GastricSleeveWeightLossResult({ result }) {
         </div>
 
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Actual loss so far</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.actualLoss} {result.unitLabel}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Remaining estimated loss</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.remainingLoss} {result.unitLabel}
@@ -1110,7 +1110,7 @@ function GastricSleeveWeightLossResult({ result }) {
               {result.projectedWeight} {result.unitLabel}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Current BMI</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.currentBmi} {result.currentBmiCategory}
@@ -1122,7 +1122,7 @@ function GastricSleeveWeightLossResult({ result }) {
           {result.milestones.map((milestone) => (
             <div
               key={milestone.label}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-center text-sm"
+              className="rounded-2xl border border-white/10 bg-white/3 p-3 text-center text-sm"
             >
               <p className="font-bold text-zinc-100">{milestone.label}</p>
               <p className="mt-1 text-emerald-300">
@@ -1194,25 +1194,25 @@ function RmrResult({ result }) {
         </div>
 
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Mifflin-St Jeor</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.mifflin} kcal/day
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Revised Harris-Benedict</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.harris} kcal/day
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Low activity estimate</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.lowActivityCalories} kcal/day
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Moderate activity estimate</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.moderateActivityCalories} kcal/day
@@ -1251,13 +1251,13 @@ function TdeeResult({ result }) {
         </div>
 
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Base metabolic estimate</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.bmr} kcal/day
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Activity multiplier</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.activityFactor}
@@ -1320,19 +1320,19 @@ function EerResult({ result }) {
         </div>
 
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Base EER</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.baseEer} kcal/day
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Activity coefficient</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.activityFactor}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-4">
             <p className="text-zinc-500">Life stage adjustment</p>
             <p className="mt-1 font-black text-zinc-100">
               {result.lifeStageAdjustment} kcal/day
