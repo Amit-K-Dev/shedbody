@@ -45,14 +45,10 @@ export async function POST(req) {
     const entryDate = new Date().toISOString().slice(0, 10);
 
     // Database Insert
-    const { error: dbError } = await supabase.from("progress_entries").insert([
-      {
-        user_id: user.id,
-        weight: weightValue,
-        entry_date: entryDate,
-        updated_at: new Date().toISOString(),
-      },
-    ]);
+    const { error: dbError } = await supabase.rpc("upsert_progress_entry", {
+      p_weight: weightValue,
+      p_entry_date: entryDate,
+    });
 
     // Database Error Handling
     if (dbError) {
