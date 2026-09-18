@@ -1,22 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-
-function isValidCalendarDate(dateString) {
-  if (!dateString || typeof dateString !== "string") return false;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
-
-  const [year, month, day] = dateString.split("-").map(Number);
-  if (month < 1 || month > 12) return false;
-
-  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  
-  // Leap year check
-  if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
-    daysInMonth[1] = 29;
-  }
-  
-  return day > 0 && day <= daysInMonth[month - 1];
-}
+import { isValidCalendarDate } from "@/lib/utils/dateValidator";
 
 export async function POST(req) {
   try {
@@ -55,9 +39,10 @@ export async function POST(req) {
       );
     }
 
-    // Parse and validate numeric fields (null or finite non-negative)
+    // Parse and validate numeric fields (undefined means omitted, null means explicit clear)
     const parseNumber = (val) => {
-      if (val === undefined || val === null || val === "") return null;
+      if (val === undefined) return undefined; // Omitted
+      if (val === null || val === "") return null; // Explicit clear
       const parsed = Number(val);
       if (isNaN(parsed) || !Number.isFinite(parsed) || parsed < 0) {
         return "INVALID";
@@ -65,15 +50,35 @@ export async function POST(req) {
       return parsed;
     };
 
-    const parsedCalories = parseNumber(calories);
-    const parsedProtein = parseNumber(protein);
-    const parsedWater = parseNumber(water);
+    let parsedCalories = parseNumber(body.calories);
+    let parsedProtein = parseNumber(body.protein);
+    let parsedWater = parseNumber(body.water);
 
     if (parsedCalories === "INVALID" || parsedProtein === "INVALID" || parsedWater === "INVALID") {
       return NextResponse.json(
         { success: false, error: "Calories, protein, and water must be positive numbers or empty." },
         { status: 400 }
       );
+    }
+
+    // Preserve existing values ONLY for genuinely omitted fields (undefined)
+    if (parsedCalories === undefined || parsedProtein === undefined || parsedWater === undefined) {
+      const { data: existingLog } = await supabase
+        .from("nutrition_logs")
+        .select("calories_consumed, protein_consumed, water_ml")
+        .eq("user_id", user.id)
+        .eq("log_date", logDate)
+        .maybeSingle();
+
+      if (existingLog) {
+        if (parsedCalories === undefined) parsedCalories = existingLog.calories_consumed;
+        if (parsedProtein === undefined) parsedProtein = existingLog.protein_consumed;
+        if (parsedWater === undefined) parsedWater = existingLog.water_ml;
+      } else {
+        if (parsedCalories === undefined) parsedCalories = null;
+        if (parsedProtein === undefined) parsedProtein = null;
+        if (parsedWater === undefined) parsedWater = null;
+      }
     }
 
     // Database Insert via RPC

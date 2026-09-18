@@ -2,6 +2,8 @@ import { getBoundedProgress } from "@/lib/analytics/progress";
 import { calculateTrend } from "@/lib/analytics/engine";
 import { generateInsights } from "@/lib/ai/generateInsights";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
+import { getLifestyleData } from "@/lib/dashboard/getLifestyleData";
+import { getNutritionData } from "@/lib/dashboard/getNutritionData";
 import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
@@ -16,6 +18,7 @@ import PremiumChart from "@/components/dashboard/PremiumChart";
 import PremiumBMI from "@/components/dashboard/PremiumBMI";
 import PremiumAddWeight from "@/components/dashboard/PremiumAddWeight";
 import PremiumLogNutrition from "@/components/dashboard/PremiumLogNutrition";
+import PremiumLogLifestyle from "@/components/dashboard/PremiumLogLifestyle";
 import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
@@ -103,11 +106,13 @@ export default async function DashboardPage() {
   const endDate = now.toISOString().slice(0, 10);
   const startDate = past.toISOString().slice(0, 10);
 
-  const [boundedProgress, profileData, plans, activeWeightGoal] = await Promise.all([
+  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs] = await Promise.all([
     getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
     getActiveGoal("weight", authContext),
+    getLifestyleData(authContext, startDate, endDate),
+    getNutritionData(authContext, startDate, endDate),
   ]);
 
   const goal = activeWeightGoal?.target_value || profileData?.target_weight || null;
@@ -199,7 +204,8 @@ export default async function DashboardPage() {
           <MotionWrapper delay={0.2}>
             <div className="grid grid-cols-1 gap-6">
               <PremiumAddWeight lastWeight={currentWeight} />
-              <PremiumLogNutrition />
+              <PremiumLogNutrition recentLogs={nutritionLogs} />
+              <PremiumLogLifestyle recentLogs={lifestyleLogs} />
               <PremiumSetGoal currentTarget={goal} />
             </div>
           </MotionWrapper>

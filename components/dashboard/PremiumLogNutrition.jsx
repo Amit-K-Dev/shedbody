@@ -1,16 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Utensils, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
-export default function PremiumLogNutrition() {
+export default function PremiumLogNutrition({ recentLogs = [] }) {
+  const [localLogDate, setLocalLogDate] = useState("");
   const [calories, setCalories] = useState("");
   const [protein, setProtein] = useState("");
   const [water, setWater] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    setLocalLogDate(today);
+
+    // Find today's existing log to hydrate UI
+    const todayLog = recentLogs.find((log) => log.log_date === today);
+
+    if (todayLog) {
+      setCalories(todayLog.calories_consumed !== null ? String(todayLog.calories_consumed) : "");
+      setProtein(todayLog.protein_consumed !== null ? String(todayLog.protein_consumed) : "");
+      setWater(todayLog.water_ml !== null ? String(todayLog.water_ml) : "");
+    }
+  }, [recentLogs]);
 
   async function handleLogNutrition() {
     // If all are empty, do nothing
@@ -22,10 +38,6 @@ export default function PremiumLogNutrition() {
     setLoading(true);
 
     try {
-      // Derive local date strictly as YYYY-MM-DD
-      const now = new Date();
-      const localLogDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-
       const res = await fetch("/api/nutrition", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
