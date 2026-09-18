@@ -15,6 +15,7 @@ import PremiumInsights from "@/components/dashboard/PremiumInsights";
 import PremiumChart from "@/components/dashboard/PremiumChart";
 import PremiumBMI from "@/components/dashboard/PremiumBMI";
 import PremiumAddWeight from "@/components/dashboard/PremiumAddWeight";
+import PremiumLogNutrition from "@/components/dashboard/PremiumLogNutrition";
 import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
@@ -198,6 +199,7 @@ export default async function DashboardPage() {
           <MotionWrapper delay={0.2}>
             <div className="grid grid-cols-1 gap-6">
               <PremiumAddWeight lastWeight={currentWeight} />
+              <PremiumLogNutrition />
               <PremiumSetGoal currentTarget={goal} />
             </div>
           </MotionWrapper>
