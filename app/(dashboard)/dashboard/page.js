@@ -5,6 +5,7 @@ import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
+import { getActiveGoal } from "@/lib/goals";
 import { createClient } from "@/lib/supabase/server";
 
 // UI
@@ -101,13 +102,14 @@ export default async function DashboardPage() {
   const endDate = now.toISOString().slice(0, 10);
   const startDate = past.toISOString().slice(0, 10);
 
-  const [boundedProgress, profileData, plans] = await Promise.all([
+  const [boundedProgress, profileData, plans, activeWeightGoal] = await Promise.all([
     getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
+    getActiveGoal("weight", authContext),
   ]);
 
-  const goal = profileData?.target_weight || 72;
+  const goal = activeWeightGoal?.target_value || profileData?.target_weight || null;
   const height = profileData?.height;
 
   // Analytics computations
@@ -196,7 +198,7 @@ export default async function DashboardPage() {
           <MotionWrapper delay={0.2}>
             <div className="grid grid-cols-1 gap-6">
               <PremiumAddWeight lastWeight={currentWeight} />
-              <PremiumSetGoal currentTarget={profileData?.target_weight} />
+              <PremiumSetGoal currentTarget={goal} />
             </div>
           </MotionWrapper>
 
@@ -205,7 +207,7 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <PremiumChart
                 weightData={boundedProgress}
-                goalWeight={profileData?.target_weight}
+                goalWeight={goal}
               />
               <PremiumBMI bmiData={bmiProgress} />
             </div>

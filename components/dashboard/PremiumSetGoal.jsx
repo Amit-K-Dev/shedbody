@@ -5,6 +5,7 @@ import { Target, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { setWeightGoal } from "@/lib/goals";
 
 export default function PremiumSetGoal({ currentTarget }) {
   const [goalInput, setGoalInput] = useState("");
@@ -35,12 +36,9 @@ export default function PremiumSetGoal({ currentTarget }) {
       if (!user) throw new Error("User not found");
 
       // Update target weight in Database
-      const { data: updatedProfile, error } = await supabase
-        .rpc("save_user_profile", { p_target_weight: targetWeight })
-        .single();
+      const updatedGoal = await setWeightGoal(targetWeight);
 
-      if (error) throw error;
-      if (!updatedProfile) throw new Error("Profile not found");
+      if (!updatedGoal) throw new Error("Failed to update goal");
 
       toast.show({
         title: "Target Goal Updated! 🎯",

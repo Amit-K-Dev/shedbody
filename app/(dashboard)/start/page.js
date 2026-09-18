@@ -6,6 +6,7 @@ import { dietPlans } from "@/data/diet";
 import { workoutPlans } from "@/data/workout";
 import Link from "next/link";
 import { saveUserProfile, savePlan } from "@/lib/storage";
+import { setWeightGoal } from "@/lib/goals";
 import { createClient } from "@/lib/supabase/client";
 import {
   Sun,
@@ -202,9 +203,11 @@ export default function StartPlan() {
         goal,
         level,
         diet_type: dietType,
-        target_weight: weight,
         gender,
       });
+
+      // Initialize the weight goal with the user's starting weight
+      await setWeightGoal(weight);
 
       const supabase = createClient();
       const entryDate = new Date().toISOString().slice(0, 10);
