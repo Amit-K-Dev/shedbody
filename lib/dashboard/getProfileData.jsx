@@ -17,7 +17,7 @@ export async function getProfileData(authContext) {
 
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("target_weight, height, xp, gamification_level, streak_count")
+      .select("weight, target_weight, height, xp, gamification_level, streak_count")
       .eq("user_id", userId)
       .maybeSingle();
 

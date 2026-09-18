@@ -1,4 +1,5 @@
-import { getWeightData } from "@/lib/dashboard/getWeightData";
+import { getBoundedProgress } from "@/lib/analytics/progress";
+import { calculateTrend } from "@/lib/analytics/engine";
 import { generateInsights } from "@/lib/ai/generateInsights";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
@@ -92,60 +93,71 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   const authContext = { supabase, userId: user?.id };
-
   const athlete = getUserDisplay(user);
 
-  const [weightData, profileData, plans] = await Promise.all([
-    getWeightData(authContext),
+  // Set default 30-day bounded historical date range using pure Date arithmetic (UTC safe for generation)
+  const now = new Date();
+  const past = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000);
+  const endDate = now.toISOString().slice(0, 10);
+  const startDate = past.toISOString().slice(0, 10);
+
+  const [boundedProgress, profileData, plans] = await Promise.all([
+    getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
   ]);
 
   const goal = profileData?.target_weight || 72;
-
   const height = profileData?.height;
-  const bmiHistory = (weightData || [])
-    .map((item) => {
-      let bmiValue = null;
-      if (height && height > 0) {
+
+  // Analytics computations
+  const extractDate = (item) => item.entry_date || item.created_at.slice(0, 10);
+
+  const weightTrend = calculateTrend(boundedProgress, (item) => item.weight, extractDate);
+
+  let bmiProgress = [];
+  if (height && height > 0) {
+    bmiProgress = boundedProgress
+      .filter((item) => item.weight)
+      .map((item) => {
         const { bmi } = calculateBMI({
           height,
           weight: item.weight,
           unit: "metric",
         });
-        bmiValue = bmi;
-      }
-
-      return {
-        date: new Date(item.entry_date || item.created_at).toLocaleDateString(
-          "en-IN",
-          {
+        return {
+          ...item,
+          bmi: bmi,
+          date: new Date(item.entry_date || item.created_at).toLocaleDateString("en-IN", {
             day: "2-digit",
             month: "short",
-          },
-        ),
-        bmi: bmiValue,
-      };
-    })
-    .filter((item) => item.bmi !== null);
+          })
+        };
+      });
+  }
+  const bmiTrend = calculateTrend(bmiProgress, (item) => item.bmi, extractDate);
 
-  const bmiLogsForInsights = [...bmiHistory].reverse();
-  const latestBMI = bmiLogsForInsights[0]?.bmi || null;
-  const latestCategory = latestBMI ? getBmiCategory(latestBMI) : null;
+  // Exact Canonical Rules
+  const currentWeight = profileData?.weight || null;
+  let latestBMI = null;
+  let latestCategory = null;
 
+  if (currentWeight && height && height > 0) {
+    const { bmi } = calculateBMI({ height, weight: currentWeight, unit: "metric" });
+    latestBMI = bmi;
+    latestCategory = getBmiCategory(latestBMI);
+  }
+
+  // Preserve existing insights logic using the bounded dataset
+  const bmiLogsForInsights = bmiTrend.points.map(p => ({ date: p.date, bmi: p.value })).reverse();
   const insights = generateInsights({
-    weightData: weightData || [],
+    weightData: boundedProgress || [],
     bmiLogs: bmiLogsForInsights,
     goal,
   });
 
-  const todayLogged = (weightData || []).some((entry) => {
-    const entryDate =
-      entry.entry_date || new Date(entry.created_at).toISOString().slice(0, 10);
-    return entryDate === new Date().toISOString().slice(0, 10);
-  });
-
-  const currentWeight = weightData?.[weightData.length - 1]?.weight;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayLogged = boundedProgress.some((entry) => extractDate(entry) === todayStr);
 
   // Separate Current and Previous Plans
   const currentPlan = (plans || []).find((p) => p.is_active === true);
@@ -173,7 +185,7 @@ export default async function DashboardPage() {
           <MotionWrapper delay={0.1}>
             <StatCards
               latestBMI={latestBMI || "--"}
-              totalLogs={weightData?.length || 0}
+              totalLogs={boundedProgress.length || 0}
               category={latestCategory || "--"}
               currentWeight={currentWeight}
               goalWeight={goal}
@@ -192,10 +204,10 @@ export default async function DashboardPage() {
           <MotionWrapper delay={0.2}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <PremiumChart
-                weightData={weightData}
+                weightData={boundedProgress}
                 goalWeight={profileData?.target_weight}
               />
-              <PremiumBMI bmiData={bmiHistory} />
+              <PremiumBMI bmiData={bmiProgress} />
             </div>
           </MotionWrapper>
 
