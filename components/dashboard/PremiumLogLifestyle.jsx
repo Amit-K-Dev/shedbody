@@ -43,11 +43,6 @@ export default function PremiumLogLifestyle({ recentLogs = [] }) {
     const payloadSteps = steps === "" ? null : Number(steps);
     const payloadSleep = sleep === "" ? null : Number(sleep);
 
-    if (payloadWorkout === null && payloadSteps === null && payloadSleep === null) {
-      toast.error("Please enter at least one value to log.");
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -172,7 +167,7 @@ export default function PremiumLogLifestyle({ recentLogs = [] }) {
           {/* Save Button */}
           <button
             onClick={handleLogLifestyle}
-            disabled={loading || (workoutStatus === "null" && steps === "" && sleep === "")}
+            disabled={loading}
             className="flex items-center justify-center gap-2 bg-linear-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-black font-bold px-6 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px] mt-2 xl:mt-0"
           >
             {loading ? (
