@@ -22,6 +22,10 @@ import PremiumLogLifestyle from "@/components/dashboard/PremiumLogLifestyle";
 import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
+import PremiumAnalyticsCharts from "@/components/dashboard/PremiumAnalyticsCharts";
+
+// Unified Analytics
+import { mergeDailyMetrics } from "@/lib/analytics/unified";
 
 // Icons & Link for Protocol Section
 import Link from "next/link";
@@ -114,6 +118,12 @@ export default async function DashboardPage() {
     getLifestyleData(authContext, startDate, endDate),
     getNutritionData(authContext, startDate, endDate),
   ]);
+
+  const unifiedTimeline = mergeDailyMetrics(
+    boundedProgress,
+    nutritionLogs,
+    lifestyleLogs
+  );
 
   const goal = activeWeightGoal?.target_value || profileData?.target_weight || null;
   const height = profileData?.height;
@@ -219,6 +229,8 @@ export default async function DashboardPage() {
               />
               <PremiumBMI bmiData={bmiProgress} />
             </div>
+
+            <PremiumAnalyticsCharts unifiedTimeline={unifiedTimeline} />
           </MotionWrapper>
 
           {/* AI COACH INSIGHTS */}
