@@ -1,6 +1,6 @@
 import { getBoundedProgress } from "@/lib/analytics/progress";
 import { calculateTrend } from "@/lib/analytics/engine";
-import { generateInsights } from "@/lib/ai/generateInsights";
+import { generateStructuredInsights } from "@/lib/insights/engine";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { getLifestyleData } from "@/lib/dashboard/getLifestyleData";
 import { getNutritionData } from "@/lib/dashboard/getNutritionData";
@@ -166,22 +166,17 @@ export default async function DashboardPage() {
     latestCategory = getBmiCategory(latestBMI);
   }
 
-  // Preserve existing insights logic using the bounded dataset
-  const bmiLogsForInsights = bmiTrend.points.map(p => ({ date: p.date, bmi: p.value })).reverse();
-  const insights = generateInsights({
-    weightData: boundedProgress || [],
-    bmiLogs: bmiLogsForInsights,
-    goal,
-  });
-
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const todayLogged = boundedProgress.some((entry) => extractDate(entry) === todayStr);
-
   // Separate Current and Previous Plans
   const currentPlan = (plans || []).find((p) => p.is_active === true);
   const previousPlan = (plans || []).find((p) => p.is_active === false);
   const currentWorkoutSummary = summarizeWorkout(currentPlan?.workout);
   const currentMealSummary = summarizeMeals(currentPlan?.meals);
+
+  // Generate deterministic structured insights
+  const insights = generateStructuredInsights(unifiedTimeline, profileData, currentPlan);
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayLogged = boundedProgress.some((entry) => extractDate(entry) === todayStr);
 
   // UI
   return (
