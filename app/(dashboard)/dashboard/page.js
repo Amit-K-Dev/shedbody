@@ -172,10 +172,11 @@ export default async function DashboardPage() {
   const currentWorkoutSummary = summarizeWorkout(currentPlan?.workout);
   const currentMealSummary = summarizeMeals(currentPlan?.meals);
 
-  // Generate deterministic structured insights
-  const insights = generateStructuredInsights(unifiedTimeline, profileData, currentPlan, activeWeightGoal);
-
   const todayStr = new Date().toISOString().slice(0, 10);
+
+  // Generate deterministic structured insights
+  const insights = generateStructuredInsights(unifiedTimeline, profileData, currentPlan, activeWeightGoal, todayStr);
+
   const todayLogged = boundedProgress.some((entry) => extractDate(entry) === todayStr);
 
   // UI

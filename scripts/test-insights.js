@@ -38,21 +38,21 @@ function runTests() {
   }
 
   // A. Empty timeline -> []
-  assertEqual(generateStructuredInsights([], null, null), [], "A. Empty timeline");
+  assertEqual(generateStructuredInsights([], null, null, null, "2023-01-10"), [], "A. Empty timeline");
 
   // B. Insufficient current weight observations
   const tlB = createTimeline([
     { date: "2023-01-01", weight: 70 }, // Previous
     { date: "2023-01-10", weight: 70 }  // Current (only 1)
   ]);
-  assertEqual(generateStructuredInsights(tlB, null, null), [], "B. Insufficient current weight observations");
+  assertEqual(generateStructuredInsights(tlB, null, null, null, "2023-01-10"), [], "B. Insufficient current weight observations");
 
   // C. Insufficient previous weight observations
   const tlC = createTimeline([
     { date: "2023-01-09", weight: 70 }, // Current
     { date: "2023-01-10", weight: 70 }  // Current (no previous)
   ]);
-  assertEqual(generateStructuredInsights(tlC, null, null), [], "C. Insufficient previous weight observations");
+  assertEqual(generateStructuredInsights(tlC, null, null, null, "2023-01-10"), [], "C. Insufficient previous weight observations");
 
   // D. Stable weight difference < 0.5 kg -> []
   const tlD = createTimeline([
@@ -61,7 +61,7 @@ function runTests() {
     { date: "2023-01-09", weight: 70.2 },
     { date: "2023-01-10", weight: 70.4 }
   ]);
-  assertEqual(generateStructuredInsights(tlD, null, null), [], "D. Stable weight difference < 0.5 kg");
+  assertEqual(generateStructuredInsights(tlD, null, null, null, "2023-01-10"), [], "D. Stable weight difference < 0.5 kg");
 
   // E. Valid weight decrease >= 0.5 kg
   const tlE = createTimeline([
@@ -70,7 +70,7 @@ function runTests() {
     { date: "2023-01-09", weight: 69 }, // cur avg: 69
     { date: "2023-01-10", weight: 69 }
   ]);
-  const resE = generateStructuredInsights(tlE, null, null);
+  const resE = generateStructuredInsights(tlE, null, null, null, "2023-01-10");
   assert(resE.length === 1 && resE[0].id === "WEIGHT_TREND_CHANGE" && resE[0].evidence.includes("-1.0 kg"), "E. Valid weight decrease >= 0.5 kg");
 
   // F. Valid weight increase >= 0.5 kg
@@ -80,7 +80,7 @@ function runTests() {
     { date: "2023-01-09", weight: 72 },
     { date: "2023-01-10", weight: 72 }
   ]);
-  const resF = generateStructuredInsights(tlF, null, null);
+  const resF = generateStructuredInsights(tlF, null, null, null, "2023-01-10");
   assert(resF.length === 1 && resF[0].id === "WEIGHT_TREND_CHANGE" && resF[0].evidence.includes("+2.0 kg"), "F. Valid weight increase >= 0.5 kg");
 
   // G. Null weight values -> ignored, not treated as zero
@@ -90,7 +90,7 @@ function runTests() {
     { date: "2023-01-09", weight: 69 },
     { date: "2023-01-10", weight: 69 }
   ]);
-  const resG = generateStructuredInsights(tlG, null, null);
+  const resG = generateStructuredInsights(tlG, null, null, null, "2023-01-10");
   assert(resG.length === 1 && resG[0].id === "WEIGHT_TREND_CHANGE", "G. Null weight values ignored");
 
   // H. Missing dates -> not fabricated (tested by definition of our test setup)
@@ -103,7 +103,7 @@ function runTests() {
     { date: "2023-01-09", weight: 0 },
     { date: "2023-01-10", weight: 0 }
   ]);
-  const resI = generateStructuredInsights(tlI, null, null);
+  const resI = generateStructuredInsights(tlI, null, null, null, "2023-01-10");
   assert(resI.length === 1 && resI[0].id === "WEIGHT_TREND_CHANGE" && resI[0].evidence.includes("-70.0 kg"), "I. Exact 0 value handling");
 
   // J. Deterministic ordering
@@ -115,7 +115,7 @@ function runTests() {
     canEvaluate: () => true,
     evaluate: () => ({ id: "A_TEST", category: "body", priority: 1, observation: "test" })
   });
-  const resJ = generateStructuredInsights(tlF, null, null);
+  const resJ = generateStructuredInsights(tlF, null, null, null, "2023-01-10");
   assert(resJ.length === 2 && resJ[0].id === "A_TEST" && resJ[1].id === "WEIGHT_TREND_CHANGE", "J. Deterministic ordering");
   rules.pop(); // restore
 
@@ -127,13 +127,13 @@ function runTests() {
     canEvaluate: () => true,
     evaluate: () => ({ id: "WEIGHT_TREND_CHANGE", category: "body", priority: 10, observation: "duplicate", type: "info" })
   });
-  const resK = generateStructuredInsights(tlF, null, null);
+  const resK = generateStructuredInsights(tlF, null, null, null, "2023-01-10");
   assert(resK.length === 1 && resK[0].evidence.includes("+2.0 kg"), "K. Duplicate rule ID prevention");
   rules.pop(); // restore
 
   // L. Input immutability
   const originalJson = JSON.stringify(tlF);
-  generateStructuredInsights(tlF, null, null);
+  generateStructuredInsights(tlF, null, null, null, "2023-01-10");
   assert(JSON.stringify(tlF) === originalJson, "L. Input immutability");
 
   // M. Timestamp
@@ -160,7 +160,7 @@ function runTests() {
   tlW1[1].lifestyle.workoutCompleted = false;
   tlW1[2].lifestyle.workoutCompleted = true;
   tlW1[3].lifestyle.workoutCompleted = true;
-  assertEqual(generateStructuredInsights(tlW1, null, null).filter(i => i.category === "lifestyle"), [], "W1. Insufficient current data");
+  assertEqual(generateStructuredInsights(tlW1, null, null, null, "2023-01-10").filter(i => i.category === "lifestyle"), [], "W1. Insufficient current data");
 
   // Workout 2. insufficient previous data
   const tlW2 = createTimeline([
@@ -171,7 +171,7 @@ function runTests() {
   tlW2[0].lifestyle.workoutCompleted = true;
   tlW2[1].lifestyle.workoutCompleted = true;
   tlW2[2].lifestyle.workoutCompleted = true;
-  assertEqual(generateStructuredInsights(tlW2, null, null).filter(i => i.category === "lifestyle"), [], "W2. Insufficient previous data");
+  assertEqual(generateStructuredInsights(tlW2, null, null, null, "2023-01-10").filter(i => i.category === "lifestyle"), [], "W2. Insufficient previous data");
 
   // Workout 3. null ignored, Workout 4. false counts as valid
   // Workout 5. 4 prev vs 1 current -> DROP warning
@@ -200,7 +200,7 @@ function runTests() {
   tlW3[11].lifestyle.workoutCompleted = undefined;
   tlW3[12].lifestyle.workoutCompleted = null;
 
-  const resW3 = generateStructuredInsights(tlW3, null, null).filter(i => i.category === "lifestyle");
+  const resW3 = generateStructuredInsights(tlW3, null, null, null, "2023-01-13").filter(i => i.category === "lifestyle");
   assert(resW3.length === 1 && resW3[0].id === "WORKOUT_CONSISTENCY_DROP" && resW3[0].type === "warning", "W3-5. Drop Warning, null ignored, false valid");
   
   // Workout 8. timestamp correctness
@@ -220,7 +220,7 @@ function runTests() {
   tlW6[4].lifestyle.workoutCompleted = true;
   tlW6[5].lifestyle.workoutCompleted = true;
 
-  const resW6 = generateStructuredInsights(tlW6, null, null).filter(i => i.category === "lifestyle");
+  const resW6 = generateStructuredInsights(tlW6, null, null, null, "2023-01-13").filter(i => i.category === "lifestyle");
   assert(resW6.length === 1 && resW6[0].id === "WORKOUT_CONSISTENCY_IMPROVED" && resW6[0].type === "positive", "W6. Improved positive");
 
   // Workout 7. equal completion counts -> no insight
@@ -228,7 +228,7 @@ function runTests() {
   tlW6[5].lifestyle.workoutCompleted = false;
   tlW6[2].lifestyle.workoutCompleted = false;
   // Now Current has 1 true, Previous has 1 true
-  const resW7 = generateStructuredInsights(tlW6, null, null).filter(i => i.category === "lifestyle");
+  const resW7 = generateStructuredInsights(tlW6, null, null, null, "2023-01-13").filter(i => i.category === "lifestyle");
   assertEqual(resW7, [], "W7. Equal completion counts -> no insight");
 
   // Workout 9. no null -> false coercion
@@ -241,7 +241,7 @@ function runTests() {
   tlW9[0].lifestyle.workoutCompleted = true;
   tlW9[1].lifestyle.workoutCompleted = null;
   tlW9[2].lifestyle.workoutCompleted = null;
-  assertEqual(generateStructuredInsights(tlW9, null, null).filter(i => i.category === "lifestyle"), [], "W9. No null -> false coercion (should be insufficient current)");
+  assertEqual(generateStructuredInsights(tlW9, null, null, null, "2023-01-13").filter(i => i.category === "lifestyle"), [], "W9. No null -> false coercion (should be insufficient current)");
 
   // Nutrition 10. no active plan -> no insight
   const tlN10 = createTimeline([
@@ -250,11 +250,11 @@ function runTests() {
   tlN10[0].nutrition.calories = 2000;
   tlN10[1].nutrition.calories = 2000;
   tlN10[2].nutrition.calories = 2000;
-  assertEqual(generateStructuredInsights(tlN10, null, null).filter(i => i.category === "nutrition"), [], "N10. No active plan -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, null, null, "2023-01-13").filter(i => i.category === "nutrition"), [], "N10. No active plan -> no insight");
 
   // Nutrition 11. invalid/missing calorie target -> no insight
-  assertEqual(generateStructuredInsights(tlN10, null, { calories: null }).filter(i => i.category === "nutrition"), [], "N11. Invalid calorie target -> no insight");
-  assertEqual(generateStructuredInsights(tlN10, null, { calories: 0 }).filter(i => i.category === "nutrition"), [], "N11. Zero calorie target -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { calories: null }, null, "2023-01-13").filter(i => i.category === "nutrition"), [], "N11. Invalid calorie target -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { calories: 0 }, null, "2023-01-13").filter(i => i.category === "nutrition"), [], "N11. Zero calorie target -> no insight");
 
   // Nutrition 12. fewer than 3 valid logs -> no insight
   const tlN12 = createTimeline([
@@ -262,7 +262,7 @@ function runTests() {
   ]);
   tlN12[0].nutrition.calories = 2000;
   tlN12[1].nutrition.calories = 2000;
-  assertEqual(generateStructuredInsights(tlN12, null, { calories: 2000 }).filter(i => i.category === "nutrition"), [], "N12. Fewer than 3 valid logs -> no insight");
+  assertEqual(generateStructuredInsights(tlN12, null, { calories: 2000 }, null, "2023-01-13").filter(i => i.category === "nutrition"), [], "N12. Fewer than 3 valid logs -> no insight");
 
   // Nutrition 13. null ignored + explicit 0 preserved
   // Nutrition 14. average within 10% -> positive insight
@@ -276,7 +276,7 @@ function runTests() {
   tlN13[4].nutrition.calories = 2000;
   // valid: 2100, 0, 1900, 2000 => avg 1500
   // If target is 1500, average is exactly 1500 (within 10%)
-  const resN13 = generateStructuredInsights(tlN13, null, { calories: 1500 }).filter(i => i.category === "nutrition");
+  const resN13 = generateStructuredInsights(tlN13, null, { calories: 1500 }, null, "2023-01-13").filter(i => i.category === "nutrition");
   assert(resN13.length === 1 && resN13[0].id === "NUTRITION_CALORIC_ADHERENCE_POSITIVE" && resN13[0].type === "positive", "N13-14. explicit 0 preserved, null ignored, within 10% positive");
   
   // Nutrition 18. timestamp correctness
@@ -289,7 +289,7 @@ function runTests() {
   tlN15[0].nutrition.calories = 2200;
   tlN15[1].nutrition.calories = 2200;
   tlN15[2].nutrition.calories = 2200;
-  const resN15 = generateStructuredInsights(tlN15, null, { calories: 2000 }).filter(i => i.category === "nutrition");
+  const resN15 = generateStructuredInsights(tlN15, null, { calories: 2000 }, null, "2023-01-13").filter(i => i.category === "nutrition");
   assert(resN15.length === 1 && resN15[0].type === "positive", "N15. Exactly +10% boundary -> positive");
 
   // Nutrition 16. average exactly -10% boundary -> positive insight
@@ -299,7 +299,7 @@ function runTests() {
   tlN16[0].nutrition.calories = 1800;
   tlN16[1].nutrition.calories = 1800;
   tlN16[2].nutrition.calories = 1800;
-  const resN16 = generateStructuredInsights(tlN16, null, { calories: 2000 }).filter(i => i.category === "nutrition");
+  const resN16 = generateStructuredInsights(tlN16, null, { calories: 2000 }, null, "2023-01-13").filter(i => i.category === "nutrition");
   assert(resN16.length === 1 && resN16[0].type === "positive", "N16. Exactly -10% boundary -> positive");
 
   // Nutrition 17. average outside 10% -> no insight
@@ -309,7 +309,7 @@ function runTests() {
   tlN17[0].nutrition.calories = 2201;
   tlN17[1].nutrition.calories = 2201;
   tlN17[2].nutrition.calories = 2201;
-  assertEqual(generateStructuredInsights(tlN17, null, { calories: 2000 }).filter(i => i.category === "nutrition"), [], "N17. Average outside 10% -> no insight");
+  assertEqual(generateStructuredInsights(tlN17, null, { calories: 2000 }, null, "2023-01-13").filter(i => i.category === "nutrition"), [], "N17. Average outside 10% -> no insight");
 
   // Nutrition 19. no target estimation
   // If activePlan.calories is missing, it returns null (tested in N11).
@@ -317,14 +317,14 @@ function runTests() {
   // --- PHASE 4.3 PROTEIN TESTS ---
 
   // P1. missing plan
-  assertEqual(generateStructuredInsights(tlN10, null, null).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P1. Missing plan -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, null, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P1. Missing plan -> no insight");
 
   // P2-6. invalid target -> no insight
-  assertEqual(generateStructuredInsights(tlN10, null, { protein: null }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P2. Missing protein -> no insight");
-  assertEqual(generateStructuredInsights(tlN10, null, { protein: 0 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P3. Zero protein -> no insight");
-  assertEqual(generateStructuredInsights(tlN10, null, { protein: -50 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P4. Negative protein -> no insight");
-  assertEqual(generateStructuredInsights(tlN10, null, { protein: NaN }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P5. NaN protein -> no insight");
-  assertEqual(generateStructuredInsights(tlN10, null, { protein: Infinity }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P6. Infinity protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: null }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P2. Missing protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: 0 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P3. Zero protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: -50 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P4. Negative protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: NaN }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P5. NaN protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: Infinity }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P6. Infinity protein -> no insight");
 
   // P7. fewer than 3 valid logs -> no insight
   const tlP7 = createTimeline([
@@ -332,7 +332,7 @@ function runTests() {
   ]);
   tlP7[0].nutrition.protein = 150;
   tlP7[1].nutrition.protein = 150;
-  assertEqual(generateStructuredInsights(tlP7, null, { protein: 150 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P7. Fewer than 3 valid logs -> no insight");
+  assertEqual(generateStructuredInsights(tlP7, null, { protein: 150 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P7. Fewer than 3 valid logs -> no insight");
 
   // P8-14. exactly 3, null ignored, zero preserved, within threshold (+/-10%), outside 10%, timestamp, deterministic
   const tlP8 = createTimeline([
@@ -344,7 +344,7 @@ function runTests() {
   tlP8[3].nutrition.protein = 140;
   tlP8[4].nutrition.protein = 150;
   // valid: 160, 0, 140, 150 => avg 112.5
-  const resP8 = generateStructuredInsights(tlP8, null, { protein: 125 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE");
+  const resP8 = generateStructuredInsights(tlP8, null, { protein: 125 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE");
   assert(resP8.length === 1 && resP8[0].type === "positive" && resP8[0].timestamp === "2023-01-13", "P8-10, P15-16. exactly 3+ valid, explicit 0 preserved, null ignored, within 10%, timestamp");
 
   // P12. exact +10%
@@ -352,21 +352,21 @@ function runTests() {
     { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
   ]);
   tlP12[0].nutrition.protein = 110; tlP12[1].nutrition.protein = 110; tlP12[2].nutrition.protein = 110;
-  assert(generateStructuredInsights(tlP12, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P12. Exact +10% boundary -> positive");
+  assert(generateStructuredInsights(tlP12, null, { protein: 100 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P12. Exact +10% boundary -> positive");
 
   // P13. exact -10%
   const tlP13 = createTimeline([
     { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
   ]);
   tlP13[0].nutrition.protein = 90; tlP13[1].nutrition.protein = 90; tlP13[2].nutrition.protein = 90;
-  assert(generateStructuredInsights(tlP13, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P13. Exact -10% boundary -> positive");
+  assert(generateStructuredInsights(tlP13, null, { protein: 100 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P13. Exact -10% boundary -> positive");
 
   // P14. >10%
   const tlP14 = createTimeline([
     { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
   ]);
   tlP14[0].nutrition.protein = 111; tlP14[1].nutrition.protein = 111; tlP14[2].nutrition.protein = 111;
-  assertEqual(generateStructuredInsights(tlP14, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P14. >10% -> no insight");
+  assertEqual(generateStructuredInsights(tlP14, null, { protein: 100 }, null, "2023-01-13").filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P14. >10% -> no insight");
 
   // --- PHASE 4.3 GOAL PROGRESS TESTS ---
 
@@ -375,55 +375,55 @@ function runTests() {
     { date: "2022-12-01", weight: 90 },
     { date: "2023-01-13", weight: 75 }
   ]);
-  assertEqual(generateStructuredInsights(tlGP43, null, null, null).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G1. Missing goal");
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "lifestyle", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G2. Non-weight goal");
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "completed", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G3. Non-active goal");
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: null, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G4. Missing start");
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: null }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G5. Missing target");
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: "80", target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G6. Invalid start/target");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, null, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G1. Missing goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "lifestyle", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G2. Non-weight goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "completed", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G3. Non-active goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: null, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G4. Missing start");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: null }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G5. Missing target");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: "80", target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G6. Invalid start/target");
 
   // G7. missing current weight
   const tlG7 = createTimeline([
     { date: "2023-01-13", weight: null }
   ]);
-  assertEqual(generateStructuredInsights(tlG7, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G7. Missing current weight");
+  assertEqual(generateStructuredInsights(tlG7, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G7. Missing current weight");
 
   // G8. start === target
-  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 80 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G8. start === target");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 80 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G8. start === target");
 
   // G9. weight loss 80->70 current 75 = 50%
-  const resG9 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG9 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG9.length === 1 && resG9[0].evidence.includes("50%"), "G9. Weight loss 80->70 current 75 = 50%");
   
   // G10. weight gain 70->80 current 75 = 50%
-  const resG10 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 70, target_value: 80 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG10 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 70, target_value: 80 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG10.length === 1 && resG10[0].evidence.includes("50%"), "G10. Weight gain 70->80 current 75 = 50%");
 
   // G11-G15. 0%, 25%, 50%, 75%, 100%
   const tlG11 = createTimeline([{ date: "2023-01-13", weight: 80 }]);
-  const resG11 = generateStructuredInsights(tlG11, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG11 = generateStructuredInsights(tlG11, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG11.length === 1 && resG11[0].evidence.includes("0%"), "G11. 0%");
 
   const tlG12 = createTimeline([{ date: "2023-01-13", weight: 77.5 }]);
-  const resG12 = generateStructuredInsights(tlG12, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG12 = generateStructuredInsights(tlG12, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG12.length === 1 && resG12[0].evidence.includes("25%"), "G12. 25%");
 
   const tlG13 = createTimeline([{ date: "2023-01-13", weight: 72.5 }]);
-  const resG13 = generateStructuredInsights(tlG13, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG13 = generateStructuredInsights(tlG13, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG13.length === 1 && resG13[0].evidence.includes("75%"), "G14. 75%");
 
   const tlG14 = createTimeline([{ date: "2023-01-13", weight: 70 }]);
-  const resG14 = generateStructuredInsights(tlG14, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG14 = generateStructuredInsights(tlG14, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG14.length === 1 && resG14[0].evidence.includes("100%"), "G15. 100%");
 
   // G16. beyond target
   const tlG16 = createTimeline([{ date: "2023-01-13", weight: 65 }]);
-  const resG16 = generateStructuredInsights(tlG16, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG16 = generateStructuredInsights(tlG16, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG16.length === 1 && resG16[0].evidence.includes("100%") && resG16[0].interpretation.includes("beyond"), "G16. Beyond target");
 
   // G17. moving away
   const tlG17 = createTimeline([{ date: "2023-01-13", weight: 85 }]);
-  const resG17 = generateStructuredInsights(tlG17, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  const resG17 = generateStructuredInsights(tlG17, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }, "2023-01-13").filter(i => i.id === "GOAL_PROGRESS_INFO");
   assert(resG17.length === 1 && resG17[0].evidence.includes("0%") && resG17[0].interpretation.includes("away"), "G17. Moving away");
 
   // G18. latest weight from entire timeline, timestamp
@@ -431,6 +431,60 @@ function runTests() {
 
   // G21. no milestone-crossing claim
   assert(!resG14[0].interpretation.includes("crossed") && !resG14[0].interpretation.includes("Achieved"), "G21. No milestone claim");
+
+  // --- PHASE 4.4 HARDENING TESTS ---
+  
+  // 1. INVALID currentDate
+  const tl44_invalid = createTimeline([
+    { date: "2023-01-09", weight: 70, nutrition: { calories: 2000, protein: 150 }, lifestyle: { workoutCompleted: true } },
+    { date: "2023-01-10", weight: 65, nutrition: { calories: 2000, protein: 150 }, lifestyle: { workoutCompleted: true } }
+  ]);
+  const activePlan44 = { calories: 2000, protein: 150 };
+  const goal44 = { domain: "weight", status: "active", start_value: 80, target_value: 70 };
+  
+  const resInv1 = generateStructuredInsights(tl44_invalid, null, activePlan44, goal44, "2026-02-30");
+  assert(resInv1.filter(i => i.id !== "GOAL_PROGRESS_INFO").length === 0, "4.4 INVALID - impossible date prevents window rules");
+  
+  const resInv2 = generateStructuredInsights(tl44_invalid, null, activePlan44, goal44, "malformed");
+  assert(resInv2.filter(i => i.id !== "GOAL_PROGRESS_INFO").length === 0, "4.4 INVALID - malformed date prevents window rules");
+
+  // 2. MISSING currentDate
+  const resMiss1 = generateStructuredInsights(tl44_invalid, null, activePlan44, goal44, undefined);
+  assert(resMiss1.filter(i => i.id !== "GOAL_PROGRESS_INFO").length === 0, "4.4 MISSING - undefined date prevents window rules");
+  
+  const resMiss2 = generateStructuredInsights(tl44_invalid, null, activePlan44, goal44, null);
+  assert(resMiss2.filter(i => i.id !== "GOAL_PROGRESS_INFO").length === 0, "4.4 MISSING - null date prevents window rules");
+
+  // 3. GOAL_PROGRESS with invalid/missing currentDate
+  assert(resInv1.some(i => i.id === "GOAL_PROGRESS_INFO"), "4.4 GOAL - evaluates with invalid date");
+  assert(resMiss1.some(i => i.id === "GOAL_PROGRESS_INFO"), "4.4 GOAL - evaluates with missing date");
+
+  // 4. FUTURE-DATED RECORDS & 7. WINDOW BOUNDARIES
+  const tl44_future = createTimeline([
+    { date: "2023-01-06", weight: 70, nutrition: { calories: 2000, protein: 150 }, lifestyle: { workoutCompleted: true } }, // previous window (day -7)
+    { date: "2023-01-07", weight: 70, nutrition: { calories: 2000, protein: 150 }, lifestyle: { workoutCompleted: true } }, // current window start (day -6)
+    { date: "2023-01-13", weight: 65, nutrition: { calories: 2000, protein: 150 }, lifestyle: { workoutCompleted: true } }, // currentDate (day 0)
+    { date: "2023-01-14", weight: 60, nutrition: { calories: 1000, protein: 50 },  lifestyle: { workoutCompleted: false } } // future (day +1)
+  ]);
+  const resFuture = generateStructuredInsights(tl44_future, null, activePlan44, goal44, "2023-01-13");
+  // The future record (60kg) should be ignored. The trend should be 70 -> 67.5 (avg of 70 and 65) => -2.5kg.
+  const wtFuture = resFuture.find(i => i.id === "WEIGHT_TREND_CHANGE");
+  assert(wtFuture && wtFuture.evidence.includes("-2.5 kg"), "4.4 FUTURE - future record is ignored, boundaries respected");
+
+  // 5. CALORIE FINITE VALIDATION
+  const tl44_cal = createTimeline([
+    { date: "2023-01-11", nutrition: { calories: NaN } },
+    { date: "2023-01-12", nutrition: { calories: Infinity } },
+    { date: "2023-01-13", nutrition: { calories: -Infinity } }
+  ]);
+  const resCalFinite = generateStructuredInsights(tl44_cal, null, activePlan44, null, "2023-01-13");
+  assert(!resCalFinite.some(i => i.category === "nutrition"), "4.4 FINITE - NaN/Infinity calories are ignored");
+
+  // 6. WEIGHT TREND TIMESTAMP
+  assert(wtFuture && wtFuture.timestamp === "2023-01-13", "4.4 TIMESTAMP - Weight trend timestamp is actual valid observation inside window");
+
+  // 8. SPARSE TIMELINE
+  assert(wtFuture !== undefined, "4.4 SPARSE - Sparse timeline evaluates correctly without synthesizing days");
 
   console.log(`\nResults: ${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
