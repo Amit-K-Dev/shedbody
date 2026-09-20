@@ -314,6 +314,124 @@ function runTests() {
   // Nutrition 19. no target estimation
   // If activePlan.calories is missing, it returns null (tested in N11).
 
+  // --- PHASE 4.3 PROTEIN TESTS ---
+
+  // P1. missing plan
+  assertEqual(generateStructuredInsights(tlN10, null, null).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P1. Missing plan -> no insight");
+
+  // P2-6. invalid target -> no insight
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: null }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P2. Missing protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: 0 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P3. Zero protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: -50 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P4. Negative protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: NaN }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P5. NaN protein -> no insight");
+  assertEqual(generateStructuredInsights(tlN10, null, { protein: Infinity }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P6. Infinity protein -> no insight");
+
+  // P7. fewer than 3 valid logs -> no insight
+  const tlP7 = createTimeline([
+    { date: "2023-01-12" }, { date: "2023-01-13" }
+  ]);
+  tlP7[0].nutrition.protein = 150;
+  tlP7[1].nutrition.protein = 150;
+  assertEqual(generateStructuredInsights(tlP7, null, { protein: 150 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P7. Fewer than 3 valid logs -> no insight");
+
+  // P8-14. exactly 3, null ignored, zero preserved, within threshold (+/-10%), outside 10%, timestamp, deterministic
+  const tlP8 = createTimeline([
+    { date: "2023-01-09" }, { date: "2023-01-10" }, { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
+  ]);
+  tlP8[0].nutrition.protein = 160;
+  tlP8[1].nutrition.protein = 0; // explicit 0
+  tlP8[2].nutrition.protein = null; // ignored
+  tlP8[3].nutrition.protein = 140;
+  tlP8[4].nutrition.protein = 150;
+  // valid: 160, 0, 140, 150 => avg 112.5
+  const resP8 = generateStructuredInsights(tlP8, null, { protein: 125 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE");
+  assert(resP8.length === 1 && resP8[0].type === "positive" && resP8[0].timestamp === "2023-01-13", "P8-10, P15-16. exactly 3+ valid, explicit 0 preserved, null ignored, within 10%, timestamp");
+
+  // P12. exact +10%
+  const tlP12 = createTimeline([
+    { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
+  ]);
+  tlP12[0].nutrition.protein = 110; tlP12[1].nutrition.protein = 110; tlP12[2].nutrition.protein = 110;
+  assert(generateStructuredInsights(tlP12, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P12. Exact +10% boundary -> positive");
+
+  // P13. exact -10%
+  const tlP13 = createTimeline([
+    { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
+  ]);
+  tlP13[0].nutrition.protein = 90; tlP13[1].nutrition.protein = 90; tlP13[2].nutrition.protein = 90;
+  assert(generateStructuredInsights(tlP13, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE").length === 1, "P13. Exact -10% boundary -> positive");
+
+  // P14. >10%
+  const tlP14 = createTimeline([
+    { date: "2023-01-11" }, { date: "2023-01-12" }, { date: "2023-01-13" }
+  ]);
+  tlP14[0].nutrition.protein = 111; tlP14[1].nutrition.protein = 111; tlP14[2].nutrition.protein = 111;
+  assertEqual(generateStructuredInsights(tlP14, null, { protein: 100 }).filter(i => i.id === "PROTEIN_CONSISTENCY_POSITIVE"), [], "P14. >10% -> no insight");
+
+  // --- PHASE 4.3 GOAL PROGRESS TESTS ---
+
+  // G1-G6. missing goal, non-weight, non-active, missing start, missing target, invalid
+  const tlGP43 = createTimeline([
+    { date: "2022-12-01", weight: 90 },
+    { date: "2023-01-13", weight: 75 }
+  ]);
+  assertEqual(generateStructuredInsights(tlGP43, null, null, null).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G1. Missing goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "lifestyle", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G2. Non-weight goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "completed", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G3. Non-active goal");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: null, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G4. Missing start");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: null }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G5. Missing target");
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: "80", target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G6. Invalid start/target");
+
+  // G7. missing current weight
+  const tlG7 = createTimeline([
+    { date: "2023-01-13", weight: null }
+  ]);
+  assertEqual(generateStructuredInsights(tlG7, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G7. Missing current weight");
+
+  // G8. start === target
+  assertEqual(generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 80 }).filter(i => i.id === "GOAL_PROGRESS_INFO"), [], "G8. start === target");
+
+  // G9. weight loss 80->70 current 75 = 50%
+  const resG9 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG9.length === 1 && resG9[0].evidence.includes("50%"), "G9. Weight loss 80->70 current 75 = 50%");
+  
+  // G10. weight gain 70->80 current 75 = 50%
+  const resG10 = generateStructuredInsights(tlGP43, null, null, { domain: "weight", status: "active", start_value: 70, target_value: 80 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG10.length === 1 && resG10[0].evidence.includes("50%"), "G10. Weight gain 70->80 current 75 = 50%");
+
+  // G11-G15. 0%, 25%, 50%, 75%, 100%
+  const tlG11 = createTimeline([{ date: "2023-01-13", weight: 80 }]);
+  const resG11 = generateStructuredInsights(tlG11, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG11.length === 1 && resG11[0].evidence.includes("0%"), "G11. 0%");
+
+  const tlG12 = createTimeline([{ date: "2023-01-13", weight: 77.5 }]);
+  const resG12 = generateStructuredInsights(tlG12, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG12.length === 1 && resG12[0].evidence.includes("25%"), "G12. 25%");
+
+  const tlG13 = createTimeline([{ date: "2023-01-13", weight: 72.5 }]);
+  const resG13 = generateStructuredInsights(tlG13, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG13.length === 1 && resG13[0].evidence.includes("75%"), "G14. 75%");
+
+  const tlG14 = createTimeline([{ date: "2023-01-13", weight: 70 }]);
+  const resG14 = generateStructuredInsights(tlG14, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG14.length === 1 && resG14[0].evidence.includes("100%"), "G15. 100%");
+
+  // G16. beyond target
+  const tlG16 = createTimeline([{ date: "2023-01-13", weight: 65 }]);
+  const resG16 = generateStructuredInsights(tlG16, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG16.length === 1 && resG16[0].evidence.includes("100%") && resG16[0].interpretation.includes("beyond"), "G16. Beyond target");
+
+  // G17. moving away
+  const tlG17 = createTimeline([{ date: "2023-01-13", weight: 85 }]);
+  const resG17 = generateStructuredInsights(tlG17, null, null, { domain: "weight", status: "active", start_value: 80, target_value: 70 }).filter(i => i.id === "GOAL_PROGRESS_INFO");
+  assert(resG17.length === 1 && resG17[0].evidence.includes("0%") && resG17[0].interpretation.includes("away"), "G17. Moving away");
+
+  // G18. latest weight from entire timeline, timestamp
+  assert(resG9[0].timestamp === "2023-01-13", "G18-G19. Latest weight from entire timeline, timestamp");
+
+  // G21. no milestone-crossing claim
+  assert(!resG14[0].interpretation.includes("crossed") && !resG14[0].interpretation.includes("Achieved"), "G21. No milestone claim");
+
   console.log(`\nResults: ${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }
