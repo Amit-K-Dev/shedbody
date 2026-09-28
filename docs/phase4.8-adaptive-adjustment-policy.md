@@ -31,20 +31,38 @@ The following are existing facts and inputs currently available in the system:
 |---|---|---|---|
 | COOLDOWN_ACTIVE | No | EXISTING FACT | Engine blocks adjustment for 7 days after creation. |
 | INSUFFICIENT_DATA | No | EXISTING FACT | Fails closed; no adjustment. |
-| LOW_ADHERENCE | UNRESOLVED | UNRESOLVED — REQUIRES APPROVAL | Determine if targets should decrease, hold, or break. |
-| ELIGIBLE_PLATEAU | Yes (candidate) | UNRESOLVED — REQUIRES APPROVAL | Adjustment direction/magnitude pending approval. |
-| ON_TRACK | No | PROPOSED POLICY — REQUIRES APPROVAL | System should not adjust targets if progress is steady. |
+| LOW_ADHERENCE | No | APPROVED POLICY DECISION | No automatic adjustment. |
+| ELIGIBLE_PLATEAU | Yes (candidate) | APPROVED POLICY DECISION | Direction approved; magnitude pending approval. |
+| ON_TRACK | No | APPROVED POLICY DECISION | No adjustment. |
 | UNSUPPORTED_GOAL | No | EXISTING FACT | Fails closed; no adjustment. |
 
 ## 5. Adjustment direction
-**PROPOSED POLICY — REQUIRES APPROVAL**
+**APPROVED POLICY DECISION — ADJUSTMENT DIRECTION**
 
-Candidate semantics for adjustments based on state and goal:
-- **weight-loss goal + plateau/regression** → candidate calorie decrease
-- **weight-gain goal + plateau/regression** → candidate calorie increase
-- **ON_TRACK** → no adjustment
+1. For an active weight-loss goal:
+   ELIGIBLE_PLATEAU
+   -> candidate calorie adjustment direction = DECREASE
 
-These are proposed and not yet final.
+2. For an active weight-gain goal:
+   ELIGIBLE_PLATEAU
+   -> candidate calorie adjustment direction = INCREASE
+
+3. ON_TRACK:
+   -> NO adjustment
+
+4. LOW_ADHERENCE:
+   -> NO automatic adjustment
+
+5. INSUFFICIENT_DATA:
+   -> NO adjustment
+
+6. COOLDOWN_ACTIVE:
+   -> NO adjustment
+
+7. UNSUPPORTED_GOAL:
+   -> NO adjustment
+
+*Note: The direction is approved but the magnitude remains unresolved.*
 
 ## 6. Adjustment magnitude
 **UNRESOLVED DECISION**
@@ -151,7 +169,7 @@ Future implementation must test:
 ## 16. Decision checklist
 Before ANY implementation can begin, the following must be explicitly approved:
 
-- [ ] A. Adjustment direction
+- [x] A. Adjustment direction
 - [ ] B. Adjustment magnitude
 - [ ] C. Calorie floor for adaptive adjustments
 - [ ] D. Calorie ceiling
