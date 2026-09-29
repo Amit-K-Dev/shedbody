@@ -11,10 +11,12 @@ import {
   Calculator,
   ClipboardList,
   PlusCircle,
+  MessageSquare,
 } from "lucide-react";
 
 const navItems = [
   { name: "Profile", href: "/profile", icon: User },
+  { name: "AI Coach", href: "/coach", icon: MessageSquare },
   { name: "BMI Calculator", href: "/calculators/bmi", icon: Calculator },
   { name: "Calorie Calculator", href: "/calculators/calorie", icon: Calculator },
   { name: "Pregnancy Calculator", href: "/calculators/pregnancy", icon: Baby },
