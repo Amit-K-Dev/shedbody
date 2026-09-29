@@ -85,7 +85,7 @@ export default function CoachChat() {
             >
               {/* Avatar */}
               <div
-                className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
+                className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
                   msg.role === "user"
                     ? "bg-emerald-500 text-zinc-950"
                     : "bg-zinc-800 text-emerald-400 border border-emerald-500/30"
@@ -142,7 +142,7 @@ export default function CoachChat() {
                         <ul className="space-y-1.5">
                           {msg.evidence.map((ev, i) => (
                             <li key={i} className="flex items-start gap-2 text-zinc-300">
-                              <ChevronRight size={14} className="mt-0.5 flex-shrink-0 text-emerald-500/50" />
+                              <ChevronRight size={14} className="mt-0.5 shrink-0 text-emerald-500/50" />
                               <span>{ev.claimType}: {ev.assertedValue !== undefined ? `${ev.assertedValue} ${ev.unit || ''}` : 'Verified'}</span>
                             </li>
                           ))}
@@ -159,7 +159,7 @@ export default function CoachChat() {
                         <ul className="space-y-2">
                           {msg.recommendations.map((rec, i) => (
                             <li key={i} className="flex items-start gap-2 bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-2.5">
-                              <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-400" />
+                              <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-400" />
                               <span className="text-emerald-100/90">{rec.text}</span>
                             </li>
                           ))}
@@ -170,7 +170,7 @@ export default function CoachChat() {
                     {/* Safety Note */}
                     {msg.safetyNote && (
                       <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-200/90 p-3 rounded-lg text-xs mt-2">
-                        <AlertTriangle size={14} className="mt-0.5 flex-shrink-0 text-amber-500" />
+                        <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-500" />
                         <p>{msg.safetyNote}</p>
                       </div>
                     )}
@@ -184,7 +184,7 @@ export default function CoachChat() {
         {/* Loading Indicator */}
         {isLoading && (
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-800 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shadow-lg">
+            <div className="shrink-0 w-8 h-8 rounded-full bg-zinc-800 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shadow-lg">
               <Bot size={18} />
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl rounded-tl-sm p-4 shadow-md">
