@@ -52,13 +52,31 @@ export default function CoachChat() {
       setMessages((prev) => [...prev, { role: "assistant", ...data.data }]);
     } catch (error) {
       console.error("Coach API Error:", error);
+      
+      const rawError = error.message || "";
+      let safeSummary = "I encountered an unexpected issue while processing your request. Please try again later.";
+      
+      if (rawError.includes("Unauthorized")) {
+        safeSummary = rawError;
+      } else if (rawError === "AI_GROUNDING_VIOLATION") {
+        safeSummary = "I couldn't provide a sufficiently supported answer based on your health data. Please try asking in a more specific way.";
+      } else if (rawError === "AI_SAFETY_VIOLATION") {
+        safeSummary = "I can't provide that type of health guidance. I can help with general fitness, nutrition, and wellness information.";
+      } else if (rawError === "AI Provider Network Error" || rawError === "Bad Gateway") {
+        safeSummary = "I'm having trouble connecting to my reasoning engine right now. Please try again later.";
+      } else if (rawError === "Internal Context Error." || rawError === "Internal Server Error" || rawError === "DATA_FETCH_FAILED") {
+        safeSummary = "There was an issue processing your health data. Please try again later.";
+      } else if (rawError.includes("Question") || rawError.includes("Invalid")) {
+        safeSummary = "There was an issue with your request. Please try again.";
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           type: "error",
           title: "Connection Error",
-          summary: error.message || "I'm having trouble connecting right now. Please try again later.",
+          summary: safeSummary,
           safetyNote: "If you have a medical emergency, please contact a healthcare professional."
         },
       ]);
