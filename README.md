@@ -54,7 +54,7 @@ Make sure you have Node.js installed along with a Supabase project set up.
 
 ### 1. Clone the repository
 
-> git clone https://github.com/your-username/shedbody.git
+> git clone https://github.com/Amit-K-Dev/shedbody.git
 > cd shedbody
 
 ### 2. Install dependencies
