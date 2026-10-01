@@ -3,6 +3,7 @@ import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { getLifestyleData } from "@/lib/dashboard/getLifestyleData";
 import { getNutritionData } from "@/lib/dashboard/getNutritionData";
 import { getPlans } from "@/lib/storage";
+import { getHabitsData } from "@/lib/dashboard/getHabitsData";
 import { getActiveGoal } from "@/lib/goals";
 import { createClient } from "@/lib/supabase/server";
 import { mergeDailyMetrics, generateTimeline } from "@/lib/analytics/unified";
@@ -50,13 +51,14 @@ export default async function ReportsPage({ searchParams }) {
     startDate = "2020-01-01";
   }
 
-  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs] = await Promise.all([
+  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs, habitEntries] = await Promise.all([
     getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
     getActiveGoal("weight", authContext),
     getLifestyleData(authContext, startDate, endDate),
     getNutritionData(authContext, startDate, endDate),
+    getHabitsData(authContext, startDate, endDate),
   ]);
 
   const unifiedMetrics = mergeDailyMetrics(
@@ -80,7 +82,8 @@ export default async function ReportsPage({ searchParams }) {
     nutritionLogs,
     lifestyleLogs,
     insights,
-    { startDate, endDate } // Passing the bounds so Timeline filters out-of-bound insights
+    { startDate, endDate }, // Passing the bounds so Timeline filters out-of-bound insights
+    habitEntries
   );
 
   // Generate the report via the deterministic engine

@@ -4,6 +4,7 @@ import { generateStructuredInsights } from "@/lib/insights/engine";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { getLifestyleData } from "@/lib/dashboard/getLifestyleData";
 import { getNutritionData } from "@/lib/dashboard/getNutritionData";
+import { getHabitsData } from "@/lib/dashboard/getHabitsData";
 import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
@@ -20,12 +21,14 @@ import PremiumAddWeight from "@/components/dashboard/PremiumAddWeight";
 import PremiumLogNutrition from "@/components/dashboard/PremiumLogNutrition";
 import PremiumLogLifestyle from "@/components/dashboard/PremiumLogLifestyle";
 import PremiumSetGoal from "@/components/dashboard/PremiumSetGoal";
+import PremiumHabitTracker from "@/components/dashboard/PremiumHabitTracker";
 import ReminderBanner from "@/components/dashboard/ReminderBanner";
 import MotionWrapper from "@/components/ui/MotionWrapper";
 import PremiumAnalyticsCharts from "@/components/dashboard/PremiumAnalyticsCharts";
 
 // Unified Analytics
 import { mergeDailyMetrics } from "@/lib/analytics/unified";
+import { generateHabitMatrix } from "@/lib/habits/engine";
 
 // Icons & Link for Protocol Section
 import Link from "next/link";
@@ -110,13 +113,14 @@ export default async function DashboardPage() {
   const endDate = now.toISOString().slice(0, 10);
   const startDate = past.toISOString().slice(0, 10);
 
-  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs] = await Promise.all([
+  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs, habitEntries] = await Promise.all([
     getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
     getActiveGoal("weight", authContext),
     getLifestyleData(authContext, startDate, endDate),
     getNutritionData(authContext, startDate, endDate),
+    getHabitsData(authContext, startDate, endDate),
   ]);
 
   const unifiedTimeline = mergeDailyMetrics(
@@ -177,6 +181,9 @@ export default async function DashboardPage() {
   // Generate deterministic structured insights
   const insights = generateStructuredInsights(unifiedTimeline, profileData, currentPlan, activeWeightGoal, todayStr);
 
+  const habitMatrix = generateHabitMatrix(habitEntries, lifestyleLogs, nutritionLogs);
+  const todayHabits = habitMatrix.find(d => d.date === todayStr)?.habits || {};
+
   const todayLogged = boundedProgress.some((entry) => extractDate(entry) === todayStr);
 
   // UI
@@ -209,6 +216,7 @@ export default async function DashboardPage() {
           {/* ACTIONS */}
           <MotionWrapper delay={0.2}>
             <div className="grid grid-cols-1 gap-6">
+              <PremiumHabitTracker todayHabits={todayHabits} />
               <PremiumAddWeight lastWeight={currentWeight} />
               <PremiumLogNutrition recentLogs={nutritionLogs} />
               <PremiumLogLifestyle recentLogs={lifestyleLogs} />

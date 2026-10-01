@@ -3,6 +3,7 @@ import { getProfileData } from "@/lib/dashboard/getProfileData";
 import { getLifestyleData } from "@/lib/dashboard/getLifestyleData";
 import { getNutritionData } from "@/lib/dashboard/getNutritionData";
 import { getPlans } from "@/lib/storage";
+import { getHabitsData } from "@/lib/dashboard/getHabitsData";
 import { getActiveGoal } from "@/lib/goals";
 import { createClient } from "@/lib/supabase/server";
 import { mergeDailyMetrics, generateTimeline } from "@/lib/analytics/unified";
@@ -29,13 +30,14 @@ export default async function TimelinePage() {
   const endDate = now.toISOString().slice(0, 10);
   const startDate = past.toISOString().slice(0, 10);
 
-  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs] = await Promise.all([
+  const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs, habitEntries] = await Promise.all([
     getBoundedProgress(authContext, startDate, endDate),
     getProfileData(authContext),
     getPlans(authContext),
     getActiveGoal("weight", authContext),
     getLifestyleData(authContext, startDate, endDate),
     getNutritionData(authContext, startDate, endDate),
+    getHabitsData(authContext, startDate, endDate),
   ]);
 
   const unifiedMetrics = mergeDailyMetrics(
@@ -60,7 +62,8 @@ export default async function TimelinePage() {
     nutritionLogs,
     lifestyleLogs,
     insights,
-    { startDate, endDate }
+    { startDate, endDate },
+    habitEntries
   );
 
   return (
