@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Calculator, ClipboardList, PlusCircle, MessageSquare, History } from "lucide-react";
+import { User, Calculator, ClipboardList, PlusCircle, MessageSquare, History, FileText } from "lucide-react";
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -11,6 +11,7 @@ export default function MobileNav() {
     { name: "Profile", href: "/profile", icon: User },
     { name: "Coach", href: "/coach", icon: MessageSquare },
     { name: "Timeline", href: "/timeline", icon: History },
+    { name: "Reports", href: "/reports", icon: FileText },
     { name: "Calories", href: "/calculators/calorie", icon: Calculator },
     { name: "My Plan", href: "/plans", icon: ClipboardList },
     { name: "New Plan", href: "/start", icon: PlusCircle },
