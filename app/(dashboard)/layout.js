@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import MobileNav from "@/components/layout/MobileNav";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
+import NotificationSync from "@/components/notifications/NotificationSync";
 
 export const metadata = {
   robots: {
@@ -40,6 +41,9 @@ export default async function DashboardLayout({ children }) {
           <MobileNav />
         </div>
       </div>
+      
+      {/* Lazy notification generation */}
+      <NotificationSync />
     </section>
   );
 }
