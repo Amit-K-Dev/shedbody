@@ -224,7 +224,27 @@ export async function POST(req) {
       aiResponseString = await callAiProvider(SYSTEM_PROMPT, userPrompt);
     } catch (err) {
       console.error("AI Provider Error:", err.message);
-      return NextResponse.json({ success: false, error: "AI Provider Network Error" }, { status: 502 });
+      const statusCode = err.status || 502;
+      let clientMsg = "Unable to connect to the AI provider. Please try again later.";
+
+      if (statusCode === 500) {
+        clientMsg = "AI provider configuration error.";
+      } else if (statusCode === 401 || statusCode === 403) {
+        clientMsg = "AI provider authentication failed.";
+      } else if (statusCode === 404) {
+        clientMsg = "AI model configuration error.";
+      } else if (statusCode === 429) {
+        clientMsg = "AI provider rate limit reached. Please try again later.";
+      } else if (statusCode === 502) {
+        clientMsg = "Unable to connect to the AI provider. Please try again later.";
+      } else if (statusCode >= 500 && statusCode < 600) {
+        clientMsg = "AI provider is temporarily unavailable. Please try again later.";
+      }
+
+      return NextResponse.json({ 
+        success: false, 
+        error: clientMsg
+      }, { status: statusCode });
     }
 
     // 6. JSON Parsing
