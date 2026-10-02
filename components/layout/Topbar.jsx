@@ -6,6 +6,7 @@ import { BicepsFlexed, Menu, X, LayoutDashboard } from "lucide-react";
 import LogoutButton from "@/components/LogoutButton";
 import UserAvatar from "@/components/UserAvatar";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function Topbar({ user }) {
   // Desktop Dropdown State
@@ -35,6 +36,8 @@ export default function Topbar({ user }) {
 
         {/* DESKTOP VIEW */}
         <div className="hidden md:flex flex-row items-center gap-4">
+          <NotificationBell />
+
           <Link
             href="/dashboard"
             className="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-zinc-950 text-emerald-400 transition flex items-center gap-2"
@@ -68,12 +71,15 @@ export default function Topbar({ user }) {
         </div>
 
         {/* MOBILE TOGGLE BUTTON */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-zinc-300 hover:text-emerald-400 transition cursor-pointer"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <NotificationBell />
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-zinc-300 hover:text-emerald-400 transition cursor-pointer"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* MOBILE MENU SLIDE-DOWN */}

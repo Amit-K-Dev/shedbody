@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/LogoutButton";
 import UserAvatar from "@/components/UserAvatar";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
+import Link from "next/link";
 import {
   Mail,
   Calendar,
@@ -156,7 +157,7 @@ export default async function ProfilePage() {
           Account Settings
         </h3>
         <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden mb-8">
-          <button className="w-full flex items-center justify-between p-5 border-b border-zinc-800/50 hover:bg-zinc-800/40 transition-colors text-left group">
+          <Link href="/profile/settings" className="w-full flex items-center justify-between p-5 border-b border-zinc-800/50 hover:bg-zinc-800/40 transition-colors text-left group">
             <div className="flex items-center gap-4">
               <div className="p-2 bg-zinc-800 rounded-lg text-zinc-400 group-hover:text-zinc-50 transition-colors">
                 <Settings className="w-5 h-5" />
@@ -171,7 +172,7 @@ export default async function ProfilePage() {
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
-          </button>
+          </Link>
 
           <button className="w-full flex items-center justify-between p-5 hover:bg-zinc-800/40 transition-colors text-left group">
             <div className="flex items-center gap-4">
