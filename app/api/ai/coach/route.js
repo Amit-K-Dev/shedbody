@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+
 import { buildAiContext } from "@/lib/ai/contextBuilder";
 import { validateAiContext } from "@/lib/ai/contextValidator";
 import { callAiProvider } from "@/lib/ai/providerAdapter";
@@ -18,6 +19,8 @@ import { getPlans } from "@/lib/storage";
 import { getActiveGoal } from "@/lib/goals";
 import { mergeDailyMetrics } from "@/lib/analytics/unified";
 import { generateStructuredInsights } from "@/lib/insights/engine";
+
+export const maxDuration = 60;
 
 const MAX_QUESTION_LENGTH = 1000;
 const ALLOWED_INTENTS = [
@@ -235,6 +238,8 @@ export async function POST(req) {
         clientMsg = "AI model configuration error.";
       } else if (statusCode === 429) {
         clientMsg = "AI provider rate limit reached. Please try again later.";
+      } else if (statusCode === 504) {
+        clientMsg = "AI provider took too long to respond. Please try again later.";
       } else if (statusCode === 502) {
         clientMsg = "Unable to connect to the AI provider. Please try again later.";
       } else if (statusCode >= 500 && statusCode < 600) {
