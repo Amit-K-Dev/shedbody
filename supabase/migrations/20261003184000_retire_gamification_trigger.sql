@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS on_progress_entries_inserted_gamification ON public.progress_entries;
