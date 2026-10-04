@@ -56,3 +56,13 @@ shedbody-plan.md
 
 # docs
 docs/audit.md
+
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+/scratch/*.sql
+/scratch/*.json
+/scratch/*.txt
+/scratch/*.log
+/scratch/*.cjs
