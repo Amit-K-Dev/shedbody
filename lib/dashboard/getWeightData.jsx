@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { MetricReadAdapter } from "@/lib/repositories/MetricReadAdapter";
 
 export async function getWeightData(authContext) {
   try {
@@ -22,20 +23,8 @@ export async function getWeightData(authContext) {
       return [];
     }
 
-    // Database Error Handling
-    const { data: weights, error: dbError } = await supabase
-      .from("progress_entries")
-      .select("id, weight, body_fat, notes, entry_date, created_at")
-      .eq("user_id", userId)
-      .is("deleted_at", null)
-      .order("entry_date", { ascending: true })
-      .order("created_at", { ascending: true });
-
-    if (dbError) {
-      console.error("Error fetching weight data:", dbError);
-      return [];
-    }
-
+    // Delegate to Canonical EAV Adapter
+    const weights = await MetricReadAdapter.getProgress({ supabase, userId });
     return weights || [];
   } catch (error) {
     console.error("Crash in getWeightData:", error);
