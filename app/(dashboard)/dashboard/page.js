@@ -135,7 +135,25 @@ export default async function DashboardPage() {
   // Analytics computations
   const extractDate = (item) => item.entry_date || item.created_at.slice(0, 10);
 
-  const weightTrend = calculateTrend(boundedProgress, (item) => item.weight, extractDate);
+  // Wire ONE existing dashboard trend consumer to the new Python API
+  let weightTrend = null;
+  try {
+    const pythonParams = new URLSearchParams();
+    if (user?.id) pythonParams.append("user_id", user.id);
+    pythonParams.append("start_date", startDate);
+    pythonParams.append("end_date", endDate);
+    
+    const pyUrl = process.env.PYTHON_ANALYTICS_URL;
+    const internalSecret = process.env.INTERNAL_API_SECRET || "internal-python-secret-key-123";
+    const pyRes = await fetch(`${pyUrl}/api/v1/analytics/weight-trend?${pythonParams.toString()}`, {
+      headers: { "Authorization": `Bearer ${internalSecret}` }
+    });
+    if (pyRes.ok) {
+      weightTrend = await pyRes.json();
+    }
+  } catch (e) {
+    console.error("Failed to fetch weight trend from Python API:", e);
+  }
 
   let bmiProgress = [];
   if (height && height > 0) {
