@@ -15,7 +15,6 @@ import {
 import toast from "react-hot-toast";
 import Link from "next/link";
 import SeoMetaBox from "@/components/admin/SeoMetaBox";
-import { createClient } from "@/lib/supabase/client";
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -42,20 +41,20 @@ export default function NewPostPage() {
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("posts")
-        .select("category")
-        .not("category", "is", null);
-
-      if (data && !error) {
-        const uniqueCategories = [...new Set(data.map((p) => p.category))];
-        setCategories(uniqueCategories);
-        if (uniqueCategories.length > 0) {
-          setCategory(uniqueCategories[0]);
-        } else {
-          setCategory("General");
+      try {
+        const res = await fetch("/api/admin/posts");
+        const json = await res.json();
+        if (json?.data) {
+          const uniqueCategories = [...new Set(json.data.map((p) => p.category).filter(Boolean))];
+          setCategories(uniqueCategories);
+          if (uniqueCategories.length > 0) {
+            setCategory(uniqueCategories[0]);
+          } else {
+            setCategory("General");
+          }
         }
+      } catch (err) {
+        setCategory("General");
       }
     };
     fetchCategories();
@@ -142,36 +141,8 @@ export default function NewPostPage() {
     }
 
     setIsSubmitting(true);
-    const supabase = createClient();
     const finalSlug = slug.trim() ? generateSlug(slug) : generateSlug(title);
-
-    // 🟢 1. SLUG COLLISION CHECK (Unique URL Validation for NEW post)
-    const { data: existingSlugData } = await supabase
-      .from("posts")
-      .select("id")
-      .eq("slug", finalSlug)
-      .maybeSingle(); // Yahan '.neq()' ki zaroorat nahi kyunki ye naya post hai
-
-    if (existingSlugData) {
-      toast.error(
-        `Error: The URL slug "${finalSlug}" is already used by another post. Please change the title or custom slug!`,
-      );
-      setIsSubmitting(false);
-      return;
-    }
-
-    // 2. Get current logged-in Admin User
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      toast.error("Your session expired. Please log in again.");
-      setIsSubmitting(false);
-      router.push("/login");
-      return;
-    }
-
+    
     // 3. Handle Featured Image
     let finalFeaturedImage = extractFirstImage(content); // Fallback to content image
     if (featuredImageFile) {
@@ -199,7 +170,6 @@ export default function NewPostPage() {
       category: finalCategory || "General",
       status: status,
       featured_image: finalFeaturedImage,
-      author_id: user?.id,
       published_at: status === "published" ? new Date().toISOString() : null,
       views: 0,
       seo_title: seoData.seo_title.trim(),
@@ -208,26 +178,33 @@ export default function NewPostPage() {
       updated_at: new Date().toISOString(),
     };
 
-    // 5. Insert into Supabase
-    const { data, error } = await supabase
-      .from("posts")
-      .insert([postData])
-      .select();
+    // 5. Insert via API route
+    try {
+      const response = await fetch('/api/admin/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData)
+      });
+      const result = await response.json();
+      
+      setIsSubmitting(false);
 
-    setIsSubmitting(false);
-
-    if (error) {
-      toast.error("Post saving error: " + error.message);
-    } else {
-      const newPostId = data[0].id;
-
-      if (status === "draft") {
-        toast.success("Draft saved! You can continue editing.");
-        router.push(`/admin/posts/${newPostId}`);
+      if (!response.ok || !result.success) {
+        toast.error("Post saving error: " + (result.error || "Unknown error"));
       } else {
-        toast.success("Post Published! 🎉");
-        router.push("/admin/posts");
+        const newPostId = result.id;
+
+        if (status === "draft") {
+          toast.success("Draft saved! You can continue editing.");
+          router.push(`/admin/posts/${newPostId}`);
+        } else {
+          toast.success("Post Published! 🎉");
+          router.push("/admin/posts");
+        }
       }
+    } catch (apiError) {
+      setIsSubmitting(false);
+      toast.error("Network error while saving post");
     }
   };
 

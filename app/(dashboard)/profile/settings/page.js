@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import NotificationPreferencesForm from "@/components/notifications/NotificationPreferencesForm";
-import { getNotificationPreferences } from "@/lib/dashboard/getNotificationPreferences";
+
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -12,16 +12,44 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const preferences = await getNotificationPreferences({ supabase, userId: user.id });
+  let preferences = null;
+  try {
+    const { ProfileRepository } = await import("@/lib/repositories/ProfileRepository.js");
+    const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+    const adapter = new D1Adapter();
+    adapter._checkDb();
+    const profileRepo = new ProfileRepository(adapter);
+    preferences = await profileRepo.getPreferences(user.id);
+  } catch (d1Error) {
+    console.warn("D1 ProfileRepository fallback to Supabase (profile/settings):", d1Error?.message || d1Error);
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
+      const { data } = await supabase
+        .from("notification_preferences")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data) preferences = data;
+    } catch {}
+  }
+
+  if (!preferences) {
+    // Fallback defaults
+    preferences = {
+      workout_reminders: true,
+      goal_reminders: true,
+      habit_reminders: true,
+      weekly_progress: true,
+      plan_updates: true,
+    };
+  }
 
   return (
     <section className="min-h-screen text-zinc-50 px-4 py-10 pb-32 bg-black relative overflow-hidden">

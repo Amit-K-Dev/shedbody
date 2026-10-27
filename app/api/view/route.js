@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 const VIEW_HASH_SECRET =
   process.env.VIEW_HASH_SECRET ||
@@ -19,8 +18,6 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid postId" }, { status: 400 });
   }
 
-  const supabase = await createClient();
-
   const forwardedFor = req.headers.get("x-forwarded-for") || "";
   const ip =
     forwardedFor.split(",")[0].trim() ||
@@ -35,6 +32,22 @@ export async function POST(req) {
 
   try {
     const viewedAt = new Date();
+
+    try {
+      const { PostRepository } = await import("@/lib/repositories/PostRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const postRepo = new PostRepository(adapter);
+      
+      const result = await postRepo.recordPostView(postId.toString(), userHash, viewedAt.toISOString());
+      return NextResponse.json(result);
+    } catch (d1Error) {
+      console.warn("D1 View API error fallback to Supabase:", d1Error?.message || d1Error);
+    }
+
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = await createClient();
 
     const { data, error } = await supabase.rpc("record_post_view", {
       target_post_id: postId,

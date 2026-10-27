@@ -16,7 +16,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { createClient } from "@/lib/supabase/client";
 
 export default function EditPostPage() {
   const router = useRouter();
@@ -51,45 +50,47 @@ export default function EditPostPage() {
 
     const fetchData = async () => {
       setIsFetching(true);
-      const supabase = createClient();
 
       // Fetch Categories
-      const { data: catData } = await supabase
-        .from("posts")
-        .select("category")
-        .not("category", "is", null);
-
-      if (catData) {
-        const uniqueCategories = [...new Set(catData.map((p) => p.category))];
-        setCategories(uniqueCategories);
+      try {
+        const catRes = await fetch("/api/admin/posts");
+        const catJson = await catRes.json();
+        if (catJson?.data) {
+          const uniqueCategories = [...new Set(catJson.data.map((p) => p.category).filter(Boolean))];
+          setCategories(uniqueCategories);
+        }
+      } catch (catErr) {
+        console.warn("Failed to fetch categories:", catErr);
       }
 
-      // Fetch Post Details
-      const { data: postData, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", id)
-        .single();
+      // Fetch Post Details via API
+      try {
+        const response = await fetch(`/api/admin/posts?id=${id}`);
+        const result = await response.json();
+        if (response.ok && result.success && result.data) {
+          const postData = result.data;
+          setTitle(postData.title || "");
+          setSlug(postData.slug || "");
+          setContent(postData.content || "");
+          setExcerpt(postData.excerpt || "");
+          setCategory(postData.category || "General");
+          setFeaturedImage(postData.featured_image || null);
 
-      if (postData && !error) {
-        setTitle(postData.title || "");
-        setSlug(postData.slug || "");
-        setContent(postData.content || "");
-        setExcerpt(postData.excerpt || "");
-        setCategory(postData.category || "General");
-        setFeaturedImage(postData.featured_image || null);
+          setOriginalUrl(
+            `/${(postData.category || "General").toLowerCase()}/${postData.slug}`,
+          );
 
-        setOriginalUrl(
-          `/${(postData.category || "General").toLowerCase()}/${postData.slug}`,
-        );
-
-        // Set new SEO data in box
-        setSeoData({
-          seo_title: postData.seo_title || "",
-          seo_desc: postData.seo_desc || "",
-          keywords: postData.keywords || "",
-        });
-      } else {
+          // Set new SEO data in box
+          setSeoData({
+            seo_title: postData.seo_title || "",
+            seo_desc: postData.seo_desc || "",
+            keywords: postData.keywords || "",
+          });
+        } else {
+          toast.error("Error loading post! Redirecting...");
+          router.push("/admin/posts");
+        }
+      } catch (e) {
         toast.error("Error loading post! Redirecting...");
         router.push("/admin/posts");
       }
@@ -247,31 +248,38 @@ export default function EditPostPage() {
       postData.published_at = new Date().toISOString();
     }
 
-    // 4. SAVE TO DATABASE
-    const { error } = await supabase
-      .from("posts")
-      .update(postData)
-      .eq("id", id);
+    // 4. SAVE VIA API
+    try {
+      const response = await fetch('/api/admin/posts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...postData })
+      });
+      const result = await response.json();
 
-    // THE REDIRECT LOGIC
-    const newUrl = `/${(finalCategory || "General").toLowerCase()}/${finalSlug}`;
+      setIsSubmitting(false);
 
-    if (originalUrl && originalUrl !== newUrl) {
-      await supabase
-        .from("redirects")
-        .insert([{ old_url: originalUrl, new_url: newUrl }]);
-    }
+      if (!response.ok || !result.success) {
+        toast.error("Post not updated: " + (result.error || "Unknown error"));
+      } else {
+        // THE REDIRECT LOGIC
+        const newUrl = `/${(finalCategory || "General").toLowerCase()}/${finalSlug}`;
 
-    setIsSubmitting(false);
-
-    if (error) {
-      console.error("🔴 Supabase Update Error:", error);
-      toast.error("Post not updated: " + error.message);
-    } else {
-      toast.success(`Post successfully updated as ${status}! 🎉`);
-      if (status === "published") {
-        router.push("/admin/posts");
+        if (originalUrl && originalUrl !== newUrl) {
+          // This should ideally also be via API, but leave it as is if it's minimal
+          await supabase
+            .from("redirects")
+            .insert([{ old_url: originalUrl, new_url: newUrl }]);
+        }
+        
+        toast.success(`Post successfully updated as ${status}! 🎉`);
+        if (status === "published") {
+          router.push("/admin/posts");
+        }
       }
+    } catch (apiError) {
+      setIsSubmitting(false);
+      toast.error("Network error while updating post");
     }
   };
 

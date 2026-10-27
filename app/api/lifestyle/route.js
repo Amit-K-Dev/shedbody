@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { isValidCalendarDate } from "@/lib/utils/dateValidator";
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
+    const user = await getUser();
 
-    // Auth Check
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 }
@@ -38,20 +32,19 @@ export async function POST(req) {
       );
     }
 
-    // Workout Validation: Must be true, false, or null
-    let parsedWorkout = null;
-    if (workoutCompleted === true || workoutCompleted === false) {
-      parsedWorkout = workoutCompleted;
-    } else if (workoutCompleted !== null && workoutCompleted !== undefined) {
+    // Workout Validation: Must be true, false, undefined (omitted), or null (clear)
+    let parsedWorkout = workoutCompleted;
+    if (parsedWorkout !== undefined && parsedWorkout !== null && parsedWorkout !== true && parsedWorkout !== false) {
       return NextResponse.json(
-        { success: false, error: "workoutCompleted must be true, false, or null." },
+        { success: false, error: "workoutCompleted must be true, false, undefined, or null." },
         { status: 400 }
       );
     }
 
-    // Numeric Validation Helper
+    // Numeric Validation Helper (undefined means omitted, null means explicit clear)
     const parseNumber = (val, min, max, isInteger) => {
-      if (val === undefined || val === null || val === "") return null;
+      if (val === undefined) return undefined; // Omitted
+      if (val === null || val === "") return null; // Explicit clear
       const parsed = Number(val);
       if (isNaN(parsed) || !Number.isFinite(parsed)) return "INVALID";
       if (parsed < min || parsed > max) return "INVALID";
@@ -77,20 +70,59 @@ export async function POST(req) {
       );
     }
 
-    // RPC Invocation
-    const { error: dbError } = await supabase.rpc("upsert_lifestyle_log", {
-      p_log_date: logDate,
-      p_workout_completed: parsedWorkout,
-      p_steps_count: parsedSteps,
-      p_sleep_hours: parsedSleep,
-    });
+    // Build sparse payload
+    const payload = {};
+    if (parsedWorkout !== undefined) payload.workout = parsedWorkout;
+    if (parsedSteps !== undefined) payload.steps = parsedSteps;
+    if (parsedSleep !== undefined) payload.sleep = parsedSleep;
 
-    if (dbError) {
-      console.error("Supabase RPC Error (upsert_lifestyle_log):", dbError);
-      return NextResponse.json(
-        { success: false, error: "Failed to save lifestyle log." },
-        { status: 500 }
+    // Database Insert via MetricWriteAdapter or MetricRepository
+    try {
+      const { MetricRepository } = await import("@/lib/repositories/MetricRepository.js");
+      const { LifestyleRepository } = await import("@/lib/repositories/LifestyleRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const metricRepo = new MetricRepository(adapter);
+      const lifestyleRepo = new LifestyleRepository(adapter);
+
+      const metricStmts = await metricRepo.getCommitStatements(user.id, logDate, payload, 'manual');
+      const lifestyleStmt = await lifestyleRepo.getUpsertStatement(
+        user.id, 
+        logDate, 
+        parsedWorkout !== undefined ? parsedWorkout : null,
+        parsedSteps !== undefined ? parsedSteps : null,
+        parsedSleep !== undefined ? parsedSleep : null
       );
+
+      // Atomic Batch
+      await adapter.batch([...metricStmts, lifestyleStmt]);
+    } catch (d1Error) {
+      console.warn("D1 Metric/LifestyleRepository fallback to Supabase:", d1Error?.message || d1Error);
+      try {
+        const { createClient } = await import("@/lib/supabase/server");
+        const supabase = await createClient();
+        const { MetricWriteAdapter } = await import("@/lib/repositories/MetricWriteAdapter.js");
+        const { error: dbError } = await MetricWriteAdapter.commit(
+          { supabase, userId: user.id, logDate },
+          payload,
+          'manual'
+        );
+
+        if (dbError) {
+          console.error("MetricWriteAdapter Error (lifestyle):", dbError);
+          return NextResponse.json(
+            { success: false, error: "Failed to save lifestyle log." },
+            { status: 500 }
+          );
+        }
+      } catch (fallbackError) {
+        console.error("Lifestyle Fallback Error:", fallbackError);
+        return NextResponse.json(
+          { success: false, error: "Failed to save lifestyle log." },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(

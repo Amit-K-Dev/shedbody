@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Target, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { setWeightGoal } from "@/lib/goals";
 
 export default function PremiumSetGoal({ currentTarget }) {
@@ -28,14 +27,7 @@ export default function PremiumSetGoal({ currentTarget }) {
     setLoading(true);
 
     try {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) throw new Error("User not found");
-
-      // Update target weight in Database
+      // Update target weight in Database via Server Action
       const updatedGoal = await setWeightGoal(targetWeight);
 
       if (!updatedGoal) throw new Error("Failed to update goal");

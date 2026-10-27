@@ -1,6 +1,6 @@
 import { handleCronRequest } from '../../../../lib/notifications/cronHandler.js';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { syncUser } from '@/lib/notifications/syncUser';
+import { logger } from '../../../../lib/observability/logger.js';
 
 // Force dynamic execution for Vercel Cron
 export const dynamic = 'force-dynamic';
@@ -10,9 +10,22 @@ export async function GET(req) {
   const cronSecret = process.env.CRON_SECRET;
   
   if (!cronSecret) {
-    console.error('CRON_SECRET environment variable is not configured');
+    logger.error('cron.config.error', {
+      details: {
+        reason: 'missing_cron_secret'
+      }
+    });
     return Response.json({ error: 'Server configuration error' }, { status: 500 });
   }
 
-  return await handleCronRequest(req, cronSecret, createAdminClient, syncUser);
+  const getAdminClient = async () => {
+    try {
+      const { createAdminClient } = await import('@/lib/supabase/admin');
+      return createAdminClient();
+    } catch {
+      return null;
+    }
+  };
+
+  return await handleCronRequest(req, cronSecret, getAdminClient, syncUser);
 }

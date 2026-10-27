@@ -1,11 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { PostRepository } from "@/lib/repositories/PostRepository.js";
+import { D1Adapter } from "@/lib/repositories/D1Adapter.js";
 
 const baseUrl = "https://shedbody.com";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
 
 function escapeXml(str = "") {
   return String(str)
@@ -25,22 +21,39 @@ function getPostUrl(post) {
 }
 
 export async function GET() {
-  const { data: posts, error } = await supabase
-    .from("posts")
-    .select(
-      "slug,title,excerpt,seo_desc,category,featured_image,published_at,updated_at,status",
-    )
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(100);
+  let posts = [];
 
-  if (error) {
-    return new Response("Failed to generate RSS feed", {
-      status: 500,
-    });
+  try {
+    const postRepo = new PostRepository(new D1Adapter());
+    posts = await postRepo.getPublishedPosts(100);
+  } catch (d1Error) {
+    console.warn("D1 query failed in rss.xml, trying fallback:", d1Error?.message);
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      try {
+        const { createClient } = await import("@supabase/supabase-js");
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        );
+        const { data, error } = await supabase
+          .from("posts")
+          .select(
+            "slug,title,excerpt,seo_desc,category,featured_image,published_at,updated_at,status",
+          )
+          .eq("status", "published")
+          .order("published_at", { ascending: false })
+          .limit(100);
+
+        if (!error && data) {
+          posts = data;
+        }
+      } catch (fallbackErr) {
+        console.error("Fallback failed in rss.xml:", fallbackErr?.message);
+      }
+    }
   }
 
-  const items = (posts || [])
+  const items = posts
     .filter((post) => post.slug)
     .map((post) => {
       const title = escapeXml(post.title || "ShedBody");

@@ -17,6 +17,12 @@
 /.next/
 /out/
 
+# cloudflare / opennext
+/.open-next/
+**/.open-next/
+/.wrangler/
+**/.wrangler/
+
 # production
 /build
 
@@ -35,6 +41,8 @@ yarn-error.log*
 .env*
 .env.local
 .env.*.local
+!.env.example
+!.env.*.example
 
 # vercel
 .vercel
@@ -48,11 +56,14 @@ next-env.d.ts
 # Supabase hardening
 scripts/supabase-hardening.sql
 
-# Supabase CLI temp artifacts
+# Supabase CLI temp artifacts & production backups
 supabase/.temp/
+/supabase/backups/
 
 # shedbody plan
 shedbody-plan.md
+shedbody-cloudflare-migration-master-plan-revised.md
+oci-migration-plan.md
 
 # docs
 docs/audit.md
@@ -61,8 +72,27 @@ docs/audit.md
 *.sqlite3
 *.db
 *.db-journal
+*.sqlite-shm
+*.sqlite-wal
 /scratch/*.sql
 /scratch/*.json
 /scratch/*.txt
 /scratch/*.log
 /scratch/*.cjs
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+ENV/
+
+# Memory & transcript caches
+/.cmem-projects/
+/agent-transcripts/
+
+# Temporary local artifacts
+scratch-schema.js

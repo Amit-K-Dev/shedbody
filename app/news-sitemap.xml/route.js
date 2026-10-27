@@ -1,8 +1,8 @@
-export const dynamic = "force-dynamic";
-
-import { createClient } from "@/lib/supabase/server";
+import { PostRepository } from "@/lib/repositories/PostRepository.js";
+import { D1Adapter } from "@/lib/repositories/D1Adapter.js";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const baseUrl = "https://shedbody.com";
 const publicationName = "ShedBody";
@@ -32,30 +32,40 @@ const escapeXml = (unsafe) => {
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-    const { data: posts, error } = await supabase
-      .from("posts")
-      .select("slug, category, title, published_at")
-      .or(
-        "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
-      )
-      .not("slug", "is", null)
-      .not("category", "is", null)
-      .not("title", "is", null)
-      .not("published_at", "is", null)
-      .gte("published_at", twoDaysAgo.toISOString())
-      .order("published_at", { ascending: false });
+    let posts = [];
 
-    if (error) {
-      console.error(
-        "Database Error fetching posts for news sitemap:",
-        error.message,
-      );
-      return new Response("Error generating news sitemap.", { status: 500 });
+    try {
+      const postRepo = new PostRepository(new D1Adapter());
+      posts = await postRepo.getRecentPublishedPostsForNewsSitemap(twoDaysAgo.toISOString());
+    } catch (d1Error) {
+      console.warn("D1 query failed in news-sitemap, trying fallback:", d1Error?.message);
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        try {
+          const { createClient } = await import("@/lib/supabase/server");
+          const supabase = await createClient();
+          const { data, error } = await supabase
+            .from("posts")
+            .select("slug, category, title, published_at")
+            .or(
+              "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
+            )
+            .not("slug", "is", null)
+            .not("category", "is", null)
+            .not("title", "is", null)
+            .not("published_at", "is", null)
+            .gte("published_at", twoDaysAgo.toISOString())
+            .order("published_at", { ascending: false });
+
+          if (!error && data) {
+            posts = data;
+          }
+        } catch (fallbackErr) {
+          console.error("Fallback failed in news-sitemap:", fallbackErr?.message);
+        }
+      }
     }
 
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>

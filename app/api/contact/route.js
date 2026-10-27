@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
 // In-memory rate limit tracker
@@ -89,7 +88,6 @@ export async function POST(req) {
       rateLimitMap.set(ip, { count: 1, startTime: currentTime });
     }
 
-    const supabase = await createClient();
     const body = await req.json();
 
     const { name, email, inquiryType, message, honeypot, turnstileToken } =
@@ -213,9 +211,27 @@ export async function POST(req) {
     }
 
     // Save to database
-    const { error: dbError } = await supabase
-      .from("contact_submissions")
-      .insert([cleanData]);
+    let dbError = null;
+
+    try {
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const { ContactRepository } = await import("@/lib/repositories/ContactRepository.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const repo = new ContactRepository(adapter);
+      await repo.createSubmission(cleanData);
+    } catch (e) {
+      try {
+        const { createClient } = await import("@/lib/supabase/server");
+        const supabase = await createClient();
+        const { error: sbError } = await supabase
+          .from("contact_submissions")
+          .insert([cleanData]);
+        dbError = sbError;
+      } catch (fallbackErr) {
+        dbError = e || fallbackErr;
+      }
+    }
 
     if (dbError) {
       console.error("Database error:", dbError);

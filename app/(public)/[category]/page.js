@@ -1,22 +1,12 @@
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 
-import { getCategoriesForBuild, getAllPosts } from "@/lib/posts";
+import { getAllPosts } from "@/lib/posts";
 import SortFilter from "@/components/SortFilter";
 import SearchBar from "@/components/SearchBar";
 import { safeJsonLd } from "@/lib/security/html";
 
-export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const categories = await getCategoriesForBuild();
-
-  const validCategories = categories.filter((c) => c !== "all");
-
-  return validCategories.map((category) => ({
-    category,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 const categoryDescriptions = {
   nutrition:

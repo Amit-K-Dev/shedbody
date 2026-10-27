@@ -1,0 +1,90 @@
+# workers/auth-worker/wrangler.toml
+# ShedBody Dedicated Cloudflare Worker for Better Auth (CF-4B)
+
+name = "shedbody-auth-worker"
+main = "index.js"
+compatibility_date = "2024-04-05"
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare D1 Database Binding (Provisioned for Production Cutover)
+[[d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1"
+database_id = "27621f4f-22b4-4644-bcb0-ea35eabceede"
+preview_database_id = "27621f4f-22b4-4644-bcb0-ea35eabceede"
+migrations_dir = "../../d1-migrations"
+
+# ------------------------------------------------------------------------------
+# Production Environment Variables (Strictly Default-Off Until Authorized Cutover)
+# ------------------------------------------------------------------------------
+[vars]
+ENABLE_CF_AUTH = "true"
+BETTER_AUTH_URL = "https://shedbody-auth-worker.amitforge.workers.dev"
+APP_URL = "https://www.shedbody.com"
+AUTH_EMAIL_FROM = "ShedBody <auth@shedbody.com>"
+ENVIRONMENT = "production"
+BETTER_AUTH_TRUSTED_ORIGINS = "https://www.shedbody.com,https://shedbody.com,https://shedbody-auth-worker.amitforge.workers.dev"
+
+# ------------------------------------------------------------------------------
+# Production Rate Limiting Binding (Native Cloudflare Workers Rate Limiting)
+# ------------------------------------------------------------------------------
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 5
+period = 60
+
+# Production Secrets (Provision via `wrangler secret put --config workers/auth-worker/wrangler.toml`):
+# Required:
+# - BETTER_AUTH_SECRET (min 32 chars)
+# - RESEND_API_KEY
+# Optional OAuth:
+# - GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
+# - FACEBOOK_CLIENT_ID / FACEBOOK_CLIENT_SECRET
+# - TWITTER_CLIENT_ID / TWITTER_CLIENT_SECRET
+# - LINKEDIN_CLIENT_ID / LINKEDIN_CLIENT_SECRET
+
+# ------------------------------------------------------------------------------
+# Staging Environment Configuration
+# ------------------------------------------------------------------------------
+[env.staging]
+name = "shedbody-auth-worker-staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1-staging"
+database_id = "1e24679a-e0b6-4b97-ad84-023e972eca52"
+preview_database_id = "1e24679a-e0b6-4b97-ad84-023e972eca52"
+migrations_dir = "../../d1-migrations"
+
+[env.staging.vars]
+ENABLE_CF_AUTH = "true"
+BETTER_AUTH_URL = "https://shedbody-auth-worker-staging.amitforge.workers.dev"
+APP_URL = "https://shedbody-staging.amitforge.workers.dev"
+AUTH_EMAIL_FROM = "ShedBody Staging <staging-auth@shedbody.com>"
+AUTH_ALLOWED_RECIPIENTS = "kumar.amit2648@gmail.com"
+ENVIRONMENT = "staging"
+BETTER_AUTH_TRUSTED_ORIGINS = "http://localhost:3000,https://shedbody-auth-worker-staging.amitforge.workers.dev,https://shedbody-staging.amitforge.workers.dev"
+
+# ------------------------------------------------------------------------------
+# Staging Rate Limiting Binding (Native Cloudflare Workers Rate Limiting)
+# ------------------------------------------------------------------------------
+[[env.staging.ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+[env.staging.ratelimits.simple]
+limit = 5
+period = 60
+
+# ------------------------------------------------------------------------------
+# Staging Secrets (To be provisioned via `wrangler secret put`, NEVER committed):
+# - BETTER_AUTH_SECRET
+# - RESEND_API_KEY
+# - GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
+# - FACEBOOK_CLIENT_ID / FACEBOOK_CLIENT_SECRET
+# - TWITTER_CLIENT_ID / TWITTER_CLIENT_SECRET
+# - LINKEDIN_CLIENT_ID / LINKEDIN_CLIENT_SECRET
+# ------------------------------------------------------------------------------

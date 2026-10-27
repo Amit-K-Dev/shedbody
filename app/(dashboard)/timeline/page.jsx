@@ -5,7 +5,7 @@ import { getNutritionData } from "@/lib/dashboard/getNutritionData";
 import { getPlans } from "@/lib/storage";
 import { getHabitsData } from "@/lib/dashboard/getHabitsData";
 import { getActiveGoal } from "@/lib/goals";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { mergeDailyMetrics, generateTimeline } from "@/lib/analytics/unified";
 import { generateStructuredInsights } from "@/lib/insights/engine";
 
@@ -19,8 +19,12 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function TimelinePage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getUser();
+  let supabase = null;
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    supabase = await createClient();
+  } catch {}
 
   const authContext = { supabase, userId: user?.id };
 

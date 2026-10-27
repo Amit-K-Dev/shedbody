@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { calculatorMap } from "@/lib/calculations";
 import {
   Activity,
@@ -1430,8 +1429,7 @@ function ResultPanel({ config, result }) {
 }
 
 export default function CalculatorEngine({ config }) {
-  const supabase = useMemo(() => createClient(), []);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(false);
   const [inputs, setInputs] = useState(() => buildInitialInputs(config.inputs));
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
@@ -1441,29 +1439,26 @@ export default function CalculatorEngine({ config }) {
   const metricKey = config.historyMetric || config.result?.type || "bmi";
   const metricLabel = config.historyLabel || config.result?.label || "Result";
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, [supabase]);
-
   const fetchHistory = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("calculator_results")
-      .select("id, result_data, input_data, is_latest, created_at")
-      .eq("calculator_id", config.id)
-      .eq("user_id", user.id)
-      .is("deleted_at", null)
-      .order("created_at", { ascending: false })
-      .limit(7);
-
-    setHistory(data || []);
-  }, [config.id, supabase, user]);
+    try {
+      const res = await fetch(`/api/calculator/history?calculatorId=${config.id}`);
+      if (res.status === 401) {
+        setUser(false);
+        setHistory([]);
+        return;
+      }
+      const json = await res.json();
+      if (json.success) {
+        setUser(true);
+        setHistory(json.data || []);
+      } else {
+        setHistory([]);
+      }
+    } catch (e) {
+      console.error(e);
+      setHistory([]);
+    }
+  }, [config.id]);
 
   useEffect(() => {
     fetchHistory();
@@ -1474,13 +1469,28 @@ export default function CalculatorEngine({ config }) {
   };
 
   const saveResult = async (resultData, inputData) => {
-    const { error } = await supabase.rpc("upsert_calculator_result", {
-      p_calculator_id: config.id,
-      p_input_data: inputData,
-      p_result_data: resultData,
-    });
-
-    if (!error) fetchHistory();
+    try {
+      const res = await fetch("/api/calculator/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          calculatorId: config.id,
+          inputData,
+          resultData
+        })
+      });
+      if (res.status === 401) {
+        setUser(false);
+        return;
+      }
+      const json = await res.json();
+      if (json.success) {
+        setUser(true);
+        fetchHistory();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleCalculate = async () => {
@@ -1491,9 +1501,8 @@ export default function CalculatorEngine({ config }) {
       const output = calculatorMap[config.slug](parsedInputs);
       setResult(output);
 
-      if (user) {
-        await saveResult(output, parsedInputs);
-      }
+      // Best-effort save (ignored with 401 if not logged in)
+      await saveResult(output, parsedInputs);
     } catch (err) {
       setError(err.message || "Calculation failed. Please check your inputs.");
     } finally {

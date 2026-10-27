@@ -9,7 +9,7 @@ import { calculateBMI, getBmiCategory } from "@/lib/calculations/bmi";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
 import { getPlans } from "@/lib/storage";
 import { getActiveGoal } from "@/lib/goals";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 
 // UI
 import PremiumHeader from "@/components/dashboard/PremiumHeader";
@@ -99,10 +99,12 @@ function summarizeMeals(meals) {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
+  let supabase = null;
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    supabase = await createClient();
+  } catch {}
 
   const authContext = { supabase, userId: user?.id };
   const athlete = getUserDisplay(user);
@@ -144,12 +146,14 @@ export default async function DashboardPage() {
     pythonParams.append("end_date", endDate);
     
     const pyUrl = process.env.PYTHON_ANALYTICS_URL;
-    const internalSecret = process.env.INTERNAL_API_SECRET || "internal-python-secret-key-123";
-    const pyRes = await fetch(`${pyUrl}/api/v1/analytics/weight-trend?${pythonParams.toString()}`, {
-      headers: { "Authorization": `Bearer ${internalSecret}` }
-    });
-    if (pyRes.ok) {
-      weightTrend = await pyRes.json();
+    const internalSecret = process.env.INTERNAL_API_SECRET;
+    if (pyUrl && internalSecret) {
+      const pyRes = await fetch(`${pyUrl}/api/v1/analytics/weight-trend?${pythonParams.toString()}`, {
+        headers: { "Authorization": `Bearer ${internalSecret}` }
+      });
+      if (pyRes.ok) {
+        weightTrend = await pyRes.json();
+      }
     }
   } catch (e) {
     console.error("Failed to fetch weight trend from Python API:", e);

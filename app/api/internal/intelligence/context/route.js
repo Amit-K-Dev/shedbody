@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { safeTimingCompare } from "@/lib/auth/edgeJwtVerifier.js";
 
 import { getBoundedProgress } from "@/lib/analytics/progress";
 import { getProfileData } from "@/lib/dashboard/getProfileData";
@@ -48,8 +48,12 @@ function sanitizePlan(activePlan) {
 export async function GET(req) {
   try {
     const authHeader = req.headers.get("Authorization");
-    const internalSecret = process.env.INTERNAL_API_SECRET || "internal-python-secret-key-123";
-    if (authHeader !== `Bearer ${internalSecret}`) {
+    const internalSecret = process.env.INTERNAL_API_SECRET;
+    if (!internalSecret || !authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized Internal Request" }, { status: 401 });
+    }
+    const token = authHeader.slice(7).trim();
+    if (!safeTimingCompare(token, internalSecret)) {
       return NextResponse.json({ error: "Unauthorized Internal Request" }, { status: 401 });
     }
 
@@ -80,7 +84,11 @@ export async function GET(req) {
     }
 
     // Pass the auth context
-    const supabase = await createClient();
+    let supabase = null;
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      supabase = await createClient();
+    } catch {}
     const authContext = { supabase, userId };
 
     const [boundedProgress, profileData, plans, activeWeightGoal, lifestyleLogs, nutritionLogs] = await Promise.all([

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser";
 import { redirect } from "next/navigation";
 import MobileNav from "@/components/layout/MobileNav";
 import Sidebar from "@/components/layout/Sidebar";
@@ -13,11 +13,7 @@ export const metadata = {
 };
 
 export default async function DashboardLayout({ children }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   // Protect route
   if (!user) {

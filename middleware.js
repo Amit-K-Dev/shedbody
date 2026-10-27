@@ -1,16 +1,28 @@
 import { NextResponse } from 'next/server';
 
-export async function proxy(req) {
+export const runtime = 'experimental-edge';
+
+export async function middleware(req) {
+  const rawHost = req.headers.get('host') || req.nextUrl.hostname || '';
+  const host = rawHost.split(':')[0].toLowerCase();
+  if (host === 'shedbody.com') {
+    const url = req.nextUrl.clone();
+    url.hostname = 'www.shedbody.com';
+    url.protocol = 'https:';
+    url.port = '';
+    return NextResponse.redirect(url, 308);
+  }
+
   const { pathname } = req.nextUrl;
   
   let res = NextResponse.next({
     request: { headers: req.headers },
   });
 
+  const cookie = req.headers.get('cookie') || '';
+
   // Handle Better Auth API Protection for CF-4 and CF-9 tests
   if (pathname.startsWith('/api/protected') || pathname.startsWith('/api/analytics')) {
-    const cookie = req.headers.get('cookie') || '';
-    
     try {
       const authRes = await fetch(new URL('/api/auth/get-session', req.url), {
         headers: { cookie }
@@ -35,30 +47,27 @@ export async function proxy(req) {
     }
   }
 
-  // --- Original Supabase Proxy logic follows (untouched except for returning early above) ---
-  const { createServerClient } = await import("@supabase/ssr");
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return req.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            req.cookies.set(name, value);
-            res = NextResponse.next({ request: { headers: req.headers } });
-            res.cookies.set(name, value, options);
-          });
-        },
-      },
-    },
-  );
+  // Check Better Auth session for protected frontend routes
+  let authenticatedUser = null;
+  const hasBetterAuthCookie = cookie.includes('better-auth.session_token');
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (hasBetterAuthCookie) {
+    try {
+      const authRes = await fetch(new URL('/api/auth/get-session', req.url), {
+        headers: { cookie },
+        signal: AbortSignal.timeout(3000),
+      });
+      if (authRes.ok) {
+        const session = await authRes.json().catch(() => null);
+        if (session && session.user && session.session) {
+          authenticatedUser = session.user;
+        }
+      }
+    } catch {}
+    // FAIL-CLOSED INVARIANT: Better Auth session cookie is validated strictly.
+    // If unauthenticated or Worker is unavailable, authenticatedUser remains null,
+    // which cleanly redirects unauthorized requests to /login.
+  }
 
   const protectedRoutes = [
     "/dashboard",
@@ -71,11 +80,11 @@ export async function proxy(req) {
     pathname.startsWith(route),
   );
 
-  if (isProtected && !user) {
+  if (isProtected && !authenticatedUser) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if ((pathname === "/login" || pathname === "/signup") && user) {
+  if ((pathname === "/login" || pathname === "/signup") && authenticatedUser) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
@@ -84,6 +93,7 @@ export async function proxy(req) {
 
 export const config = {
   matcher: [
+    "/",
     "/dashboard/:path*",
     "/profile/:path*",
     "/plans/:path*",

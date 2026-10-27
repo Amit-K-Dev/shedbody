@@ -1,7 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
-import { getTrendingPosts, getPopularPosts, getSmartFeed } from "@/lib/posts";
+import { getTrendingPosts, getPopularPosts, getSmartFeed, getAllPosts } from "@/lib/posts";
 import PostCard from "@/components/PostCard";
 import HeroSection from "@/components/HeroSection";
 import { safeJsonLd } from "@/lib/security/html";
@@ -523,24 +522,9 @@ function DashboardValueSection() {
 }
 
 export default async function Home() {
-  const supabase = await createClient();
-
-  const [{ data: posts }, smartFeed, trendingPosts, popularPosts] =
+  const [{ posts }, smartFeed, trendingPosts, popularPosts] =
     await Promise.all([
-      supabase
-        .from("posts")
-        .select(
-          "id, title, slug, category, excerpt, published_at, updated_at, views, featured_image",
-        )
-        .or(
-          "status.eq.published,status.eq.Published,status.eq.publish,status.is.null",
-        )
-        .not("title", "is", null)
-        .not("slug", "is", null)
-        .not("category", "is", null)
-        .not("published_at", "is", null)
-        .order("published_at", { ascending: false })
-        .limit(7),
+      getAllPosts("all", 1, 7, "latest"),
       getSmartFeed(6),
       getTrendingPosts(4),
       getPopularPosts(4),

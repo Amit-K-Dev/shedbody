@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import LogoutButton from "@/components/LogoutButton";
 import UserAvatar from "@/components/UserAvatar";
 import { getUserDisplay } from "@/lib/auth/userDisplay";
@@ -29,26 +29,40 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const [{ data: profile }, { count: plansCount }] = await Promise.all([
-    supabase
-      .from("user_profiles")
-      .select("streak_count, gamification_level")
-      .eq("user_id", user.id)
-      .maybeSingle(),
-    supabase
-      .from("plans")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
-  ]);
+  // Domain Migration: ProfileRepository replacing Supabase reads
+  let profile = null, plansCount = 0;
+  try {
+    const { ProfileRepository } = await import("@/lib/repositories/ProfileRepository.js");
+    const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+    const adapter = new D1Adapter();
+    adapter._checkDb();
+    const profileRepo = new ProfileRepository(adapter);
+
+    [profile, plansCount] = await Promise.all([
+      profileRepo.getProfileStats(user.id),
+      profileRepo.getSavedPlansCount(user.id)
+    ]);
+  } catch (d1Error) {
+    console.warn("D1 ProfileRepository fallback to Supabase (profile):", d1Error?.message || d1Error);
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
+      const [profileRes, plansRes] = await Promise.all([
+        supabase.from("user_profiles").select("*").eq("user_id", user.id).maybeSingle(),
+        supabase.from("user_plans").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      ]);
+      profile = profileRes?.data || null;
+      plansCount = plansRes?.count || 0;
+    } catch (fallbackError) {
+      console.error("Profile Supabase fallback error:", fallbackError);
+    }
+  }
 
   const athlete = getUserDisplay(user);
 

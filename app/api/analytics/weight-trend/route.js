@@ -1,25 +1,23 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 
-const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET || "internal-python-secret-key-123";
+const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET;
 const PYTHON_API_URL = process.env.PYTHON_ANALYTICS_URL;
 
 export async function GET(req) {
   try {
-    const supabase = await createClient();
-    
-    let user = null;
-    let authHeaderToken = null;
-    const authHeader = req.headers.get('Authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      authHeaderToken = authHeader.substring(7);
-      const { data: authData } = await supabase.auth.getUser(authHeaderToken);
-      if (authData?.user) user = authData.user;
-    }
+    let user = await getUser();
 
     if (!user) {
-      const { data: cookieData } = await supabase.auth.getUser();
-      user = cookieData?.user;
+      const authHeader = req.headers.get('Authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        try {
+          const { createClient } = await import("@/lib/supabase/server");
+          const supabase = await createClient();
+          const { data: authData } = await supabase.auth.getUser(authHeader.substring(7));
+          if (authData?.user) user = authData.user;
+        } catch {}
+      }
     }
 
     // Fallback for Better Auth proxy
@@ -46,6 +44,14 @@ export async function GET(req) {
     pythonParams.append("user_id", user.id);
     if (startDate) pythonParams.append("start_date", startDate);
     if (endDate) pythonParams.append("end_date", endDate);
+
+    if (!INTERNAL_SECRET || !PYTHON_API_URL) {
+      console.error("Analytics Gateway configuration error: Missing INTERNAL_API_SECRET or PYTHON_ANALYTICS_URL.");
+      return NextResponse.json(
+        { success: false, error: "Analytics service is not properly configured." },
+        { status: 503 }
+      );
+    }
 
     // Call Python Service
     const pythonResponse = await fetch(`${PYTHON_API_URL}/api/v1/analytics/weight-trend?${pythonParams.toString()}`, {

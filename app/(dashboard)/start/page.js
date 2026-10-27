@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { dietPlans } from "@/data/diet";
 import { workoutPlans } from "@/data/workout";
 import Link from "next/link";
-import { saveUserProfile, savePlan } from "@/lib/storage";
+import { saveUserProfile, savePlan, addProgressEntry } from "@/lib/storage";
 import { setWeightGoal } from "@/lib/goals";
-import { createClient } from "@/lib/supabase/client";
 import {
   Sun,
   Apple,
@@ -211,13 +210,13 @@ export default function StartPlan() {
 
       const supabase = createClient();
       const entryDate = new Date().toISOString().slice(0, 10);
-      const { error: progressError } = await supabase.rpc("upsert_progress_entry", {
-        p_weight: weight,
-        p_entry_date: entryDate,
+      const progressResult = await addProgressEntry({
+        weight: weight,
+        entry_date: entryDate,
       });
 
-      if (progressError) {
-        console.error("Failed to log initial onboarding measurement:", progressError);
+      if (!progressResult) {
+        console.error("Failed to log initial onboarding measurement");
         toast.error("Failed to initialize your starting weight. Please try again.");
         setLoading(false);
         return;

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 
 
 import { buildAiContext } from "@/lib/ai/contextBuilder";
@@ -130,17 +130,21 @@ function buildContextDictionary(context) {
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
+    // 1. Authentication (Better Auth with fallback)
+    const user = await getUser();
 
-    // 1. Authentication (Supabase SSR)
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 }
       );
     }
+
+    let supabase = null;
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      supabase = await createClient();
+    } catch {}
 
     const authContext = { supabase, userId: user.id };
 
@@ -173,6 +177,54 @@ export async function POST(req) {
     if (intent !== undefined) {
       if (!ALLOWED_INTENTS.includes(intent)) {
         return NextResponse.json({ success: false, error: "Invalid intent." }, { status: 400 });
+      }
+    }
+
+    if (process.env.USE_PYTHON_ORCHESTRATION === "true") {
+      try {
+        const pythonSecret = process.env.PYTHON_API_SECRET;
+        if (!pythonSecret) {
+          console.error("Missing PYTHON_API_SECRET");
+          return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+        }
+        
+        const pythonUrl = process.env.PYTHON_SERVICE_URL || "http://127.0.0.1:8000";
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 58000);
+        
+        const pythonRes = await fetch(`${pythonUrl}/api/v1/coach/orchestrate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${pythonSecret}`
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            question,
+            intent
+          }),
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (pythonRes.status === 401) {
+          console.error("Python auth failed");
+          return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+        }
+        
+        const data = await pythonRes.json().catch(() => null);
+        if (!data) {
+           return NextResponse.json({ success: false, error: "Bad Gateway" }, { status: 502 });
+        }
+        
+        return NextResponse.json(data, { status: pythonRes.status });
+      } catch (err) {
+        if (err.name === 'AbortError') {
+           return NextResponse.json({ success: false, error: "AI provider took too long to respond. Please try again later." }, { status: 504 });
+        }
+        console.error("Python orchestration call failed:", err);
+        return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
       }
     }
 

@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { isValidCalendarDate } from "@/lib/utils/dateValidator";
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
+    const user = await getUser();
 
-    // Auth Check
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 }
@@ -54,19 +48,39 @@ export async function POST(req) {
       );
     }
 
-    // RPC Invocation
-    const { error: dbError } = await supabase.rpc("upsert_habit_entry", {
-      p_habit_name: habitName,
-      p_log_date: logDate,
-      p_completed: completed,
-    });
+    // Repository Invocation
+    try {
+      const { HabitRepository } = await import("@/lib/repositories/HabitRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const habitRepo = new HabitRepository(adapter);
+      await habitRepo.upsertHabitEntry(user.id, habitName, logDate, completed);
+    } catch (d1Error) {
+      console.warn("D1 HabitRepository fallback to Supabase:", d1Error?.message || d1Error);
+      try {
+        const { createClient } = await import("@/lib/supabase/server");
+        const supabase = await createClient();
+        const { error: dbError } = await supabase.rpc("upsert_habit_entry", {
+          p_habit_name: habitName,
+          p_log_date: logDate,
+          p_completed: completed,
+        });
 
-    if (dbError) {
-      console.error("Supabase RPC Error (upsert_habit_entry):", dbError);
-      return NextResponse.json(
-        { success: false, error: "Failed to save habit entry." },
-        { status: 500 }
-      );
+        if (dbError) {
+          console.error("Supabase RPC Error (upsert_habit_entry):", dbError);
+          return NextResponse.json(
+            { success: false, error: "Failed to save habit entry." },
+            { status: 500 }
+          );
+        }
+      } catch (fallbackError) {
+        console.error("Habit Fallback Error:", fallbackError);
+        return NextResponse.json(
+          { success: false, error: "Failed to save habit entry." },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(

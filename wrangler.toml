@@ -1,0 +1,83 @@
+# wrangler.toml
+# ShedBody Next.js Application on Cloudflare Workers (OpenNext)
+
+name = "shedbody"
+main = ".open-next/worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+# Cloudflare Assets Binding (OpenNext assets)
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+# Worker Self-Reference Service Binding (Required by OpenNext)
+[[services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "shedbody"
+
+# D1 Database Binding (Provisioned for Production Cutover)
+[[d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1"
+database_id = "27621f4f-22b4-4644-bcb0-ea35eabceede"
+preview_database_id = "27621f4f-22b4-4644-bcb0-ea35eabceede"
+migrations_dir = "d1-migrations"
+
+# R2 Storage Binding
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "shedbody-assets"
+
+# ------------------------------------------------------------------------------
+# Production Environment Variables (Strictly Default-Off Until Authorized Cutover)
+# ------------------------------------------------------------------------------
+[vars]
+ENVIRONMENT = "production"
+NEXT_PUBLIC_APP_ENV = "production"
+ENABLE_BETTER_AUTH = "true"
+NEXT_PUBLIC_ENABLE_BETTER_AUTH = "true"
+ENABLE_D1_PLANS = "true"
+ENABLE_D1_METRICS = "true"
+ENABLE_D1_PROFILE = "true"
+ENABLE_D1_GOALS = "true"
+ENABLE_D1_ADAPTIVE = "true"
+ENABLE_D1_NOTIFICATIONS = "true"
+AUTH_WORKER_URL = "https://shedbody-auth-worker.amitforge.workers.dev"
+BETTER_AUTH_URL = "https://shedbody-auth-worker.amitforge.workers.dev"
+NEXT_PUBLIC_APP_URL = "https://www.shedbody.com"
+
+# ------------------------------------------------------------------------------
+# Staging Environment Configuration
+# ------------------------------------------------------------------------------
+[env.staging]
+name = "shedbody-staging"
+
+[[env.staging.services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "shedbody-staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1-staging"
+database_id = "1e24679a-e0b6-4b97-ad84-023e972eca52"
+migrations_dir = "d1-migrations"
+
+[[env.staging.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "shedbody-assets"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+NEXT_PUBLIC_APP_ENV = "staging"
+ENABLE_BETTER_AUTH = "true"
+NEXT_PUBLIC_ENABLE_BETTER_AUTH = "true"
+ENABLE_D1_PLANS = "true"
+ENABLE_D1_METRICS = "true"
+ENABLE_D1_PROFILE = "true"
+ENABLE_D1_GOALS = "true"
+ENABLE_D1_ADAPTIVE = "true"
+ENABLE_D1_NOTIFICATIONS = "true"
+AUTH_WORKER_URL = "https://shedbody-auth-worker-staging.amitforge.workers.dev"
+BETTER_AUTH_URL = "https://shedbody-auth-worker-staging.amitforge.workers.dev"
+NEXT_PUBLIC_APP_URL = "https://shedbody-staging.amitforge.workers.dev"

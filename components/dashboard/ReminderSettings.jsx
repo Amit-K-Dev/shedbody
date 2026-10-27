@@ -1,23 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { updateGlobalReminderSettings } from "@/lib/actions/profile";
 
 export default function ReminderSettings({ initial }) {
   const [enabled, setEnabled] = useState(initial?.enabled);
   const [time, setTime] = useState(initial?.time);
 
-  const supabase = createClient();
-
   const save = async () => {
-    const { error } = await supabase.rpc("save_user_profile", {
-      p_reminder_enabled: enabled,
-      p_reminder_time: time,
-    }).single();
-
-    if (error) throw error;
-
-    alert("Saved");
+    try {
+      await updateGlobalReminderSettings(enabled, time);
+      alert("Saved");
+    } catch (error) {
+      console.error(error);
+      alert("Error saving reminders");
+    }
   };
 
   return (

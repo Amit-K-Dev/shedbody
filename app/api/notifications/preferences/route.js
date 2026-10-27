@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 
 export async function PATCH(request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -27,15 +24,36 @@ export async function PATCH(request) {
     }
     
     // Upsert preference
-    const { error } = await supabase
-      .from("notification_preferences")
-      .upsert({
-        user_id: user.id,
-        ...safeUpdates,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
+    const isD1NotificationsEnabled = process.env.ENABLE_D1_NOTIFICATIONS === "true";
+    let d1Updated = false;
 
-    if (error) throw error;
+    if (isD1NotificationsEnabled) {
+      try {
+        const { ProfileRepository } = await import("@/lib/repositories/ProfileRepository.js");
+        const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+        const adapter = new D1Adapter();
+        adapter._checkDb();
+        const profileRepo = new ProfileRepository(adapter);
+        await profileRepo.updatePreferences(user.id, safeUpdates);
+        d1Updated = true;
+      } catch (d1Err) {
+        console.warn("ProfileRepository D1 updatePreferences error, falling back to Supabase:", d1Err?.message || d1Err);
+      }
+    }
+
+    if (!d1Updated) {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
+
+      const { error: upsertError } = await supabase
+        .from("notification_preferences")
+        .upsert({ user_id: user.id, ...safeUpdates, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+
+      if (upsertError) {
+        console.error("Supabase notification_preferences upsert error:", upsertError);
+        return NextResponse.json({ error: upsertError.message }, { status: 500 });
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

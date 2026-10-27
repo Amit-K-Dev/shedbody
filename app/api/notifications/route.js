@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 
 export async function GET(request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -13,6 +10,32 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const limit = parseInt(searchParams.get("limit") || "50", 10);
+
+  const isD1NotificationsEnabled = process.env.ENABLE_D1_NOTIFICATIONS === "true";
+
+  if (isD1NotificationsEnabled) {
+    try {
+      const { NotificationRepository } = await import("@/lib/repositories/NotificationRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const notificationRepo = new NotificationRepository(adapter);
+
+      const notifications = await notificationRepo.getNotifications(user.id, limit);
+      const unreadCount = await notificationRepo.getUnreadCount(user.id);
+      
+      return NextResponse.json({
+        notifications,
+        unreadCount,
+      });
+    } catch (error) {
+      console.warn("NotificationRepository D1 Error, falling back to Supabase:", error?.message || error);
+      // Fall through to Supabase below
+    }
+  }
+
+  const { createClient } = await import("@/lib/supabase/server");
+  const supabase = await createClient();
 
   // Fetch notifications
   const { data: notifications, error } = await supabase

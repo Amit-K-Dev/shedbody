@@ -1,12 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
+import { PostRepository } from "@/lib/repositories/PostRepository.js";
+import { D1Adapter } from "@/lib/repositories/D1Adapter.js";
 import { normalizeImageUrl } from "@/lib/utils/imageUrl";
 
-const baseUrl = "https://shedbody.com";
+export const dynamic = "force-dynamic";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+const baseUrl = "https://shedbody.com";
 
 function escapeXml(str = "") {
   return String(str)
@@ -43,15 +41,32 @@ function getPostImage(post) {
 }
 
 export async function GET() {
-  const { data: posts, error } = await supabase
-    .from("posts")
-    .select("slug,title,seo_title,category,featured_image,content,status")
-    .eq("status", "published");
+  let posts = [];
 
-  if (error) {
-    return new Response("Failed to generate image sitemap", {
-      status: 500,
-    });
+  try {
+    const postRepo = new PostRepository(new D1Adapter());
+    posts = await postRepo.getPublishedPostsForImageSitemap();
+  } catch (d1Error) {
+    console.warn("D1 query failed in image-sitemap, trying fallback:", d1Error?.message);
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      try {
+        const { createClient } = await import("@supabase/supabase-js");
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        );
+        const { data, error } = await supabase
+          .from("posts")
+          .select("slug,title,seo_title,category,featured_image,content,status")
+          .eq("status", "published");
+
+        if (!error && data) {
+          posts = data;
+        }
+      } catch (fallbackErr) {
+        console.error("Fallback failed in image-sitemap:", fallbackErr?.message);
+      }
+    }
   }
 
   const urls = posts

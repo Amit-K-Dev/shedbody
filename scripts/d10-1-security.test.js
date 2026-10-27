@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 const NEXT_URL = 'http://localhost:3000';
-const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET || "internal-python-secret-key-123";
+const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET || "test-internal-secret-for-analytics";
 
 async function runTests() {
   console.log("Starting D10-1 Intelligence Boundary Security & Context Tests...\n");
@@ -32,6 +32,13 @@ async function runTests() {
   });
   assert(invalidSecretRes.status === 401, "Expected 401 for invalid internal secret");
   console.log("✅ Invalid internal secret correctly blocked.");
+
+  console.log("4b. Testing Deprecated Fallback Secret Is Blocked (401)...");
+  const deprecatedFallbackRes = await fetch(`${NEXT_URL}/api/internal/intelligence/context?user_id=${userAData.user.id}`, {
+    headers: { 'Authorization': 'Bearer internal-python-secret-key-123' }
+  });
+  assert(deprecatedFallbackRes.status === 401, "Expected 401 for deprecated fallback secret");
+  console.log("✅ Deprecated fallback secret correctly blocked.");
 
   console.log("5. Testing Missing Identity (400)...");
   const missingIdRes = await fetch(`${NEXT_URL}/api/internal/intelligence/context`, {

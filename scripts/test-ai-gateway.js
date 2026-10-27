@@ -10,7 +10,8 @@ const rawCode = fs.readFileSync(routePath, 'utf8');
 // Strip imports so we can evaluate the module logic in isolation
 let codeToEval = rawCode
   .replace(/import\s+[\s\S]*?\s+from\s+['"][^'"]+['"];?/g, '')
-  .replace(/export async function POST/, 'async function POST');
+  .replace(/export async function POST/, 'async function POST')
+  .replace(/export const maxDuration = 60;/, '');
 
 // A simple mock for NextResponse
 const NextResponse = {

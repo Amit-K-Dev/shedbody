@@ -1,0 +1,46 @@
+name = "shedbody-d1-bridge"
+main = "index.js"
+compatibility_date = "2024-04-05"
+compatibility_flags = ["nodejs_compat"]
+
+# Native Cloudflare D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1"
+database_id = "local-dev-id-placeholder"
+preview_database_id = "local-dev-id-placeholder"
+
+# Environment Variables: Default-Off
+[vars]
+ENABLE_D1_BRIDGE = "false"
+REQUIRE_INTERNAL_SECRET = "false"
+# ALLOWED_JWT_ALGORITHMS = "HS256"
+# SUPABASE_AUTH_ISSUER = "https://<project-ref>.supabase.co/auth/v1"
+
+# Staging Environment: Flags strictly default-off
+[env.staging]
+name = "shedbody-d1-bridge-staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "shedbody-d1-staging"
+database_id = "staging-d1-id-placeholder"
+preview_database_id = "staging-d1-id-placeholder"
+
+[env.staging.vars]
+ENABLE_D1_BRIDGE = "false"
+REQUIRE_INTERNAL_SECRET = "true"
+# Cryptographic JWT Verification Configuration (Algorithm-Neutral):
+# CRITICAL INVARIANTS:
+# 1. An unverified JWT header is diagnostic evidence only, never proof of the trusted signing algorithm.
+# 2. A missing or empty JWKS endpoint does not independently prove HS256.
+# 3. Use authoritative Supabase project settings or documented project metadata to establish the configured signing mode.
+# 4. Never reveal, copy into logs, or request secret values (e.g. SUPABASE_JWT_SECRET must be set via `wrangler secret put`, never committed).
+# 
+# Signing mode options (select only after confirming authoritative Supabase settings):
+#   - For symmetric mode:  ALLOWED_JWT_ALGORITHMS = "HS256" (requires SUPABASE_JWT_SECRET stored via wrangler secret put)
+#   - For asymmetric mode: ALLOWED_JWT_ALGORITHMS = "RS256" or "ES256" (requires SUPABASE_AUTH_ISSUER and SUPABASE_JWKS_URL)
+#
+# Status: UNCONFIRMED (Awaiting authoritative Supabase project settings)
+# ALLOWED_JWT_ALGORITHMS = "UNCONFIRMED (HS256, RS256, or ES256)"
+# SUPABASE_AUTH_ISSUER = "https://<project-ref>.supabase.co/auth/v1"

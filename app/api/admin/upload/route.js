@@ -1,34 +1,49 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { uploadToR2 } from "@/lib/r2/upload";
 
 export const runtime = "nodejs";
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
-
     // 1. Auth Check: Ensure user is logged in
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const user = await getUser();
 
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 },
       );
     }
 
-    // 2. Admin Check: Query public.profiles
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+    // 2. Admin Check
+    let isAdmin = false;
 
-    if (profile?.role !== "admin") {
+    try {
+      const { ProfileRepository } = await import("@/lib/repositories/ProfileRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const repo = new ProfileRepository(adapter);
+      const profile = await repo.getPublicProfile(user.id);
+      isAdmin = profile?.role === "admin";
+    } catch (d1Error) {
+      console.warn("D1 ProfileRepository fallback to Supabase (admin/upload):", d1Error?.message || d1Error);
+      try {
+        const { createClient } = await import("@/lib/supabase/server");
+        const supabase = await createClient();
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+        isAdmin = profile?.role === "admin";
+      } catch (fallbackError) {
+        console.error("Admin upload role check fallback error:", fallbackError);
+      }
+    }
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, error: "Forbidden. Admin access required." },
         { status: 403 },

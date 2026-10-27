@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import {
   Edit,
@@ -23,14 +22,17 @@ export default function AllPostsPage() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("posts")
-        .select("id, title, category, status, published_at, updated_at")
-        .order("updated_at", { ascending: false })
-        .limit(100);
-
-      if (!error && data) setPosts(data);
+      try {
+        const response = await fetch("/api/admin/posts");
+        const json = await response.json();
+        if (json.success) {
+          setPosts(json.data);
+        } else {
+          toast.error("Failed to fetch posts.");
+        }
+      } catch (err) {
+        toast.error("An error occurred while fetching posts.");
+      }
       setLoading(false);
     };
     fetchPosts();
@@ -51,18 +53,20 @@ export default function AllPostsPage() {
     if (!postToDelete) return;
     setIsDeleting(true);
 
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("posts")
-      .delete()
-      .eq("id", postToDelete);
+    try {
+      const response = await fetch(`/api/admin/posts?id=${postToDelete}`, {
+        method: "DELETE",
+      });
+      const json = await response.json();
 
-    if (error) {
-      toast.error("Failed to delete post: " + error.message);
-    } else {
-      setPosts(posts.filter((post) => post.id !== postToDelete));
-
-      toast.success("Post deleted permanently!");
+      if (!response.ok || !json.success) {
+        toast.error(json.error || "Failed to delete post");
+      } else {
+        setPosts(posts.filter((post) => post.id !== postToDelete));
+        toast.success("Post deleted permanently!");
+      }
+    } catch (err) {
+      toast.error("An error occurred while deleting the post.");
     }
 
     setIsDeleting(false);

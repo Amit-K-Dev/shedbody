@@ -1,51 +1,28 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { getUser } from "@/lib/auth/getUser.js";
+import { getHeaderProfile } from "@/lib/actions/profile.js";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
+  const error = searchParams.get("error");
 
-  if (code) {
-    const cookieStore = await cookies();
+  // Propagate incoming error parameters directly to login UI
+  if (error) {
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error)}`);
+  }
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) => {
-                cookieStore.set(name, value, options);
-              });
-            } catch (error) {}
-          },
-        },
-      },
-    );
-
-    const { data: authData, error } =
-      await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error && authData?.user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", authData.user.id)
-        .single();
-
+  // Resolve session via Better Auth
+  try {
+    const user = await getUser();
+    if (user) {
+      const profile = await getHeaderProfile(user.id);
       const targetPath = profile?.role === "admin" ? "/admin" : "/dashboard";
-
       return NextResponse.redirect(`${origin}${targetPath}`);
-    } else {
-      console.error("🔴 SUPABASE AUTH ERROR:", error?.message);
     }
-  } else {
-    console.error("🔴 ERROR: 'code' parameter is missing in URL!");
+  } catch (err) {
+    console.error("[Callback] Better Auth session resolution error:", err?.message || err);
   }
 
   return NextResponse.redirect(`${origin}/login?error=callback_failed`);

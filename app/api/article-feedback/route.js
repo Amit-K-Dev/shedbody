@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 const MAX_BODY_BYTES = 2048;
 const MAX_NOTE_LENGTH = 280;
@@ -133,20 +132,39 @@ export async function POST(req) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
-  const supabase = await createClient();
+  try {
+    const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+    const { PostRepository } = await import("@/lib/repositories/PostRepository.js");
+    const adapter = new D1Adapter();
+    adapter._checkDb();
+    const postRepo = new PostRepository(adapter);
+    
+    const feedback = await postRepo.recordArticleFeedback(postId, userHash, vote, reason, note);
+    
+    return NextResponse.json({ success: true, feedback });
+  } catch (d1Error) {
+    console.warn("D1 PostRepository fallback to Supabase (article-feedback):", d1Error?.message || d1Error);
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const supabase = await createClient();
 
-  const { data, error } = await supabase.rpc("record_article_feedback", {
-    target_post_id: postId,
-    target_user_hash: userHash,
-    target_vote: vote,
-    target_reason: reason,
-    target_note: note,
-  });
+      const { data, error } = await supabase.rpc("record_article_feedback", {
+        target_post_id: postId,
+        target_user_hash: userHash,
+        target_vote: vote,
+        target_reason: reason,
+        target_note: note,
+      });
 
-  if (error) {
-    console.error("Article feedback API error:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+      if (error) {
+        console.error("Article feedback API error:", error);
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true, feedback: data?.[0] || null });
+    } catch (fallbackError) {
+      console.error("Article feedback Fallback Error:", fallbackError);
+      return NextResponse.json({ error: "Server error" }, { status: 500 });
+    }
   }
-
-  return NextResponse.json({ success: true, feedback: data?.[0] || null });
 }

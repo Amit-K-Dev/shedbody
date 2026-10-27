@@ -1,66 +1,16 @@
-import { createClient } from "@/lib/supabase/server";
 
 export async function updateStreak(userId) {
-  const supabase = await createClient();
-
-  const { data: rpcStreak, error: rpcError } = await supabase.rpc(
-    "update_user_streak",
-    {
-      target_user_id: userId,
-    },
-  );
-
-  if (!rpcError && rpcStreak !== null && rpcStreak !== undefined) {
-    return rpcStreak;
+  const { ProfileRepository } = await import("@/lib/repositories/ProfileRepository.js");
+  const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+  
+  const adapter = new D1Adapter();
+  try {
+    adapter._checkDb();
+  } catch {
+    return 0;
   }
-
-  const today = new Date();
-  const todayKey = today.toISOString().slice(0, 10);
-
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayKey = yesterday.toISOString().slice(0, 10);
-
-  const { data: profile, error: fetchError } = await supabase
-    .from("user_profiles")
-    .select("streak_count, last_active_date")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (fetchError || !profile) {
-    console.error("Error fetching profile for streak:", fetchError);
-    return null;
-  }
-
-  const lastDate = profile.last_active_date;
-  let newStreak = profile.streak_count || 0;
-
-  // Streak Logic
-  if (!lastDate) {
-    newStreak = 1;
-  } else if (lastDate === todayKey) {
-    return newStreak;
-  } else {
-    if (lastDate === yesterdayKey) {
-      newStreak += 1;
-    } else {
-      newStreak = 1;
-    }
-  }
-
-  // Supabase column is a date, so store YYYY-MM-DD instead of a timestamp.
-  const { error: updateError } = await supabase
-    .from("user_profiles")
-    .update({
-      streak_count: newStreak,
-      last_active_date: todayKey,
-    })
-    .eq("user_id", userId);
-
-  if (updateError) {
-    console.error("Error updating streak:", updateError);
-    return profile.streak_count;
-  }
-
+  
+  const profileRepo = new ProfileRepository(adapter);
+  const newStreak = await profileRepo.processStreak(userId);
   return newStreak;
 }

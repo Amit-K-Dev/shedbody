@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { getPersonSchema } from "@/lib/schema";
 import ExpertAvatar from "@/components/ExpertAvatar";
-import { createClient } from "@/lib/supabase/server";
+import { getExpertPosts } from "@/lib/posts";
 import PostCard from "@/components/PostCard";
 import { categoryExpertMap } from "@/lib/expertMapping";
 
@@ -57,27 +57,13 @@ export default async function ExpertProfilePage({ params }) {
 
   if (!expert) notFound();
 
-  // Fetch articles reviewed by this expert
-  const supabase = await createClient();
   const expertCategories = Object.keys(categoryExpertMap).filter(
     (cat) => categoryExpertMap[cat] === expert.id,
   );
 
   let reviewedPosts = [];
   if (expertCategories.length > 0) {
-    const { data } = await supabase
-      .from("posts")
-      .select(
-        "id, title, slug, category, excerpt, published_at, views, featured_image",
-      )
-      .in("category", expertCategories)
-      .not("title", "is", null)
-      .not("slug", "is", null)
-      .not("published_at", "is", null)
-      .order("published_at", { ascending: false })
-      .limit(6);
-
-    if (data) reviewedPosts = data;
+    reviewedPosts = await getExpertPosts(expertCategories, 6);
   }
 
   const schema = getPersonSchema(expert);

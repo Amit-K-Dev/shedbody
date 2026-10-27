@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { logout } from "@/lib/actions/logout";
+import { getHeaderProfile } from "@/lib/actions/profile";
 
 import {
   Flame,
@@ -213,51 +214,49 @@ export default function Header() {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [desktopSearchOpen]);
 
-  // Supabase Auth Check & Real-time Listener
+  // Auth Check via Better Auth Server Action
   useEffect(() => {
-    const supabase = createClient();
+    let mounted = true;
 
-    // Function to fetch user data
-    const fetchUserData = async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        // Fetch role from database
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role, avatar_url")
-          .eq("id", currentUser.id)
-          .single();
-
-        setRole(profile?.role || "user");
-        setAvatar(profile?.avatar_url || null);
-      } else {
+    async function checkAuth() {
+      try {
+        const profile = await getHeaderProfile();
+        if (!mounted) return;
+        if (profile?.user) {
+          setUser(profile.user);
+          setRole(profile.role || "user");
+          setAvatar(profile.avatar_url || null);
+        } else {
+          setUser(null);
+          setRole(null);
+          setAvatar(null);
+        }
+      } catch {
+        if (!mounted) return;
         setUser(null);
         setRole(null);
+        setAvatar(null);
+      } finally {
+        if (mounted) setLoading(false);
       }
-      setLoading(false);
-    };
+    }
 
-    // Initial Check
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      fetchUserData(user);
-    });
+    checkAuth();
 
-    // The Magic Listener
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      fetchUserData(session?.user || null);
-    });
-
-    // Cleanup
     return () => {
-      subscription.unsubscribe();
+      mounted = false;
     };
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    try {
+      await logout();
+    } catch {
+      // Ignore network/worker interruption on redirect
+    }
+    setUser(null);
+    setRole(null);
+    setAvatar(null);
     router.push("/login");
   };
 

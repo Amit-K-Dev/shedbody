@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { isValidCalendarDate } from "@/lib/utils/dateValidator";
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
+    const user = await getUser();
 
-    // Auth Check: Ensure user is actually logged in
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 }
@@ -50,9 +44,9 @@ export async function POST(req) {
       return parsed;
     };
 
-    let parsedCalories = parseNumber(body.calories);
-    let parsedProtein = parseNumber(body.protein);
-    let parsedWater = parseNumber(body.water);
+    const parsedCalories = parseNumber(body.calories);
+    const parsedProtein = parseNumber(body.protein);
+    const parsedWater = parseNumber(body.water);
 
     if (parsedCalories === "INVALID" || parsedProtein === "INVALID" || parsedWater === "INVALID") {
       return NextResponse.json(
@@ -61,40 +55,59 @@ export async function POST(req) {
       );
     }
 
-    // Preserve existing values ONLY for genuinely omitted fields (undefined)
-    if (parsedCalories === undefined || parsedProtein === undefined || parsedWater === undefined) {
-      const { data: existingLog } = await supabase
-        .from("nutrition_logs")
-        .select("calories_consumed, protein_consumed, water_ml")
-        .eq("user_id", user.id)
-        .eq("log_date", logDate)
-        .maybeSingle();
+    // Build sparse payload
+    const payload = {};
+    if (parsedCalories !== undefined) payload.calories = parsedCalories;
+    if (parsedProtein !== undefined) payload.protein = parsedProtein;
+    if (parsedWater !== undefined) payload.water = parsedWater;
 
-      if (existingLog) {
-        if (parsedCalories === undefined) parsedCalories = existingLog.calories_consumed;
-        if (parsedProtein === undefined) parsedProtein = existingLog.protein_consumed;
-        if (parsedWater === undefined) parsedWater = existingLog.water_ml;
-      } else {
-        if (parsedCalories === undefined) parsedCalories = null;
-        if (parsedProtein === undefined) parsedProtein = null;
-        if (parsedWater === undefined) parsedWater = null;
-      }
-    }
+    // Database Insert via MetricRepository/NutritionRepository with Supabase fallback
+    try {
+      const { MetricRepository } = await import("@/lib/repositories/MetricRepository.js");
+      const { NutritionRepository } = await import("@/lib/repositories/NutritionRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const metricRepo = new MetricRepository(adapter);
+      const nutritionRepo = new NutritionRepository(adapter);
 
-    // Database Insert via RPC
-    const { error: dbError } = await supabase.rpc("upsert_nutrition_log", {
-      p_log_date: logDate,
-      p_calories_consumed: parsedCalories,
-      p_protein_consumed: parsedProtein,
-      p_water_ml: parsedWater,
-    });
-
-    if (dbError) {
-      console.error("Supabase RPC Error (upsert_nutrition_log):", dbError);
-      return NextResponse.json(
-        { success: false, error: "Failed to save nutrition log." },
-        { status: 500 }
+      const metricStmts = await metricRepo.getCommitStatements(user.id, logDate, payload, 'manual');
+      const nutritionStmt = await nutritionRepo.getUpsertStatement(
+        user.id, 
+        logDate, 
+        parsedCalories !== undefined ? parsedCalories : null,
+        parsedProtein !== undefined ? parsedProtein : null,
+        parsedWater !== undefined ? parsedWater : null
       );
+
+      // Atomic Batch
+      await adapter.batch([...metricStmts, nutritionStmt]);
+    } catch (d1Error) {
+      console.warn("D1 Metric/NutritionRepository fallback to Supabase:", d1Error?.message || d1Error);
+      try {
+        const { createClient } = await import("@/lib/supabase/server");
+        const supabase = await createClient();
+        const { MetricWriteAdapter } = await import("@/lib/repositories/MetricWriteAdapter.js");
+        const { error: dbError } = await MetricWriteAdapter.commit(
+          { supabase, userId: user.id, logDate },
+          payload,
+          'manual'
+        );
+
+        if (dbError) {
+          console.error("MetricWriteAdapter Error (nutrition):", dbError);
+          return NextResponse.json(
+            { success: false, error: "Failed to save nutrition log." },
+            { status: 500 }
+          );
+        }
+      } catch (fallbackError) {
+        console.error("Nutrition Fallback Error:", fallbackError);
+        return NextResponse.json(
+          { success: false, error: "Failed to save nutrition log." },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(

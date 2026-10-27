@@ -1,0 +1,2602 @@
+[
+  {
+    "timeline": [],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70.2
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 70.4
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 69
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 69
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 69.0 kg; change: -1.0 kg.",
+        "interpretation": "Your recent average weight is lower than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 72.0 kg; change: +2.0 kg.",
+        "interpretation": "Your recent average weight is higher than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 69
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 69
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 69.0 kg; change: -1.0 kg.",
+        "interpretation": "Your recent average weight is lower than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 0
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 0
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 0.0 kg; change: -70.0 kg.",
+        "interpretation": "Your recent average weight is lower than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "A_TEST",
+        "category": "body",
+        "priority": 1,
+        "observation": "test"
+      },
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 72.0 kg; change: +2.0 kg.",
+        "interpretation": "Your recent average weight is higher than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 72.0 kg; change: +2.0 kg.",
+        "interpretation": "Your recent average weight is higher than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 72
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": [
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 72.0 kg; change: +2.0 kg.",
+        "interpretation": "Your recent average weight is higher than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-03",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-08",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-10",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-03",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-04",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-05",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-06",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-07",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      },
+      {
+        "date": "2023-01-08",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "WORKOUT_CONSISTENCY_DROP",
+        "category": "lifestyle",
+        "priority": 20,
+        "observation": "Your workout frequency decreased this week.",
+        "evidence": "Previous 7 days: 4 workout(s). Current 7 days: 1 workout(s).",
+        "interpretation": "You completed fewer workouts in the current comparison period.",
+        "recommendation": "Try to schedule a light session to rebuild your momentum.",
+        "confidence": "medium",
+        "timestamp": "2023-01-10",
+        "type": "warning"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-07",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-08",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "WORKOUT_CONSISTENCY_IMPROVED",
+        "category": "lifestyle",
+        "priority": 20,
+        "observation": "Your workout frequency increased this week.",
+        "evidence": "Previous 7 days: 1 workout(s). Current 7 days: 4 workout(s).",
+        "interpretation": "You successfully completed more workouts in the current comparison period.",
+        "recommendation": "Keep up the excellent consistency and ensure you are recovering adequately.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-02",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-07",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-08",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": false
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-01",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": true
+        }
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {
+          "workoutCompleted": null
+        }
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": null
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 0
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2100
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 0
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": null
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 1900
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 1500
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "NUTRITION_CALORIC_ADHERENCE_POSITIVE",
+        "category": "nutrition",
+        "priority": 30,
+        "observation": "You are accurately hitting your calorie target.",
+        "evidence": "7-day average: 1500 kcal. Target: 1500 kcal (within 10%).",
+        "interpretation": "Your recent caloric intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2200
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2200
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2200
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "NUTRITION_CALORIC_ADHERENCE_POSITIVE",
+        "category": "nutrition",
+        "priority": 30,
+        "observation": "You are accurately hitting your calorie target.",
+        "evidence": "7-day average: 2200 kcal. Target: 2000 kcal (within 10%).",
+        "interpretation": "Your recent caloric intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 1800
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 1800
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 1800
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "NUTRITION_CALORIC_ADHERENCE_POSITIVE",
+        "category": "nutrition",
+        "priority": 30,
+        "observation": "You are accurately hitting your calorie target.",
+        "evidence": "7-day average: 1800 kcal. Target: 2000 kcal (within 10%).",
+        "interpretation": "Your recent caloric intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2201
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2201
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2201
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": null
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 0
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": -50
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": null
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "calories": 2000
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": null
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 150
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 150
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 150
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 160
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 0
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": null
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 140
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 150
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 125
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "PROTEIN_CONSISTENCY_POSITIVE",
+        "category": "nutrition",
+        "priority": 35,
+        "observation": "You are accurately hitting your protein target.",
+        "evidence": "7-day average: 113g. Target: 125g (within 10%).",
+        "interpretation": "Your recent protein intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 110
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 110
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 110
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 100
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "PROTEIN_CONSISTENCY_POSITIVE",
+        "category": "nutrition",
+        "priority": 35,
+        "observation": "You are accurately hitting your protein target.",
+        "evidence": "7-day average: 110g. Target: 100g (within 10%).",
+        "interpretation": "Your recent protein intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 90
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 90
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 90
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 100
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "PROTEIN_CONSISTENCY_POSITIVE",
+        "category": "nutrition",
+        "priority": 35,
+        "observation": "You are accurately hitting your protein target.",
+        "evidence": "7-day average: 90g. Target: 100g (within 10%).",
+        "interpretation": "Your recent protein intake is well-aligned with your active plan.",
+        "recommendation": "Maintain this intake level for consistent progress.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "positive"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 111
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 111
+        },
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {
+          "protein": 111
+        },
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "protein": 100
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "lifestyle",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "completed",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": null,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": null
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": "80",
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 80
+    },
+    "currentDate": "2023-01-13",
+    "output": []
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 75. Progress: 50% (Raw: 50.0%).",
+        "interpretation": "You have completed approximately 50% of your weight goal.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2022-12-01",
+        "body": {
+          "weight": 90
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 75
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 70,
+      "target_value": 80
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 70, Target: 80, Current: 75. Progress: 50% (Raw: 50.0%).",
+        "interpretation": "You have completed approximately 50% of your weight goal.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 80
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 80. Progress: 0% (Raw: 0.0%).",
+        "interpretation": "You have completed approximately 0% of your weight goal.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 77.5
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 77.5. Progress: 25% (Raw: 25.0%).",
+        "interpretation": "You have completed approximately 25% of your weight goal.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 72.5
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 72.5. Progress: 75% (Raw: 75.0%).",
+        "interpretation": "You have completed approximately 75% of your weight goal.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 70. Progress: 100% (Raw: 100.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 65. Progress: 100% (Raw: 150.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 85
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": null,
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 85. Progress: 0% (Raw: -50.0%).",
+        "interpretation": "Your current weight is moving away from the target relative to the starting point.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2026-02-30",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 65. Progress: 100% (Raw: 150.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "malformed",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 65. Progress: 100% (Raw: 150.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 65. Progress: 100% (Raw: 150.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-09",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-10",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": null,
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 65. Progress: 100% (Raw: 150.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-10",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-06",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-07",
+        "body": {
+          "weight": 70
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": 65
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-14",
+        "body": {
+          "weight": 60
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": {
+      "domain": "weight",
+      "status": "active",
+      "start_value": 80,
+      "target_value": 70
+    },
+    "currentDate": "2023-01-13",
+    "output": [
+      {
+        "id": "GOAL_PROGRESS_INFO",
+        "category": "body",
+        "priority": 5,
+        "observation": "Current state of your active weight goal.",
+        "evidence": "Start: 80, Target: 70, Current: 60. Progress: 100% (Raw: 200.0%).",
+        "interpretation": "You are at or beyond your target.",
+        "recommendation": "Keep tracking your weight to monitor your progress over time.",
+        "confidence": "high",
+        "timestamp": "2023-01-14",
+        "type": "info"
+      },
+      {
+        "id": "WEIGHT_TREND_CHANGE",
+        "category": "body",
+        "priority": 10,
+        "observation": "Your average weight changed over the comparison period.",
+        "evidence": "Previous 7-day average: 70.0 kg; current 7-day average: 67.5 kg; change: -2.5 kg.",
+        "interpretation": "Your recent average weight is lower than the previous comparison period.",
+        "recommendation": "Continue logging weight consistently so the trend can be monitored over time.",
+        "confidence": "medium",
+        "timestamp": "2023-01-13",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "timeline": [
+      {
+        "date": "2023-01-11",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-12",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      },
+      {
+        "date": "2023-01-13",
+        "body": {
+          "weight": null
+        },
+        "nutrition": {},
+        "lifestyle": {}
+      }
+    ],
+    "profile": null,
+    "plan": {
+      "calories": 2000,
+      "protein": 150
+    },
+    "goal": null,
+    "currentDate": "2023-01-13",
+    "output": []
+  }
+]

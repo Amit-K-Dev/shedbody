@@ -1,8 +1,29 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
+    try {
+      const { PostRepository } = await import("@/lib/repositories/PostRepository.js");
+      const { D1Adapter } = await import("@/lib/repositories/D1Adapter.js");
+      const adapter = new D1Adapter();
+      adapter._checkDb();
+      const postRepo = new PostRepository(adapter);
+      
+      const data = await postRepo.getPublishedPosts();
+      return NextResponse.json(
+        { success: true, data },
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          },
+        },
+      );
+    } catch (d1Error) {
+      console.warn("D1 Fetch Error (Posts) fallback to Supabase:", d1Error?.message || d1Error);
+    }
+
+    const { createClient } = await import("@/lib/supabase/server");
     const supabase = await createClient();
 
     const { data, error } = await supabase

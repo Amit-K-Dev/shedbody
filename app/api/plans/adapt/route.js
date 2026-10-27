@@ -1,25 +1,24 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/auth/getUser.js";
 import { checkAndAdaptPlan } from "@/lib/plans/adaptationService";
 
 export async function POST(req) {
   try {
-    const supabase = await createClient();
-
     // 1. Authenticate Request
-    const { cookies } = await import("next/headers");
-    const cookieStore = await cookies();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const user = await getUser();
     
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Please log in." },
         { status: 401 }
       );
     }
+
+    let supabase = null;
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      supabase = await createClient();
+    } catch {}
 
     // 2. Delegate to the orchestration service
     // We intentionally ignore client input for adaptation to prevent

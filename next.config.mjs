@@ -1,3 +1,7 @@
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+initOpenNextCloudflareForDev();
+
 const R2_PUBLIC_URL =
   process.env.NEXT_PUBLIC_R2_URL || "https://media.shedbody.com";
 
@@ -60,6 +64,33 @@ const nextConfig = {
         hostname: "**.supabase.co",
       },
     ],
+  },
+
+  async redirects() {
+    return [
+      {
+        source: "/",
+        has: [
+          {
+            type: "host",
+            value: "^shedbody\\.com$",
+          },
+        ],
+        destination: "https://www.shedbody.com/",
+        permanent: true,
+      },
+      {
+        source: "/:path+",
+        has: [
+          {
+            type: "host",
+            value: "^shedbody\\.com$",
+          },
+        ],
+        destination: "https://www.shedbody.com/:path+",
+        permanent: true,
+      },
+    ];
   },
 
   async headers() {

@@ -1,8 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
 import { experts } from "@/lib/experts";
+import { PostRepository } from "@/lib/repositories/PostRepository.js";
+import { D1Adapter } from "@/lib/repositories/D1Adapter.js";
+
+export const dynamic = "force-dynamic";
 
 export default async function sitemap() {
-  const supabase = await createClient();
   const baseUrl = "https://shedbody.com";
 
   const staticLastModified = "2024-05-01T00:00:00.000Z";
@@ -171,20 +173,31 @@ export default async function sitemap() {
   }));
 
   try {
-    const { data: posts, error } = await supabase
-      .from("posts")
-      .select("slug, category, published_at, updated_at, status")
-      .eq("status", "published")
-      .not("slug", "is", null)
-      .not("category", "is", null)
-      .not("published_at", "is", null);
+    let posts = [];
+    try {
+      const postRepo = new PostRepository(new D1Adapter());
+      posts = await postRepo.getPublishedPostsForSitemap();
+    } catch (d1Error) {
+      console.warn("D1 query failed in sitemap, trying fallback:", d1Error?.message);
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        try {
+          const { createClient } = await import("@/lib/supabase/server");
+          const supabase = await createClient();
+          const { data, error } = await supabase
+            .from("posts")
+            .select("slug, category, published_at, updated_at, status")
+            .eq("status", "published")
+            .not("slug", "is", null)
+            .not("category", "is", null)
+            .not("published_at", "is", null);
 
-    if (error) {
-      console.error(
-        "Database Error fetching posts for sitemap:",
-        error.message,
-      );
-      throw error;
+          if (!error && data) {
+            posts = data;
+          }
+        } catch (fallbackErr) {
+          console.error("Fallback failed in sitemap:", fallbackErr?.message);
+        }
+      }
     }
 
     const dynamicUrls = (posts || []).map((post) => {
